@@ -2,6 +2,8 @@ import { getPages } from "@/sanity/sanity-utils";
 import styles from "./page.module.css";
 import Tooltip from "@/components/Tooltip/Tooltip";
 
+export const revalidate = 10;
+
 export default async function Home() {
   const pages = await getPages();
 
