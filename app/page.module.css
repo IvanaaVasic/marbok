@@ -155,6 +155,20 @@
     grid-template-columns: repeat(1, minmax(0, 1fr));
   }
 }
+@media only screen and (max-width: 485px) {
+  .footerInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+  }
+  .separator {
+    display: none;
+  }
+  .footer {
+    padding: 20px;
+  }
+}
 @media only screen and (max-width: 380px) {
   .productCard {
     max-width: 100%;
