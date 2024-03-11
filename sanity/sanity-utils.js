@@ -10,10 +10,11 @@ export async function getPages() {
         contentArea[]->{
           price,
           productKey,
-          "image": image.asset->url,
+          image,
           package,
           name,
           _id,
+          blockProductImages,
         }
       }
     }`

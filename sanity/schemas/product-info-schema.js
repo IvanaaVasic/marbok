@@ -35,6 +35,10 @@ const productInfo = {
       title: "Pakovanje",
       type: "string",
     },
+    {
+      name: "blockProductImages",
+      type: "productImagesBlock",
+    },
   ],
 };
 

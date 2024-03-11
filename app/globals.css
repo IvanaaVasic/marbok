@@ -30,6 +30,69 @@ ul {
   list-style: none;
 }
 
+.swiper {
+  width: 100%;
+  height: 100%;
+}
+
+.swiper-slide {
+  text-align: center;
+  font-size: 18px;
+  background: #fff;
+
+  /* Center slide text vertically */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.swiper-slide img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.modal .swiper-button-next {
+  color: white;
+  background: rgba(0, 66, 63, 0.8);
+  background-image: url(/images/right.png);
+  background-repeat: no-repeat;
+  background-size: auto;
+  background-position: center;
+  border-radius: 50%;
+  padding: 23px;
+  right: 0;
+}
+
+.modal .swiper-button-prev {
+  color: white;
+  background: rgba(0, 66, 63, 0.8);
+  background-image: url(/images/left.png);
+  background-repeat: no-repeat;
+  background-size: auto;
+  background-position: center;
+  border-radius: 50%;
+  padding: 23px;
+  left: 0;
+}
+.modal .swiper-button-next::after {
+  display: none;
+}
+.modal .swiper-button-prev::after {
+  display: none;
+}
+
+.modal .swiper-pagination.swiper-pagination {
+  bottom: 0px;
+  background: white;
+  padding: 5px 0;
+}
+
+.swiper-pagination .swiper-pagination-bullet-active {
+  background: rgb(0, 66, 63);
+}
+
 @media print {
   .firebase-emulator-warning,
   .tsqd-parent-container {
