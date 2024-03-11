@@ -66,7 +66,7 @@ function Content({ pages }) {
               </div>
             ))}
           </div>
-          {page.contentArea.map((contentArea) => (
+          {page?.contentArea?.map((contentArea) => (
             <Modal
               key={contentArea?._id}
               isOpen={modalStates[contentArea._id]}

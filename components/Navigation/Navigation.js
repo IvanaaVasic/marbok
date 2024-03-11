@@ -37,7 +37,7 @@ function Navigation({ pages }) {
       </div>
 
       <NavModal ref={navRef} className={styles.dialog} isOpen={isOpen}>
-        <nav>
+        <nav className={styles.navigationContainer}>
           <ul className={styles.list}>
             {pages.map(({ title, image }) => (
               <li key={title} className={clsx(styles.listItem)}>
