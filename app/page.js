@@ -1,8 +1,8 @@
 import React from "react";
 import { getPages } from "@/sanity/sanity-utils";
 import styles from "./page.module.css";
-import Tooltip from "@/components/Tooltip/Tooltip";
 import Content from "@/components/Content/Content";
+import Navigation from "@/components/Navigation/Navigation";
 
 export const revalidate = 10;
 
@@ -13,26 +13,12 @@ export default async function Home() {
     <div>
       <div className={styles.logoWrapper}>
         <img className={styles.logo} src="/logo.jpg" alt="Logo" />
+        <Navigation pages={pages?.content} />
       </div>
       <div className={styles.container}>
         <Content pages={pages} />
       </div>
 
-      <div className={styles.sidePaginationContainer}>
-        {pages?.content.map((page) => (
-          <a href={`#${page?.title}`} key={page?.title}>
-            <Tooltip text={page?.title}>
-              {page?.image && (
-                <img
-                  src={page?.image}
-                  alt={page?.title}
-                  className={styles.sideBarImage}
-                />
-              )}
-            </Tooltip>
-          </a>
-        ))}
-      </div>
       <div className={styles.footer}>
         <div className={styles.footerInfo}>
           <p>marbok.bgd@gmail.com</p>{" "}
