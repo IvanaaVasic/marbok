@@ -42,21 +42,22 @@ export default async function Home() {
                         {contentArea?.name}
                       </h3>
                     )}
-
-                    {contentArea?.price && (
-                      <div className={styles.fieldInfoWrapper}>
-                        <span className={styles.fieldName}>Cena: </span>
-                        <span>{contentArea?.price} rsd</span>
-                      </div>
-                    )}
-                    {contentArea?.productKey && (
-                      <div className={styles.fieldInfoWrapper}>
-                        <span className={styles.fieldName}>
-                          Šifra proizvoda:{" "}
-                        </span>
-                        <span>{contentArea?.productKey}</span>
-                      </div>
-                    )}
+                    <div className={styles.fieldInfoContainer}>
+                      {contentArea?.price && (
+                        <div className={styles.fieldInfoWrapper}>
+                          <span className={styles.fieldName}>Cena: </span>
+                          <span>{contentArea?.price} rsd</span>
+                        </div>
+                      )}
+                      {contentArea?.productKey && (
+                        <div className={styles.fieldInfoWrapper}>
+                          <span className={styles.fieldName}>
+                            Šifra proizvoda:{" "}
+                          </span>
+                          <span>{contentArea?.productKey}</span>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
               ))}
