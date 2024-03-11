@@ -21,8 +21,8 @@ function Content({ pages }) {
   }
 
   const sortedPages = [...pages.content].sort((a, b) => {
-    if (a.title === "Novo") return -1; // 'Novo' comes first
-    if (b.title === "Novo") return 1; // 'Novo' comes first
+    if (a.title === "Novo" && b.title !== "Novo") return -1; // 'Novo' comes first
+    if (b.title === "Novo" && a.title !== "Novo") return 1; // 'Novo' comes first
     return 0;
   });
 
