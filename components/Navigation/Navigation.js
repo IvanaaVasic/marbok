@@ -7,6 +7,8 @@ import SvgHamburger from "@/components/SvgHamburger/SvgHamburger";
 
 import styles from "./Navigation.module.css";
 
+export const revalidate = 10;
+
 function Navigation({ pages }) {
   const [isOpen, setIsOpen] = useState(false);
 
