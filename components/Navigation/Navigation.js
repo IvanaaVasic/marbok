@@ -39,7 +39,7 @@ function Navigation({ pages }) {
       <NavModal ref={navRef} className={styles.dialog} isOpen={isOpen}>
         <nav className={styles.navigationContainer}>
           <ul className={styles.list}>
-            {pages.map(({ title, image }) => (
+            {pages?.map(({ title, image }) => (
               <li key={title} className={clsx(styles.listItem)}>
                 <a href={`#${title}`} className={styles.link}>
                   {image && (
@@ -50,7 +50,9 @@ function Navigation({ pages }) {
                       onClick={(e) => handleClick(e, title)}
                     />
                   )}
-                  <p onClick={(e) => handleClick(e, title)}> {title}</p>
+                  {title && (
+                    <p onClick={(e) => handleClick(e, title)}> {title}</p>
+                  )}
                 </a>
               </li>
             ))}

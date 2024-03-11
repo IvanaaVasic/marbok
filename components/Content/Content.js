@@ -16,9 +16,19 @@ function Content({ pages }) {
     }));
   };
 
+  if (!pages || !pages.content) {
+    return <div>No content available</div>;
+  }
+
+  const sortedPages = [...pages.content].sort((a, b) => {
+    if (a.title === "Novo") return -1; // 'Novo' comes first
+    if (b.title === "Novo") return 1; // 'Novo' comes first
+    return 0;
+  });
+
   return (
     <div>
-      {pages?.content.map((page) => (
+      {sortedPages.map((page) => (
         <div key={page?._id} className={styles.productBlock}>
           {page?.image && (
             <img
@@ -31,13 +41,13 @@ function Content({ pages }) {
             {page?.title}
           </h2>
           <div className={styles.contentContainer}>
-            {page.contentArea.map((contentArea) => (
+            {page?.contentArea?.map((contentArea) => (
               <div key={contentArea?._id} className={styles.productCard}>
                 <img
                   src={urlFromThumbnail(contentArea?.image)}
                   alt={contentArea?.name}
                   className={styles.img}
-                  onClick={() => toggleModal(contentArea._id)}
+                  onClick={() => toggleModal(contentArea?._id)}
                 />
                 {contentArea?.package && (
                   <p className={styles.package}>{contentArea?.package}</p>
@@ -69,8 +79,8 @@ function Content({ pages }) {
           {page?.contentArea?.map((contentArea) => (
             <Modal
               key={contentArea?._id}
-              isOpen={modalStates[contentArea._id]}
-              onClose={() => toggleModal(contentArea._id)}
+              isOpen={modalStates[contentArea?._id]}
+              onClose={() => toggleModal(contentArea?._id)}
               images={[
                 contentArea?.image,
                 ...(contentArea?.blockProductImages?.productImages || []),
