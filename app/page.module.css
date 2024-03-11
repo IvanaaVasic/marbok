@@ -89,24 +89,6 @@
   top: 20px;
 }
 
-.sidePaginationContainer {
-  position: fixed;
-  right: 15px;
-  top: calc(-40px + 50vh);
-  display: flex;
-  flex-direction: column;
-  gap: 25px;
-  z-index: 9999;
-}
-
-.sideBarImage {
-  border-radius: 50%;
-  width: 35px;
-  height: 35px;
-  border: 2px solid #bc4d4d;
-  object-fit: cover;
-}
-
 .footer {
   display: flex;
   flex-direction: column;
