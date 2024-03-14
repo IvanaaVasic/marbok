@@ -57,6 +57,8 @@
   position: relative;
   height: 100%;
   min-height: 395px;
+  display: flex;
+  flex-direction: column;
 }
 .productName {
   font-size: 22px;
@@ -69,6 +71,8 @@
   flex-direction: column;
   gap: 10px;
   border-top: 2px solid #bc4d4d;
+  height: 100%;
+  justify-content: space-between;
 }
 .fieldName {
   font-weight: 700;
@@ -122,6 +126,53 @@
   display: flex;
   gap: 20px;
 }
+.quantityWrapper {
+  display: flex;
+  width: 100%;
+  align-items: center;
+}
+input.input {
+  margin-bottom: 0;
+  border: none;
+  display: block;
+  color: #010712;
+  font-weight: 500;
+  padding: 5px 0;
+  outline: none;
+  width: 100%;
+  max-width: 25px;
+  text-align: center;
+  -moz-appearance: textfield;
+}
+button.quantityBtn {
+  background-color: #bc4d4d;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: 700;
+  border-radius: 5px;
+  outline: none;
+  max-width: 25px;
+  height: 25px;
+}
+.input::-webkit-inner-spin-button,
+.input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+.quantityContainer {
+  display: flex;
+  align-items: center;
+}
+.cartIcon {
+  font-size: 25px;
+  color: black;
+  margin-right: 10px;
+  cursor: pointer;
+}
 @media only screen and (max-width: 1340px) {
   .contentContainer {
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -135,7 +186,7 @@
   }
 }
 
-@media only screen and (max-width: 740px) {
+@media only screen and (max-width: 840px) {
   .contentContainer {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     grid-gap: 40px 20px;
@@ -153,9 +204,7 @@
   .fieldInfoWrapper {
     font-size: 14px;
   }
-  .productInfo {
-    height: 55%;
-  }
+
   .productCard {
     min-height: auto;
   }
@@ -167,7 +216,7 @@
   }
 }
 
-@media only screen and (max-width: 485px) {
+@media only screen and (max-width: 520px) {
   .footerInfo {
     display: flex;
     flex-direction: column;

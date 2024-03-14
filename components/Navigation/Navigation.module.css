@@ -54,11 +54,7 @@
   opacity: 0.6;
   text-transform: uppercase;
 }
-.nav {
-  position: absolute;
-  top: 30%;
-  right: 20px;
-}
+
 .sideBarImage {
   border-radius: 50%;
   width: 35px;
