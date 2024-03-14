@@ -9,11 +9,11 @@ function Checkout({ cart, removeFromCart }) {
       <table className={styles.table}>
         <thead>
           <tr>
-            <th className={styles.tableHeader}>Slika</th>
+            <th className={styles.tableHeader}>Sl.</th>
             <th className={styles.tableHeader}>Proizvod</th>
-            <th className={styles.tableHeader}>Količina</th>
+            <th className={styles.tableHeader}>Kol.</th>
             <th className={styles.tableHeader}>Šifra</th>
-            <th className={styles.tableHeader}>Obriši</th>
+            <th className={styles.tableHeader}>Del.</th>
           </tr>
         </thead>
         <tbody>
