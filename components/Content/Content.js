@@ -45,26 +45,26 @@ function Content({ pages }) {
           </h2>
           <div className={styles.contentContainer}>
             {page?.contentArea?.map((contentArea) => (
-              <ContentArea
-                key={contentArea?._id}
-                contentArea={contentArea}
-                addToCart={addToCart}
-                methods={methods}
-                toggleModal={toggleModal}
-              />
+              <>
+                <ContentArea
+                  key={contentArea?._id}
+                  contentArea={contentArea}
+                  addToCart={addToCart}
+                  methods={methods}
+                  toggleModal={toggleModal}
+                />
+                <Modal
+                  key={contentArea?._id}
+                  isOpen={modalStates[contentArea?._id]}
+                  onClose={() => toggleModal(contentArea?._id)}
+                  images={[
+                    contentArea?.image,
+                    ...(contentArea?.blockProductImages?.productImages || []),
+                  ]}
+                />
+              </>
             ))}
           </div>
-          {page?.contentArea?.map((contentArea) => (
-            <Modal
-              key={contentArea?._id}
-              isOpen={modalStates[contentArea?._id]}
-              onClose={() => toggleModal(contentArea?._id)}
-              images={[
-                contentArea?.image,
-                ...(contentArea?.blockProductImages?.productImages || []),
-              ]}
-            />
-          ))}
         </div>
       ))}
     </div>

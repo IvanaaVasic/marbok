@@ -4,6 +4,8 @@ import { urlFromThumbnail } from "@/utils/image";
 import { FormProvider } from "react-hook-form";
 import Button from "@/components/Button/Button";
 import { FaCartShopping } from "react-icons/fa6";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function ContentArea({ contentArea, addToCart, methods, toggleModal }) {
   const [internalQuantity, setInternalQuantity] = useState("1");
@@ -14,6 +16,10 @@ function ContentArea({ contentArea, addToCart, methods, toggleModal }) {
     productKey,
     image
   ) => {
+    if (parseInt(quantity) <= 0) {
+      toast.success("Kolicina mora biti veća od 0!");
+      return;
+    }
     const product = {
       name: contentAreaName,
       quantity: quantity,
@@ -46,7 +52,7 @@ function ContentArea({ contentArea, addToCart, methods, toggleModal }) {
   );
 
   const decrement = useCallback(() => {
-    const value = Math.max(parseInt(internalQuantity) - 1);
+    const value = Math.max(parseInt(internalQuantity) - 1, 0);
     setInternalQuantity(value.toString());
   }, [internalQuantity, setInternalQuantity]);
 
@@ -121,6 +127,7 @@ function ContentArea({ contentArea, addToCart, methods, toggleModal }) {
                 )
               }
             />
+            <ToastContainer />
           </div>
         </FormProvider>
       </div>
