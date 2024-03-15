@@ -12,11 +12,13 @@ function Contact({ initialPages }) {
 
   return (
     <Layout pages={pages}>
-      <div className={styles.container}>
-        <Checkout cart={cart} removeFromCart={removeFromCart} />
-        <div className={styles.line}></div>
-        <ContactForm />
-      </div>
+      {(filteredProducts) => (
+        <div className={styles.container}>
+          <Checkout cart={cart} removeFromCart={removeFromCart} />
+          <div className={styles.line}></div>
+          <ContactForm />
+        </div>
+      )}
     </Layout>
   );
 }

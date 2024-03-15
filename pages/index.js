@@ -9,13 +9,13 @@ export default function Home({ initialPages }) {
   const pages = usePages() || initialPages;
 
   return (
-    <div>
-      <Layout pages={pages}>
+    <Layout pages={pages}>
+      {(filteredProducts) => (
         <div className={styles.container}>
-          <Content pages={pages} />
+          <Content pages={pages} filteredProducts={filteredProducts} />
         </div>
-      </Layout>
-    </div>
+      )}
+    </Layout>
   );
 }
 
