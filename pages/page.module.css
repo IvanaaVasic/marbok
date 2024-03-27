@@ -113,6 +113,9 @@
   background: #f2f7f6;
   color: #a2a4aa;
   box-shadow: 2px -2px 15px -5px rgba(29, 30, 34, 0.55);
+
+  width: 100%;
+  z-index: 222;
 }
 .footerInfo {
   display: flex;

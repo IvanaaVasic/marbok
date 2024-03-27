@@ -2,13 +2,17 @@
   display: flex;
   justify-content: center;
   height: 100%;
-  padding-bottom: 50px;
+  padding-bottom: 176px;
 }
 .line {
   height: 500px;
   width: 1px;
   background-color: black;
   margin-top: 50px;
+}
+.footerContactPage {
+  position: fixed;
+  bottom: 0;
 }
 @media only screen and (max-width: 920px) {
   .container {

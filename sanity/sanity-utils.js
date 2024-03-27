@@ -20,3 +20,15 @@ export async function getPages() {
     }`
   );
 }
+
+export async function getImages() {
+  return createClient(clientConfig).fetch(groq`*[_type == "heroImages"]`);
+}
+
+export async function getHeading() {
+  return createClient(clientConfig).fetch(groq`*[_type == "mainHeading"]`);
+}
+
+export async function getBrandImages() {
+  return createClient(clientConfig).fetch(groq`*[_type == "brandImages"]`);
+}

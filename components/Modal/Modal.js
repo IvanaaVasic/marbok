@@ -3,6 +3,12 @@ import styles from "./Modal.module.css";
 import { IoIosCloseCircle } from "react-icons/io";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { urlFromThumbnail } from "@/utils/image";
+import SwiperCore, {
+  Navigation,
+  Pagination,
+  Mousewheel,
+  Keyboard,
+} from "swiper";
 
 // Import Swiper styles
 import "swiper/css";
@@ -10,7 +16,8 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 
 // import required modules
-import { Navigation, Pagination, Mousewheel, Keyboard } from "swiper/modules";
+
+SwiperCore.use([Navigation, Pagination, Mousewheel, Keyboard]);
 
 function Modal({ isOpen, onClose, images }) {
   if (!isOpen) {
@@ -31,7 +38,6 @@ function Modal({ isOpen, onClose, images }) {
           pagination={true}
           mousewheel={true}
           keyboard={true}
-          modules={[Navigation, Pagination, Mousewheel, Keyboard]}
           className={`modal ${styles.imagesSwiper}`}
         >
           <SwiperSlide>

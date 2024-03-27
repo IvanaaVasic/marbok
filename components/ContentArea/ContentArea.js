@@ -6,8 +6,16 @@ import Button from "@/components/Button/Button";
 import { FaCartShopping } from "react-icons/fa6";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import clsx from "clsx";
 
-function ContentArea({ contentArea, addToCart, methods, toggleModal }) {
+function ContentArea({
+  contentArea,
+  addToCart,
+  methods,
+  toggleModal,
+  className,
+  imageClassName,
+}) {
   const [internalQuantity, setInternalQuantity] = useState("1");
 
   const handleAddToCart = async (
@@ -62,11 +70,11 @@ function ContentArea({ contentArea, addToCart, methods, toggleModal }) {
   }, [internalQuantity, setInternalQuantity]);
 
   return (
-    <div key={contentArea?._id} className={styles.productCard}>
+    <div key={contentArea?._id} className={clsx(styles.productCard, className)}>
       <img
         src={urlFromThumbnail(contentArea?.image)}
         alt={contentArea?.name}
-        className={styles.img}
+        className={clsx(styles.img, imageClassName)}
         onClick={() => toggleModal(contentArea?._id)}
       />
       {contentArea?.package && (

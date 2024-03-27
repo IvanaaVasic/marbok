@@ -93,6 +93,68 @@ ul {
   background: rgb(0, 66, 63);
 }
 
+.imagesSwiper .swiper-button-next::after {
+  display: none;
+}
+.imagesSwiper .swiper-button-prev::after {
+  display: none;
+}
+
+.imagesSwiper .swiper-pagination.swiper-pagination {
+  bottom: 0px;
+  background: white;
+  padding: 5px 0;
+}
+.imagesSwiper .swiper-pagination-bullet-active {
+  background: #bc4d4d;
+}
+
+.productCardSwiper .swiper-button-next {
+  color: white;
+  background: rgba(188, 77, 77, 0.7);
+  background-image: url(/images/right.png);
+  background-repeat: no-repeat;
+  background-size: auto;
+  background-position: center;
+  border-radius: 50%;
+  padding: 23px;
+}
+
+.productCardSwiper .swiper-button-prev {
+  color: white;
+  background: rgba(188, 77, 77, 0.6);
+  background-image: url(/images/left.png);
+  background-repeat: no-repeat;
+  background-size: auto;
+  background-position: center;
+  border-radius: 50%;
+  padding: 23px;
+}
+.productCardSwiper .swiper-button-next::after {
+  display: none;
+}
+.productCardSwiper .swiper-button-prev::after {
+  display: none;
+}
+.productCardSwiper .swiper-pagination-bullet-active {
+  background: #bc4d4d;
+  margin-top: 10px;
+}
+.productCardSwiper div.swiper-pagination {
+  bottom: 0;
+}
+
+.brandSwiper .swiper-button-next {
+  display: none;
+}
+
+.brandSwiper .swiper-button-prev {
+  display: none;
+}
+.brandSwiper .swiper-pagination-bullet-active {
+  background: #bc4d4d;
+}
+
 @media print {
   .firebase-emulator-warning,
   .tsqd-parent-container {

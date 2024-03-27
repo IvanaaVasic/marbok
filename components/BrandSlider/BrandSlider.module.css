@@ -1,0 +1,30 @@
+.swiper {
+  padding: 50px 0px 65px 25px;
+}
+.brandHeading {
+  font-size: 42px;
+  text-align: center;
+}
+.swiperSlide {
+  height: 150px;
+}
+img.brandImage {
+  object-fit: contain;
+  color: transparent;
+  max-width: 250px;
+  height: 150px;
+  display: block;
+}
+.brandContainer {
+  margin-top: 80px;
+}
+
+@media only screen and (max-width: 600px) {
+  .brandHeading {
+    font-size: 28px;
+    text-align: center;
+  }
+  .brandContainer {
+    margin-top: 50px;
+  }
+}

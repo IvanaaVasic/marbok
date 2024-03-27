@@ -1,0 +1,9 @@
+.container {
+  height: 100%;
+  padding-bottom: 176px;
+}
+@media only screen and (max-width: 600px) {
+  .container {
+    padding-bottom: 100px;
+  }
+}

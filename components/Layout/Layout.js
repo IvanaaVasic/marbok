@@ -3,7 +3,7 @@ import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
 import Head from "next/head";
 
-function Layout({ children, pages }) {
+function Layout({ children, pages, footerClassName }) {
   const [filteredProducts, setFilteredProducts] = useState([]);
 
   return (
@@ -13,7 +13,7 @@ function Layout({ children, pages }) {
       </Head>
       <Header pages={pages} setFilteredProducts={setFilteredProducts} />
       {children({ pages, filteredProducts })}
-      <Footer />
+      <Footer footerClassName={footerClassName} />
     </div>
   );
 }

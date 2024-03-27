@@ -25,8 +25,8 @@ function Content({ pages, filteredProducts }) {
   }
 
   const sortedPages = [...pages.content].sort((a, b) => {
-    if (a.title === "Novo" && b.title !== "Novo") return -1;
-    if (b.title === "Novo" && a.title !== "Novo") return 1;
+    if (a.title === "Novi proizvodi" && b.title !== "Novi proizvodi") return -1;
+    if (b.title === "Novi proizvodi" && a.title !== "Novi proizvodi") return 1;
     return 0;
   });
 

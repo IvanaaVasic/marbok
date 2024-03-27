@@ -1,0 +1,29 @@
+.swiper {
+  padding: 50px 0px 65px 25px;
+}
+.productViewHeading {
+  font-size: 42px;
+  text-align: center;
+}
+.swiperSlide {
+  height: auto;
+}
+.productCardSwiper {
+  min-height: 395px;
+}
+.productImageSwiper {
+  max-height: 250px;
+}
+
+@media only screen and (max-width: 600px) {
+  .productViewHeading {
+    font-size: 28px;
+    text-align: center;
+  }
+  .productCardSwiper {
+    min-height: auto;
+  }
+  .productImageSwiper {
+    max-height: 200px;
+  }
+}
