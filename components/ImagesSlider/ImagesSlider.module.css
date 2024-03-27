@@ -1,0 +1,8 @@
+.imgSwiper {
+  height: 650px;
+}
+@media only screen and (max-width: 920px) {
+  .imgSwiper {
+    height: 450px;
+  }
+}

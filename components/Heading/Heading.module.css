@@ -1,0 +1,64 @@
+.container {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  margin: 50px 0px;
+  padding: 0 20px;
+}
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  align-items: center;
+}
+.heading {
+  font-size: 80px;
+  margin-bottom: 30px;
+  font-weight: 500;
+  line-height: 90px;
+}
+.mainIntro {
+  font-size: 24px;
+  color: #000;
+  opacity: 0.5;
+  line-height: 36px;
+  width: 65vw;
+}
+@media only screen and (max-width: 1200px) {
+  .mainIntro {
+    font-size: 22px;
+    width: 80%;
+  }
+  .heading {
+    font-size: 50px;
+    margin-bottom: 20px;
+  }
+}
+@media only screen and (max-width: 920px) {
+  .mainIntro {
+    font-size: 18px;
+    width: 100%;
+  }
+}
+@media only screen and (max-width: 745px) {
+  .heading {
+    font-size: 38px;
+    margin-bottom: 20px;
+    line-height: 42px;
+  }
+  .container {
+    margin: 30px 0px;
+    padding: 0 15px;
+  }
+}
+
+@media only screen and (max-width: 520px) {
+  .heading {
+    font-size: 34px;
+    line-height: 42px;
+  }
+  .mainIntro {
+    font-size: 16px;
+    line-height: 30px;
+  }
+}
