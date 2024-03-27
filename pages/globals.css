@@ -55,7 +55,7 @@ ul {
 
 .modal .swiper-button-next {
   color: white;
-  background: rgba(0, 66, 63, 0.8);
+  background: rgba(188, 77, 77, 0.7);
   background-image: url(/images/right.png);
   background-repeat: no-repeat;
   background-size: auto;
@@ -67,7 +67,7 @@ ul {
 
 .modal .swiper-button-prev {
   color: white;
-  background: rgba(0, 66, 63, 0.8);
+  background: rgba(188, 77, 77, 0.7);
   background-image: url(/images/left.png);
   background-repeat: no-repeat;
   background-size: auto;
@@ -88,9 +88,8 @@ ul {
   background: white;
   padding: 5px 0;
 }
-
-.swiper-pagination .swiper-pagination-bullet-active {
-  background: rgb(0, 66, 63);
+.modal .swiper-pagination-bullet-active {
+  background: #bc4d4d;
 }
 
 .imagesSwiper .swiper-button-next::after {

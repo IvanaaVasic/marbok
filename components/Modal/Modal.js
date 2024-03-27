@@ -38,7 +38,7 @@ function Modal({ isOpen, onClose, images }) {
           pagination={true}
           mousewheel={true}
           keyboard={true}
-          className={`modal ${styles.imagesSwiper}`}
+          className={`modal`}
         >
           <SwiperSlide>
             <img
