@@ -11,7 +11,7 @@ function Contact({ initialPages }) {
   const { cart, removeFromCart } = useCart();
 
   return (
-    <Layout pages={pages} footerClassName={styles.footerContactPage}>
+    <Layout pages={pages}>
       {(filteredProducts) => (
         <div className={styles.container}>
           <Checkout cart={cart} removeFromCart={removeFromCart} />
