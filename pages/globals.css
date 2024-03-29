@@ -154,6 +154,11 @@ ul {
   background: #bc4d4d;
 }
 
+.modal {
+  display: flex;
+  justify-content: flex-end;
+}
+
 @media print {
   .firebase-emulator-warning,
   .tsqd-parent-container {

@@ -1,0 +1,80 @@
+.container {
+  display: flex;
+  width: 50vw;
+  background: url("/images/light.jpg") no-repeat center center;
+  height: 700px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-size: cover;
+}
+.contentWrapper {
+  display: flex;
+  flex-direction: column;
+  max-width: 500px;
+  height: 550px;
+  background-color: rgba(188, 77, 77, 0.7);
+  gap: 20px;
+  padding: 20px;
+  width: 100%;
+  justify-content: center;
+}
+.infoWrapper {
+  display: flex;
+  font-size: 18px;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  color: #000;
+}
+.line {
+  height: 1px;
+  width: 100%;
+  margin: 15px 0;
+  border: 1px solid #000;
+}
+.workingHoursWrapper {
+  display: flex;
+  flex-direction: column;
+  font-size: 18px;
+  color: #000;
+  font-weight: 700;
+  width: 100%;
+}
+.workingHoursHeading {
+  font-weight: 700;
+  color: #000;
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 22px;
+}
+.hoursWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.information {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+@media only screen and (max-width: 920px) {
+  .container {
+    width: 100%;
+    height: 350px;
+    padding: 20px;
+  }
+  .contentWrapper {
+    height: 90%;
+    gap: 10px;
+  }
+  .infoWrapper {
+    font-size: 14px;
+  }
+  .line {
+    margin: 10px 0;
+  }
+  .workingHoursWrapper {
+    font-size: 14px;
+  }
+}

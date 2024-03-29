@@ -1,29 +1,23 @@
-import ContactForm from "@/components/ContactForm/ContactForm";
-import styles from "./Contact.module.css";
+import React from "react";
 import { getPages } from "@/sanity/sanity-utils";
+import styles from "./page.module.css";
+import Content from "@/components/Content/Content";
 import { usePages } from "@/hooks/usePages";
 import Layout from "@/components/Layout/Layout";
-import { useCart } from "@/hooks/useCart";
-import Checkout from "@/components/Checkout/Checkout";
 
-function Contact({ initialPages }) {
+export default function Catalog({ initialPages }) {
   const pages = usePages() || initialPages;
-  const { cart, removeFromCart } = useCart();
 
   return (
     <Layout pages={pages}>
       {(filteredProducts) => (
         <div className={styles.container}>
-          <Checkout cart={cart} removeFromCart={removeFromCart} />
-          <div className={styles.line}></div>
-          <ContactForm />
+          <Content pages={pages} filteredProducts={filteredProducts} />
         </div>
       )}
     </Layout>
   );
 }
-
-export default Contact;
 
 export async function getServerSideProps() {
   const initialPages = await getPages();

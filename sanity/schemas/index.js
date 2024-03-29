@@ -5,6 +5,7 @@ import productImages from "./product-images-schema";
 import heroImages from "./hero-images-schema";
 import mainHeading from "./main-heading-schema";
 import brandImages from "./brand-images-schema";
+import aboutUs from "./about-us-schema";
 
 const shcemas = [
   page,
@@ -14,6 +15,7 @@ const shcemas = [
   heroImages,
   mainHeading,
   brandImages,
+  aboutUs,
 ];
 
 export default shcemas;

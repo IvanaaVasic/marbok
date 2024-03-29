@@ -1,16 +1,19 @@
-import Navigation from "@/components/Navigation/Navigation";
-import styles from "@/pages/page.module.css";
+import NavigationMobile from "@/components/NavigationMobile/NavigationMobile";
+import styles from "@/pages/catalog/page.module.css";
 import Cart from "@/components/Cart/Cart";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import Navigation from "@/components/Navigation/Navigation";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 function Header({ pages, setFilteredProducts }) {
   const router = useRouter();
 
   const pathName = router.pathname;
 
-  const isContactPage = pathName === "/contact";
-  const isPresentationPage = pathName === "/presentation";
+  const isCatalogPage = pathName === "/catalog";
+
+  const isMd = useMediaQuery(1000);
 
   const handleSearch = (e) => {
     const query = e.target.value.trim().toLowerCase();
@@ -31,7 +34,7 @@ function Header({ pages, setFilteredProducts }) {
 
   return (
     <div className={styles.logoWrapper}>
-      {!isContactPage && !isPresentationPage && (
+      {isCatalogPage && (
         <div>
           <input
             type="search"
@@ -45,8 +48,9 @@ function Header({ pages, setFilteredProducts }) {
         <img className={styles.logo} src="/logo.png" alt="Logo" />
       </Link>
       <div className={styles.cartNavWrapper}>
+        {!isMd && <Navigation />}
         <Cart />
-        <Navigation pages={pages.content} />
+        {(isMd || isCatalogPage) && <NavigationMobile pages={pages.content} />}
       </div>
     </div>
   );

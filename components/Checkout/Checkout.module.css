@@ -46,6 +46,10 @@
   border: 2px solid #bc4d4d;
   object-fit: cover;
 }
+.infoMessage {
+  text-align: center;
+  padding-top: 50px;
+}
 @media only screen and (max-width: 920px) {
   .checkoutContainer {
     width: 100%;

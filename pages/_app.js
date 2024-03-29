@@ -9,7 +9,7 @@ export default function MyApp({ Component, pageProps }) {
     <>
       <QueryClientProvider client={queryClient}>
         <Hydrate state={pageProps.dehydratedState}>
-          <div id="modal"></div>
+          <div id="modal" className="modal"></div>
           <Component {...pageProps} />
         </Hydrate>
       </QueryClientProvider>

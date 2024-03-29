@@ -1,7 +1,7 @@
 .primary {
   text-transform: uppercase;
   font-weight: 300;
-  background: #3b3636;
+  background: #bc4d4d;
   color: #fff;
   border: none;
   border-radius: 2px;
@@ -10,9 +10,9 @@
 }
 
 .primary:hover {
-  background-color: #fff;
-  color: #3b3636;
-  border: 1px solid #3b3636;
+  background-color: #db5050;
+  color: #fff;
+  border: 1px solid #db5050;
 }
 .primary:disabled {
   background-color: rgba(239, 239, 239, 0.3);

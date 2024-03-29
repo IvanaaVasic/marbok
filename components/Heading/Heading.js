@@ -1,12 +1,23 @@
 import React from "react";
 import styles from "./Heading.module.css";
+import clsx from "clsx";
 
-function Heading({ mainHeading }) {
+function Heading({
+  mainHeading,
+  className,
+  wrapperClassName,
+  headingClassName,
+  mainIntroClassName,
+}) {
   return (
-    <div className={styles.container}>
-      <div className={styles.wrapper}>
-        <h2 className={styles.heading}>{mainHeading.header}</h2>
-        <p className={styles.mainIntro}>{mainHeading.description}</p>
+    <div className={clsx(styles.container, className)}>
+      <div className={clsx(styles.wrapper, wrapperClassName)}>
+        <h2 className={clsx(styles.heading, headingClassName)}>
+          {mainHeading.header}
+        </h2>
+        <p className={clsx(styles.mainIntro, mainIntroClassName)}>
+          {mainHeading.description}
+        </p>
       </div>
     </div>
   );
