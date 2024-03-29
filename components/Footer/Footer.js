@@ -1,4 +1,4 @@
-import styles from "@/pages/page.module.css";
+import styles from "@/pages/catalog/page.module.css";
 import clsx from "clsx";
 
 function Footer({ footerClassName }) {
