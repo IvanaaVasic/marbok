@@ -37,8 +37,24 @@ function ContactForm() {
         console.error("Failed to send email", err);
       });
   };
-  const onSubmit = (data) => {
-    triggerEmail(data);
+  const onSubmit = (cart) => async (data) => {
+    const { firstName, email, phone, message } = data;
+
+    const cartMessage = cart
+      ?.map(
+        (item) =>
+          `proizvod: ${item.name}, kolicina: ${item.quantity}, šifra: ${item.productKey}, cena: ${item.price}`
+      )
+      .join("\n");
+
+    const sortedData = {
+      firstName: firstName,
+      email: email,
+      phone: phone,
+      message: message ? `${message},\n${cartMessage}` : cartMessage,
+    };
+    triggerEmail(sortedData);
+
     clearCart();
   };
 
@@ -79,7 +95,7 @@ function ContactForm() {
         <h1 className={styles.contactHeader}>Pošaljite porudžbinu</h1>
         <p className={styles.subtitle}>Pošaljite upit proizvoda</p>
         <FormProvider {...methods}>
-          <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+          <form className={styles.form} onSubmit={handleSubmit(onSubmit(cart))}>
             <Input
               label="Ime"
               inputType="text"
@@ -108,15 +124,9 @@ function ContactForm() {
               onChange={() => clearInputError("phone")}
             />
             <Textarea
-              label="Message"
+              label="Poruka"
               placeholder="Your Message"
               registerField="message"
-              defaultValue={cart
-                ?.map(
-                  (item) =>
-                    `proizvod: ${item.name}, kolicina: ${item.quantity}, šifra: ${item.productKey}, cena: ${item.price}`
-                )
-                .join("\n")}
             />
             <Button
               btnType="submit"
