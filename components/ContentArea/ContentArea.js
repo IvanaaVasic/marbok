@@ -22,7 +22,8 @@ function ContentArea({
     contentAreaName,
     quantity,
     productKey,
-    image
+    image,
+    price
   ) => {
     if (parseInt(quantity) <= 0) {
       toast.success("Kolicina mora biti veća od 0!");
@@ -33,6 +34,7 @@ function ContentArea({
       quantity: quantity,
       productKey: productKey,
       image: image,
+      price: price,
     };
 
     try {
@@ -131,7 +133,8 @@ function ContentArea({
                   contentArea?.name,
                   internalQuantity || 0,
                   contentArea?.productKey,
-                  contentArea?.image
+                  contentArea?.image,
+                  contentArea?.price
                 )
               }
             />

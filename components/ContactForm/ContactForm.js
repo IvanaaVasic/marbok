@@ -43,8 +43,13 @@ function ContactForm() {
   };
 
   useEffect(() => {
-    const { message, firstName, email } = errors;
-    const errorTypes = [message?.type, firstName?.type, email?.type];
+    const { message, firstName, email, phone } = errors;
+    const errorTypes = [
+      message?.type,
+      firstName?.type,
+      email?.type,
+      phone?.type,
+    ];
     if (
       errorTypes.includes("required") ||
       errorTypes.includes("minLength") ||
@@ -57,6 +62,7 @@ function ContactForm() {
   }, [
     errors?.firstName?.type,
     errors?.email?.type,
+    errors?.phone?.type,
     errors?.message?.type,
     setDisable,
   ]);
@@ -70,7 +76,7 @@ function ContactForm() {
   return (
     <div className={`${styles.sectionWrapper} ${styles.formSection}`}>
       <div className={styles.formWrapper}>
-        <h1 className={styles.contactHeader}>Kontaktirajte nas</h1>
+        <h1 className={styles.contactHeader}>Pošaljite porudžbinu</h1>
         <p className={styles.subtitle}>Pošaljite upit proizvoda</p>
         <FormProvider {...methods}>
           <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
@@ -93,6 +99,14 @@ function ContactForm() {
               errorMsg="email adresu"
               onChange={() => clearInputError("email")}
             />
+            <Input
+              label="Kontakt telefon"
+              inputType="text"
+              placeholder="Tvoj Kontakt telefon... "
+              registerField="phone"
+              required
+              onChange={() => clearInputError("phone")}
+            />
             <Textarea
               label="Message"
               placeholder="Your Message"
@@ -100,14 +114,14 @@ function ContactForm() {
               defaultValue={cart
                 ?.map(
                   (item) =>
-                    `proizvod: ${item.name}, kolicina: ${item.quantity}, šifra: ${item.productKey}`
+                    `proizvod: ${item.name}, kolicina: ${item.quantity}, šifra: ${item.productKey}, cena: ${item.price}`
                 )
                 .join("\n")}
             />
             <Button
               btnType="submit"
               theme="primary"
-              content="pošalji upit"
+              content="pošalji"
               size="regular"
               disable={disable}
             />

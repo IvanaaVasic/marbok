@@ -22,7 +22,7 @@ export function useCart() {
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries("cart"); // Invalidate the 'cart' query to refetch
+        queryClient.invalidateQueries("cart");
       },
     }
   );
