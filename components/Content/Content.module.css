@@ -144,7 +144,6 @@ input.input {
   width: 100%;
   max-width: 25px;
   text-align: center;
-  -moz-appearance: textfield;
 }
 button.quantityBtn {
   background-color: #bc4d4d;
