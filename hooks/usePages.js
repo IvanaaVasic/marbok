@@ -4,6 +4,7 @@ import {
   getImages,
   getHeading,
   getBrandImages,
+  getAboutUs,
 } from "@/sanity/sanity-utils";
 
 export function usePages() {
@@ -60,4 +61,18 @@ export function useBrandImages() {
   }, []);
 
   return brandImages;
+}
+
+export function useAboutUs() {
+  const [aboutUs, setAboutUs] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getAboutUs();
+      setAboutUs(data);
+    };
+    fetchData();
+  }, []);
+
+  return aboutUs;
 }

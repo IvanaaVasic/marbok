@@ -12,6 +12,7 @@ import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { HiHome } from "react-icons/hi2";
 import { GrCatalog } from "react-icons/gr";
 import { MdContactMail } from "react-icons/md";
+import { BsFillPeopleFill } from "react-icons/bs";
 
 export const revalidate = 10;
 
@@ -72,6 +73,12 @@ function NavigationMobile({ pages }) {
                   <li className={clsx(styles.listItem)}>
                     <GrCatalog />
                     <p className={styles.link}>Katalog proizvoda</p>
+                  </li>
+                </Link>
+                <Link href={`/aboutus`}>
+                  <li className={clsx(styles.listItem)}>
+                    <BsFillPeopleFill />
+                    <p className={styles.link}>O nama</p>
                   </li>
                 </Link>
                 <Link href={`/contact`}>

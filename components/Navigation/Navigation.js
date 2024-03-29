@@ -29,6 +29,15 @@ function Navigation() {
           Katalog proizvoda
         </p>
       </Link>
+      <Link href={`/aboutus`} className={styles.listItem}>
+        <p
+          className={`${styles.link} ${
+            pathName === "/aboutus" ? styles.activeLink : ""
+          }`}
+        >
+          O nama
+        </p>
+      </Link>
       <Link href={`/contact`} className={styles.listItem}>
         <p
           className={`${styles.link} ${

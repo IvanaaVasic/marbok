@@ -32,3 +32,7 @@ export async function getHeading() {
 export async function getBrandImages() {
   return createClient(clientConfig).fetch(groq`*[_type == "brandImages"]`);
 }
+
+export async function getAboutUs() {
+  return createClient(clientConfig).fetch(groq`*[_type == "aboutUs"]`);
+}
