@@ -135,12 +135,9 @@ ul {
 .productCardSwiper .swiper-button-prev::after {
   display: none;
 }
-.productCardSwiper .swiper-pagination-bullet-active {
-  background: #bc4d4d;
-  margin-top: 10px;
-}
+
 .productCardSwiper div.swiper-pagination {
-  bottom: 0;
+  display: none;
 }
 
 .brandSwiper .swiper-button-next {
