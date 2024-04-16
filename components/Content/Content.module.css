@@ -22,6 +22,7 @@
   max-width: 100%;
   object-fit: contain;
   max-height: 250px;
+  min-height: 250px;
   cursor: pointer;
 }
 .contentContainer {
@@ -198,6 +199,7 @@ button.quantityBtn {
   }
   .img {
     max-height: 125px;
+    min-height: 125px;
   }
   .productName {
     font-size: 14px;
