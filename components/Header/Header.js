@@ -18,7 +18,7 @@ function Header({ pages, setFilteredProducts }) {
   const handleSearch = (e) => {
     const query = e.target.value.trim().toLowerCase();
     const filtered = pages.content.flatMap((page) =>
-      page.contentArea.filter((area) => {
+      page.contentArea?.filter((area) => {
         return area.name.toLowerCase().includes(query);
       })
     );
