@@ -7,93 +7,111 @@ import ContentArea from "@/components/ContentArea/ContentArea";
 
 export const revalidate = 10;
 
-function Content({ pages, filteredProducts }) {
-  const [modalStates, setModalStates] = useState({});
-  const [updatedFilteredProducts, setUpdatedFilteredProducts] = useState([]);
-  const { addToCart } = useCart();
-  const methods = useForm();
+function Content({ filteredProducts, categories }) {
+    const [modalStates, setModalStates] = useState({});
+    const [updatedFilteredProducts, setUpdatedFilteredProducts] = useState([]);
+    const { addToCart } = useCart();
+    const methods = useForm();
 
-  const toggleModal = (pageId) => {
-    setModalStates((prevState) => ({
-      ...prevState,
-      [pageId]: !prevState[pageId],
-    }));
-  };
+    const toggleModal = (pageId) => {
+        setModalStates((prevState) => ({
+            ...prevState,
+            [pageId]: !prevState[pageId],
+        }));
+    };
 
-  if (!pages || !pages.content.length) {
-    return <div>No content available</div>;
-  }
+    if (!categories || !categories.categoryProducts.length) {
+        return <div>Nema proizvoda!</div>;
+    }
 
-  const sortedPages = [...pages.content].sort((a, b) => {
-    if (a.title === "Novi proizvodi" && b.title !== "Novi proizvodi") return -1;
-    if (b.title === "Novi proizvodi" && a.title !== "Novi proizvodi") return 1;
-    return 0;
-  });
+    const sortedCategories = [...categories.categoryProducts].sort((a, b) => {
+        if (a.title === "Novi proizvodi" && b.title !== "Novi proizvodi")
+            return -1;
+        if (b.title === "Novi proizvodi" && a.title !== "Novi proizvodi")
+            return 1;
+        return 0;
+    });
 
-  useEffect(() => {
-    setUpdatedFilteredProducts(filteredProducts.filteredProducts);
-  }, [filteredProducts.filteredProducts]);
+    useEffect(() => {
+        setUpdatedFilteredProducts(filteredProducts.filteredProducts);
+    }, [filteredProducts.filteredProducts]);
 
-  return (
-    <div>
-      {!filteredProducts.filteredProducts.length &&
-        sortedPages.map((page) => (
-          <div key={page?._id} className={styles.productBlock}>
-            {page?.image && (
-              <img
-                src={page?.image}
-                alt={page?.title}
-                className={styles.heroImage}
-              />
-            )}
-            <h2 className={styles.productSectionHeader} id={page?.title}>
-              {page?.title}
-            </h2>
-            <div className={styles.contentContainer}>
-              {page?.contentArea?.map((contentArea) => (
-                <>
-                  <ContentArea
-                    key={contentArea?._id}
-                    contentArea={contentArea}
-                    addToCart={addToCart}
-                    methods={methods}
-                    toggleModal={toggleModal}
-                  />
-                  <Modal
-                    key={contentArea?._id}
-                    isOpen={modalStates[contentArea?._id]}
-                    onClose={() => toggleModal(contentArea?._id)}
-                    images={[
-                      contentArea?.image,
-                      ...(contentArea?.blockProductImages?.productImages || []),
-                    ]}
-                  />
-                </>
-              ))}
+    return (
+        <div>
+            <div className={styles.categoryIntro}>
+                <div className={styles.lineHeader}></div>
+                <h2
+                    className={styles.categorySectionHeader}
+                    id={categories?.title}
+                >
+                    {categories?.title}
+                </h2>
             </div>
-          </div>
-        ))}
-      {updatedFilteredProducts.length && (
-        <div className={styles.contentContainer}>
-          {updatedFilteredProducts.map((filteredcontentArea) => (
-            <>
-              <ContentArea
-                key={filteredcontentArea?._id}
-                contentArea={filteredcontentArea}
-                addToCart={addToCart}
-                methods={methods}
-                toggleModal={toggleModal}
-              />
-            </>
-          ))}
+
+            {!filteredProducts.filteredProducts.length &&
+                sortedCategories.map((page) => (
+                    <div key={page?._id} className={styles.productBlock}>
+                        {page?.image && (
+                            <img
+                                src={page?.image}
+                                alt={page?.title}
+                                className={styles.heroImage}
+                            />
+                        )}
+                        <h2
+                            className={styles.productSectionHeader}
+                            id={page?.title}
+                        >
+                            {page?.title}
+                        </h2>
+                        <div className={styles.contentContainer}>
+                            {page?.contentArea?.map((contentArea) => (
+                                <>
+                                    <ContentArea
+                                        key={contentArea?._id}
+                                        contentArea={contentArea}
+                                        addToCart={addToCart}
+                                        methods={methods}
+                                        toggleModal={toggleModal}
+                                    />
+                                    <Modal
+                                        key={contentArea?._id}
+                                        isOpen={modalStates[contentArea?._id]}
+                                        onClose={() =>
+                                            toggleModal(contentArea?._id)
+                                        }
+                                        images={[
+                                            contentArea?.image,
+                                            ...(contentArea?.blockProductImages
+                                                ?.productImages || []),
+                                        ]}
+                                    />
+                                </>
+                            ))}
+                        </div>
+                    </div>
+                ))}
+            {updatedFilteredProducts.length && (
+                <div className={styles.contentContainer}>
+                    {updatedFilteredProducts.map((filteredcontentArea) => (
+                        <>
+                            <ContentArea
+                                key={filteredcontentArea?._id}
+                                contentArea={filteredcontentArea}
+                                addToCart={addToCart}
+                                methods={methods}
+                                toggleModal={toggleModal}
+                            />
+                        </>
+                    ))}
+                </div>
+            )}
         </div>
-      )}
-    </div>
-  );
+    );
 }
 
 export default Content;
 
 export function getStaticProps() {
-  return { props: {}, revalidate: 10 };
+    return { props: {}, revalidate: 10 };
 }
