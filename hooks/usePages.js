@@ -1,78 +1,93 @@
 import { useState, useEffect } from "react";
 import {
-  getPages,
-  getImages,
-  getHeading,
-  getBrandImages,
-  getAboutUs,
+    getPages,
+    getImages,
+    getHeading,
+    getBrandImages,
+    getAboutUs,
+    getCategories,
 } from "@/sanity/sanity-utils";
 
 export function usePages() {
-  const [pages, setPages] = useState(null);
+    const [pages, setPages] = useState(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const data = await getPages();
-      setPages(data);
-    };
-    fetchData();
-  }, []);
+    useEffect(() => {
+        const fetchData = async () => {
+            const data = await getPages();
+            setPages(data);
+        };
+        fetchData();
+    }, []);
 
-  return pages;
+    return pages;
 }
 
 export function useHeroImages() {
-  const [images, setImages] = useState(null);
+    const [images, setImages] = useState(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const data = await getImages();
-      setImages(data);
-    };
-    fetchData();
-  }, []);
+    useEffect(() => {
+        const fetchData = async () => {
+            const data = await getImages();
+            setImages(data);
+        };
+        fetchData();
+    }, []);
 
-  return images;
+    return images;
 }
 
 export function useHeading() {
-  const [heading, setHeading] = useState(null);
+    const [heading, setHeading] = useState(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const data = await getHeading();
-      setHeading(data);
-    };
-    fetchData();
-  }, []);
+    useEffect(() => {
+        const fetchData = async () => {
+            const data = await getHeading();
+            setHeading(data);
+        };
+        fetchData();
+    }, []);
 
-  return heading;
+    return heading;
 }
 
 export function useBrandImages() {
-  const [brandImages, setBrandImages] = useState(null);
+    const [brandImages, setBrandImages] = useState(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const data = await getBrandImages();
-      setBrandImages(data);
-    };
-    fetchData();
-  }, []);
+    useEffect(() => {
+        const fetchData = async () => {
+            const data = await getBrandImages();
+            setBrandImages(data);
+        };
+        fetchData();
+    }, []);
 
-  return brandImages;
+    return brandImages;
 }
 
 export function useAboutUs() {
-  const [aboutUs, setAboutUs] = useState(null);
+    const [aboutUs, setAboutUs] = useState(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const data = await getAboutUs();
-      setAboutUs(data);
-    };
-    fetchData();
-  }, []);
+    useEffect(() => {
+        const fetchData = async () => {
+            const data = await getAboutUs();
+            setAboutUs(data);
+        };
+        fetchData();
+    }, []);
 
-  return aboutUs;
+    return aboutUs;
+}
+
+export function useCategories() {
+    const [categories, setCategories] = useState(null);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const data = await getCategories();
+            setCategories(data);
+        };
+        fetchData();
+    }, []);
+
+    return categories;
 }

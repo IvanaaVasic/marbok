@@ -1,0 +1,23 @@
+@keyframes dropdownShow {
+    0% {
+        transform: translateY(-20%);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+.dropdown {
+    text-align: left;
+    padding: 10px 10px 10px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: #cc6666;
+    animation-duration: 0.5s;
+    animation-timing-function: ease-in-out;
+}
+
+.show {
+    animation-name: dropdownShow;
+}

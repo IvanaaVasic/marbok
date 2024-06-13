@@ -1,117 +1,128 @@
 .hamburger {
-  color: #000;
+    color: #000;
 }
 .modalOverlay {
-  position: fixed;
-  top: 100px;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    position: fixed;
+    top: 100px;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 @keyframes slideIn {
-  from {
-    transform: translateY(-100%);
-  }
-  to {
-    transform: translateY(0);
-  }
+    from {
+        transform: translateY(-100%);
+    }
+    to {
+        transform: translateY(0);
+    }
 }
 
 @keyframes slideOut {
-  from {
-    transform: translateY(0);
-  }
-  to {
-    transform: translateY(-100%);
-  }
+    from {
+        transform: translateY(0);
+    }
+    to {
+        transform: translateY(-100%);
+    }
 }
 
 .dialog {
-  z-index: 99;
-  color: #fff;
-  display: flex;
-  position: fixed;
-  background: #bc4d4d;
-  align-items: center;
-  justify-content: center;
-  inset: var(--header-height) 0 0 0;
-  top: 100px;
-  animation-duration: 0.3s;
-  animation-timing-function: ease-in-out;
+    z-index: 99;
+    color: #fff;
+    display: flex;
+    position: fixed;
+    background: #bc4d4d;
+    align-items: center;
+    justify-content: center;
+    inset: var(--header-height) 0 0 0;
+    top: 100px;
+    animation-duration: 0.3s;
+    animation-timing-function: ease-in-out;
 }
 
 .dialog.open {
-  animation-name: slideIn;
+    animation-name: slideIn;
 }
 
 .dialog.closed {
-  animation-name: slideOut;
+    animation-name: slideOut;
 }
 
 .list {
-  list-style: none;
-  text-align: center;
-  width: 100%;
-  height: calc(100vh - 100px);
-  padding: 65px 15px 30px;
-  display: flex;
-  gap: 10px;
-  flex-direction: column;
-  overflow-y: auto;
+    list-style: none;
+    text-align: center;
+    width: 100%;
+    height: calc(100vh - 100px);
+    padding: 65px 15px 30px;
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+    overflow-y: auto;
 }
 .navigationContainer {
-  overflow-y: auto;
-  max-height: 100%;
-  width: 85vw;
-  z-index: 222222;
-  background: #bc4d4d;
+    overflow-y: auto;
+    max-height: 100%;
+    width: 85vw;
+    z-index: 222222;
+    background: #bc4d4d;
 }
 .listItem {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
 }
 
 .listItem:not(:last-child) {
-  margin-bottom: var(--space-token-large);
+    margin-bottom: var(--space-token-large);
 }
 
 .link {
-  color: #fff;
-  font-size: 16px;
-  text-decoration: none;
-  text-transform: capitalize;
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  text-align: left;
+    color: #fff;
+    font-size: 16px;
+    text-decoration: none;
+    text-transform: capitalize;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    text-align: left;
 }
 
 .linkActive {
-  color: var(--color-success);
-  font-weight: 500;
+    color: var(--color-success);
+    font-weight: 500;
 }
 
 .listItemDisabled {
-  opacity: 0.6;
-  text-transform: uppercase;
+    opacity: 0.6;
+    text-transform: uppercase;
 }
 
 .sideBarImage {
-  border-radius: 50%;
-  width: 35px;
-  height: 35px;
-  border: 2px solid #bc4d4d;
-  object-fit: cover;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    border: 2px solid #bc4d4d;
+    object-fit: cover;
 }
 .line {
-  height: 1px;
-  width: 100%;
-  background-color: white;
-  margin: 15px 0;
+    height: 1px;
+    width: 100%;
+    background-color: white;
+    margin: 15px 0;
+}
+.categoriesWrapper {
+    display: flex;
+    flex-direction: column;
+}
+.dropdownIcon {
+    font-size: 25px;
+}
+.arrowUp {
+    transform: rotate(180deg);
 }

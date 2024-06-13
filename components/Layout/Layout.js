@@ -3,19 +3,23 @@ import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
 import Head from "next/head";
 
-function Layout({ children, pages, footerClassName }) {
-  const [filteredProducts, setFilteredProducts] = useState([]);
+function Layout({ children, category, footerClassName, categories }) {
+    const [filteredProducts, setFilteredProducts] = useState([]);
 
-  return (
-    <div>
-      <Head>
-        <link rel="shortcut icon" href="/icon.ico" />
-      </Head>
-      <Header pages={pages} setFilteredProducts={setFilteredProducts} />
-      {children({ pages, filteredProducts })}
-      <Footer footerClassName={footerClassName} />
-    </div>
-  );
+    return (
+        <div>
+            <Head>
+                <link rel="shortcut icon" href="/icon.ico" />
+            </Head>
+            <Header
+                category={category}
+                categories={categories}
+                setFilteredProducts={setFilteredProducts}
+            />
+            {children({ category, filteredProducts })}
+            <Footer footerClassName={footerClassName} />
+        </div>
+    );
 }
 
 export default Layout;
