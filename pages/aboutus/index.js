@@ -1,17 +1,27 @@
 import styles from "./AboutUs.module.css";
-import { getPages, getAboutUs, getCategories } from "@/sanity/sanity-utils";
+import {
+    getPages,
+    getAboutUs,
+    getCategories,
+    getStores,
+} from "@/sanity/sanity-utils";
 import { usePages, useAboutUs, useCategories } from "@/hooks/usePages";
 import Layout from "@/components/Layout/Layout";
 import AboutUsContainer from "@/components/AboutUs/AboutUsContainer";
 import Heading from "@/components/Heading/Heading";
 
-function AboutUs({ initialPages, initialAboutUs, initialCategory }) {
+function AboutUs({
+    initialPages,
+    initialAboutUs,
+    initialCategory,
+    initialStores,
+}) {
     const pages = usePages() || initialPages;
     const aboutUs = useAboutUs() || initialAboutUs;
     const categories = useCategories() || initialCategory;
 
     return (
-        <Layout pages={pages} categories={categories}>
+        <Layout pages={pages} categories={categories} stores={initialStores}>
             {(filteredProducts) => (
                 <div className={styles.pageWrapper}>
                     <Heading
@@ -41,8 +51,9 @@ export async function getServerSideProps() {
     const initialPages = await getPages();
     const initialAboutUs = await getAboutUs();
     const initialCategory = await getCategories();
+    const initialStores = await getStores();
 
     return {
-        props: { initialPages, initialAboutUs, initialCategory },
+        props: { initialPages, initialAboutUs, initialCategory, initialStores },
     };
 }

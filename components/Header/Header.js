@@ -20,6 +20,8 @@ function Header({ category, setFilteredProducts, categories, stores }) {
     const pathName = router.pathname;
     const isCategoryPage = pathName === "/category/[slug]";
     const isMd = useMediaQuery(1000);
+    const isLg = useMediaQuery(1380);
+    console.log(isLg);
 
     const handleSearch = (e) => {
         const query = e.target.value.trim().toLowerCase();
@@ -39,23 +41,78 @@ function Header({ category, setFilteredProducts, categories, stores }) {
     };
 
     return (
-        <div className={styles.logoWrapper}>
-            {isCategoryPage && (
-                <div>
-                    <input
-                        type="search"
-                        placeholder="Pretraži..."
-                        onChange={handleSearch}
-                        className={styles.searchInput}
-                    />
+        <>
+            <div className={styles.logoWrapper}>
+                {isCategoryPage && !isLg && (
+                    <div className={styles.searchContainer}>
+                        <input
+                            type="search"
+                            placeholder="Pretraži..."
+                            onChange={handleSearch}
+                            className={styles.searchInput}
+                        />
+                        <button
+                            className={styles.storeButton}
+                            onClick={() => setIsStoreSelectorOpen(true)}
+                        >
+                            <MdStorefront className={styles.storeIcon} />
+                            <span>
+                                {selectedStore
+                                    ? selectedStore.name
+                                    : "Izaberi Prodavnicu"}
+                            </span>
+                        </button>
+                    </div>
+                )}
+                {isCategoryPage && isLg && (
+                    <div className={styles.searchContainer}>
+                        <input
+                            type="search"
+                            placeholder="Pretraži..."
+                            onChange={handleSearch}
+                            className={styles.searchInput}
+                        />
+                    </div>
+                )}
+                <Link href={`/`}>
+                    <img className={styles.logo} src="/logo.png" alt="Logo" />
+                </Link>
+                <div className={styles.cartNavWrapper}>
+                    {!isCategoryPage && !isLg && (
+                        <button
+                            className={styles.storeButton}
+                            onClick={() => setIsStoreSelectorOpen(true)}
+                        >
+                            <MdStorefront className={styles.storeIcon} />
+                            <span>
+                                {selectedStore
+                                    ? selectedStore.name
+                                    : "Izaberi Prodavnicu"}
+                            </span>
+                        </button>
+                    )}
+                    {!isMd && <Navigation categories={categories} />}
+                    <Cart />
+                    {(isMd || isCategoryPage) && (
+                        <NavigationMobile
+                            category={category}
+                            categories={categories}
+                        />
+                    )}
                 </div>
-            )}
-            <Link href={`/`}>
-                <img className={styles.logo} src="/logo.png" alt="Logo" />
-            </Link>
-            <div className={styles.cartNavWrapper}>
+                <StoreSelector
+                    stores={stores}
+                    isOpen={isStoreSelectorOpen}
+                    onClose={() => setIsStoreSelectorOpen(false)}
+                    onStoreSelect={(store) => {
+                        handleStoreSelect(store);
+                        setIsStoreSelectorOpen(false);
+                    }}
+                />
+            </div>
+            {isLg && (
                 <button
-                    className={styles.storeButton}
+                    className={styles.storeButtonMobile}
                     onClick={() => setIsStoreSelectorOpen(true)}
                 >
                     <MdStorefront className={styles.storeIcon} />
@@ -65,25 +122,8 @@ function Header({ category, setFilteredProducts, categories, stores }) {
                             : "Izaberi Prodavnicu"}
                     </span>
                 </button>
-                {!isMd && <Navigation categories={categories} />}
-                <Cart />
-                {(isMd || isCategoryPage) && (
-                    <NavigationMobile
-                        category={category}
-                        categories={categories}
-                    />
-                )}
-            </div>
-            <StoreSelector
-                stores={stores}
-                isOpen={isStoreSelectorOpen}
-                onClose={() => setIsStoreSelectorOpen(false)}
-                onStoreSelect={(store) => {
-                    handleStoreSelect(store);
-                    setIsStoreSelectorOpen(false);
-                }}
-            />
-        </div>
+            )}
+        </>
     );
 }
 
