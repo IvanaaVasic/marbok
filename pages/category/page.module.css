@@ -190,6 +190,8 @@ input.searchInput::-webkit-search-cancel-button {
     justify-content: center;
     position: sticky;
     top: 100px;
+    background-color: #f8f8f8;
+    z-index: 22;
 }
 .storeButton {
     display: flex;
