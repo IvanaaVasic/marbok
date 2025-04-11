@@ -9,7 +9,6 @@
 }
 .activeLink {
     border-bottom: 2px solid #bc4d4d;
-    padding-bottom: 5px;
 }
 .listItem {
     display: flex;

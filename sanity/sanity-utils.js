@@ -58,3 +58,16 @@ export async function getCategories() {
             }`
     );
 }
+
+export async function getStores() {
+    return createClient(clientConfig).fetch(
+        groq`*[_type == "store"]{
+            name,
+            pib,
+            address,
+            phone,
+            email,
+            _id
+        }`
+    );
+}
