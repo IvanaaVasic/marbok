@@ -265,3 +265,24 @@ input.searchInput::-webkit-search-cancel-button {
         width: 100%;
     }
 }
+
+.storeButton {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: none;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.storeButton:hover {
+    background: #f5f5f5;
+}
+
+.storeIcon {
+    font-size: 1.25rem;
+    color: #666;
+}

@@ -5,14 +5,20 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import Navigation from "@/components/Navigation/Navigation";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
+import StoreSelector from "@/components/StoreSelector/StoreSelector";
+import { useStore } from "@/context/StoreContext";
+import { MdStorefront } from "react-icons/md";
 
-function Header({ category, setFilteredProducts, categories }) {
+function Header({ category, setFilteredProducts, categories, stores }) {
     const router = useRouter();
-
+    const {
+        selectedStore,
+        isStoreSelectorOpen,
+        setIsStoreSelectorOpen,
+        handleStoreSelect,
+    } = useStore();
     const pathName = router.pathname;
-
     const isCategoryPage = pathName === "/category/[slug]";
-
     const isMd = useMediaQuery(1000);
 
     const handleSearch = (e) => {
@@ -48,6 +54,17 @@ function Header({ category, setFilteredProducts, categories }) {
                 <img className={styles.logo} src="/logo.png" alt="Logo" />
             </Link>
             <div className={styles.cartNavWrapper}>
+                <button
+                    className={styles.storeButton}
+                    onClick={() => setIsStoreSelectorOpen(true)}
+                >
+                    <MdStorefront className={styles.storeIcon} />
+                    <span>
+                        {selectedStore
+                            ? selectedStore.name
+                            : "Izaberi Prodavnicu"}
+                    </span>
+                </button>
                 {!isMd && <Navigation categories={categories} />}
                 <Cart />
                 {(isMd || isCategoryPage) && (
@@ -57,7 +74,17 @@ function Header({ category, setFilteredProducts, categories }) {
                     />
                 )}
             </div>
+            <StoreSelector
+                stores={stores}
+                isOpen={isStoreSelectorOpen}
+                onClose={() => setIsStoreSelectorOpen(false)}
+                onStoreSelect={(store) => {
+                    handleStoreSelect(store);
+                    setIsStoreSelectorOpen(false);
+                }}
+            />
         </div>
     );
 }
+
 export default Header;

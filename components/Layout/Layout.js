@@ -3,7 +3,7 @@ import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
 import Head from "next/head";
 
-function Layout({ children, category, footerClassName, categories }) {
+function Layout({ children, category, footerClassName, categories, stores }) {
     const [filteredProducts, setFilteredProducts] = useState([]);
 
     return (
@@ -15,6 +15,7 @@ function Layout({ children, category, footerClassName, categories }) {
                 category={category}
                 categories={categories}
                 setFilteredProducts={setFilteredProducts}
+                stores={stores}
             />
             {children({ category, filteredProducts })}
             <Footer footerClassName={footerClassName} />
