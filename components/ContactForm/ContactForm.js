@@ -9,6 +9,7 @@ import { useCart } from "@/hooks/useCart";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/router";
+import { createOrder } from "@/sanity/sanity-utils";
 
 function ContactForm({ selectedStore }) {
     const [disable, setDisable] = useState(false);
@@ -34,9 +35,9 @@ function ContactForm({ selectedStore }) {
             )
             .then((success) => {
                 toast.success("Uspešno ste poslali upit! Hvala vam!");
-                setTimeout(() => {
-                    router.push("/");
-                }, 4000);
+                // setTimeout(() => {
+                //     router.push("/");
+                // }, 4000);
             })
             .catch((err) => {
                 toast.error("Email nije poslat! Molimo pokušajte ponovo!");
@@ -46,22 +47,44 @@ function ContactForm({ selectedStore }) {
     const onSubmit = (cart) => async (data) => {
         const { firstName, email, phone, message } = data;
 
-        const cartMessage = cart
-            ?.map(
-                (item) =>
-                    `proizvod: ${item.name}, kolicina: ${item.quantity}, šifra: ${item.productKey}, cena: ${item.price}`
-            )
-            .join("\n");
-
-        const sortedData = {
-            firstName: firstName,
-            email: email,
-            phone: phone,
-            message: message ? `${message},\n${cartMessage}` : cartMessage,
+        const orderData = {
+            firstName,
+            email,
+            phone,
+            message,
+            items: cart.map((item) => ({
+                name: item.name,
+                quantity: item.quantity,
+                productKey: item.productKey,
+                price: item.price,
+            })),
         };
-        triggerEmail(sortedData);
 
-        clearCart();
+        try {
+            const order = await createOrder(orderData);
+            const orderUrl = `${window.location.origin}/order/${order.orderNumber}`;
+
+            const emailData = {
+                firstName,
+                email,
+                phone,
+                message: `${message}\n\nLink ka potvrdi porudžbine: ${orderUrl}\n\nProizvodi:\n${cart
+                    ?.map(
+                        (item) =>
+                            `proizvod: ${item.name}, kolicina: ${item.quantity}, šifra: ${item.productKey}, cena: ${item.price}`
+                    )
+                    .join("\n")}`,
+            };
+
+            await triggerEmail(emailData);
+
+            clearCart();
+
+            router.push(`/order/${order.orderNumber}`);
+        } catch (error) {
+            console.error("Failed to create order:", error);
+            toast.error("Došlo je do greške! Molimo pokušajte ponovo!");
+        }
     };
 
     useEffect(() => {

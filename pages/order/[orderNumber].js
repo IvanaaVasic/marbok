@@ -1,0 +1,84 @@
+import { getOrder } from "@/sanity/sanity-utils";
+import { urlFromThumbnail } from "@/utils/image";
+import { formatDate } from "@/utils/dateFormat";
+import Link from "next/link";
+import styles from "./Order.module.css";
+
+export default function OrderConfirmation({ order }) {
+    if (!order) return <div>Porudžbina nije pronađena</div>;
+    console.log(order);
+
+    return (
+        <div className={styles.container}>
+            <div className={styles.header}>
+                <h1>Potvrda porudžbine</h1>
+                <Link href="/orders" className={styles.backLink}>
+                    Nazad na porudžbine
+                </Link>
+            </div>
+            <div className={styles.orderInfo}>
+                <p>
+                    <strong>Datum:</strong> {formatDate(order.createdAt)}
+                </p>
+                <p>
+                    <strong>Broj porudžbine:</strong> {order.orderNumber}
+                </p>
+                <p>
+                    <strong>Ime:</strong> {order.customerName}
+                </p>
+                <p>
+                    <strong>Email:</strong> {order.email}
+                </p>
+                <p>
+                    <strong>Telefon:</strong> {order.phone}
+                </p>
+                {order.message && (
+                    <p>
+                        <strong>Poruka:</strong> {order.message}
+                    </p>
+                )}
+            </div>
+            <div className={styles.orderItems}>
+                <h2>Proizvodi:</h2>
+                {order?.items?.map((item, index) => (
+                    <div key={index} className={styles.item}>
+                        {item.productDetails?.image && (
+                            <img
+                                src={urlFromThumbnail(
+                                    item.productDetails.image
+                                )}
+                                alt={item.name}
+                                className={styles.productImage}
+                            />
+                        )}
+                        <div className={styles.itemDetails}>
+                            <p>
+                                <strong>Ime:</strong> {item.name}
+                            </p>
+                            <p>
+                                <strong>Količina:</strong> {item.quantity}
+                            </p>
+                            <p>
+                                <strong>Šifra proizvoda:</strong>{" "}
+                                {item.productKey}
+                            </p>
+                            <p>
+                                <strong>Cena:</strong> {item.price}
+                            </p>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+}
+
+export async function getServerSideProps({ params }) {
+    const order = await getOrder(params.orderNumber);
+
+    return {
+        props: {
+            order,
+        },
+    };
+}
