@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import NavigationMobile from "@/components/NavigationMobile/NavigationMobile";
 import styles from "@/pages/category/page.module.css";
 import Cart from "@/components/Cart/Cart";
@@ -8,8 +9,16 @@ import { useMediaQuery } from "@/hooks/useMediaQuery";
 import StoreSelector from "@/components/StoreSelector/StoreSelector";
 import { useStore } from "@/context/StoreContext";
 import { MdStorefront } from "react-icons/md";
+import { useGetCurrentUser } from "@/hooks/useGetCurrentUser";
+import { useAuth } from "@/hooks/useAuth";
 
 function Header({ category, setFilteredProducts, categories, stores }) {
+    const { user } = useAuth();
+    const { data: userData } = useGetCurrentUser({ uid: user?.uid ?? null });
+    const roles = useMemo(() => userData?.roles || [], [userData]);
+    const isAdmin = roles.includes("admin");
+    const isMerch = roles.includes("merch");
+
     const router = useRouter();
     const {
         selectedStore,
@@ -51,17 +60,22 @@ function Header({ category, setFilteredProducts, categories, stores }) {
                             onChange={handleSearch}
                             className={styles.searchInput}
                         />
-                        <button
-                            className={styles.storeButton}
-                            onClick={() => setIsStoreSelectorOpen(true)}
-                        >
-                            <MdStorefront className={styles.storeIcon} />
-                            <span>
-                                {selectedStore
-                                    ? selectedStore.name
-                                    : "Izaberi Prodavnicu"}
-                            </span>
-                        </button>
+                        {isAdmin ||
+                            isMerch(
+                                <button
+                                    className={styles.storeButton}
+                                    onClick={() => setIsStoreSelectorOpen(true)}
+                                >
+                                    <MdStorefront
+                                        className={styles.storeIcon}
+                                    />
+                                    <span>
+                                        {selectedStore
+                                            ? selectedStore.name
+                                            : "Izaberi Prodavnicu"}
+                                    </span>
+                                </button>
+                            )}
                     </div>
                 )}
                 {isCategoryPage && isLg && (
@@ -78,7 +92,7 @@ function Header({ category, setFilteredProducts, categories, stores }) {
                     <img className={styles.logo} src="/logo.png" alt="Logo" />
                 </Link>
                 <div className={styles.cartNavWrapper}>
-                    {!isCategoryPage && !isLg && (
+                    {!isCategoryPage && !isLg && (isAdmin || isMerch) && (
                         <button
                             className={styles.storeButton}
                             onClick={() => setIsStoreSelectorOpen(true)}
@@ -91,9 +105,9 @@ function Header({ category, setFilteredProducts, categories, stores }) {
                             </span>
                         </button>
                     )}
-                    {!isMd && <Navigation categories={categories} />}
+                    {!isLg && <Navigation categories={categories} />}
                     <Cart />
-                    {(isMd || isCategoryPage) && (
+                    {(isLg || isCategoryPage) && (
                         <NavigationMobile
                             category={category}
                             categories={categories}
@@ -110,7 +124,7 @@ function Header({ category, setFilteredProducts, categories, stores }) {
                     }}
                 />
             </div>
-            {isLg && (
+            {isLg && (isAdmin || isMerch) && (
                 <button
                     className={styles.storeButtonMobile}
                     onClick={() => setIsStoreSelectorOpen(true)}

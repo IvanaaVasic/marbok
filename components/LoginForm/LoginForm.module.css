@@ -1,0 +1,73 @@
+.loginContainer.loginContainer {
+    padding: 50px 20px;
+    height: 100vh;
+    max-width: 500px;
+    margin: 0 auto;
+}
+.heading {
+    font-weight: 600;
+    font-size: 30px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+.intro {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: normal;
+    text-align: center;
+    color: var(--color-grey);
+    margin-bottom: 20px;
+}
+.textFieldsWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+.actionBtn {
+    width: 100%;
+}
+.account {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: normal;
+    text-align: center;
+    color: var(--color-grey);
+    text-align: center;
+    width: 100%;
+    margin-top: 15px;
+}
+.signInLink {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: normal;
+    text-align: center;
+    color: #db5050;
+}
+.passwordWrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.toggleButton.toggleButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+.introReset {
+    font-size: 16px;
+    text-align: center;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    font-weight: 500;
+    color: var(--color-heading);
+}

@@ -1,20 +1,33 @@
+import { useMemo } from "react";
 import { getOrder } from "@/sanity/sanity-utils";
 import { urlFromThumbnail } from "@/utils/image";
 import { formatDate } from "@/utils/dateFormat";
 import Link from "next/link";
 import styles from "./Order.module.css";
+import { useGetCurrentUser } from "@/hooks/useGetCurrentUser";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function OrderConfirmation({ order }) {
+    const { user } = useAuth();
+    const { data: userData } = useGetCurrentUser({ uid: user?.uid ?? null });
+    const roles = useMemo(() => userData?.roles || [], [userData]);
+    const isAdmin = roles.includes("admin");
+    console.log(isAdmin);
     if (!order) return <div>Porudžbina nije pronađena</div>;
-    console.log(order);
 
     return (
         <div className={styles.container}>
             <div className={styles.header}>
                 <h1>Potvrda porudžbine</h1>
-                <Link href="/orders" className={styles.backLink}>
-                    Nazad na porudžbine
-                </Link>
+                {isAdmin ? (
+                    <Link href="/orders" className={styles.backLink}>
+                        Nazad na porudžbine
+                    </Link>
+                ) : (
+                    <Link href="/" className={styles.backLink}>
+                        Nazad na početnu
+                    </Link>
+                )}
             </div>
             <div className={styles.orderInfo}>
                 <p>

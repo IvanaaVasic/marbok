@@ -1,0 +1,41 @@
+.wrapper {
+    display: grid;
+    gap: 5;
+    width: 100%;
+}
+
+.inputWrapper {
+    position: relative;
+    width: 100%;
+}
+
+.input {
+    width: 100%;
+    padding: 12px 12px 12px 40px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 13px;
+    background: #ecc4c4;
+    transition: all 0.2s ease;
+}
+
+.input::placeholder {
+    color: #767676;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.input:focus {
+    outline: none;
+    border-color: var(--color-brand);
+    background: #f8f2fb;
+}
+
+.icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #767676;
+    font-size: 16px;
+}

@@ -1,0 +1,55 @@
+.container.container {
+    background-color: var(--color-input);
+    padding: 20px;
+    min-height: calc(100vh - 70px);
+    height: 100%;
+    background: #fff;
+}
+
+.logo {
+    max-width: 150px;
+    width: 100%;
+    min-width: 90px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin-left: auto;
+    margin-right: auto;
+    top: 50%;
+    transform: translateY(-50%);
+}
+.heroWrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 30px 30px 50px;
+}
+.actionBtn {
+    width: 100%;
+}
+.contentBoxesContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid #db5050;
+    border-radius: 10px;
+}
+.contentContainer {
+    padding: 20px;
+    background-color: var(--color-background);
+}
+.contentWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+.containerText {
+    text-align: center;
+    padding-top: 15px;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: normal;
+    color: #000;
+}

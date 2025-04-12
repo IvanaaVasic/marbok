@@ -126,3 +126,26 @@
 .arrowUp {
     transform: rotate(180deg);
 }
+
+.userSection {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.avatar.avatar {
+    background: #fff;
+    color: #bc4d4d;
+}
+.authButton {
+    background: none;
+    border: none;
+    color: #fff;
+    font: inherit;
+    cursor: pointer;
+    padding: 0;
+    text-decoration: none;
+}
+
+.authButton:hover {
+    text-decoration: underline;
+}

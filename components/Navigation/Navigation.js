@@ -4,12 +4,25 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { IoMdArrowDropdown } from "react-icons/io";
 import Dropdown from "@/components/Dropdown/Dropdown";
+import { useAuth } from "@/hooks/useAuth";
+import { useGetCurrentUser } from "@/hooks/useGetCurrentUser";
+import { UserAvatar } from "../UserAvatar/UserAvatar";
 
 function Navigation({ categories }) {
     const router = useRouter();
+    const { user, signOutUser } = useAuth();
+    const { data: userData } = useGetCurrentUser({ uid: user?.uid ?? null });
 
     const pathName = router.pathname;
     const [dropdown, setDropdown] = useState(false);
+
+    const handleSignOut = async () => {
+        try {
+            await signOutUser();
+        } catch (error) {
+            console.error("Error signing out:", error);
+        }
+    };
 
     return (
         <div className={styles.container}>
@@ -66,6 +79,21 @@ function Navigation({ categories }) {
                     Kontakt
                 </p>
             </Link>
+            {user ? (
+                <div className={styles.userSection}>
+                    {userData?.name && <UserAvatar name={userData.name} />}
+                    <button
+                        onClick={handleSignOut}
+                        className={styles.authButton}
+                    >
+                        Izloguj se
+                    </button>
+                </div>
+            ) : (
+                <Link href="/auth/login" className={styles.listItem}>
+                    Prijavi se
+                </Link>
+            )}
         </div>
     );
 }
