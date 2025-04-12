@@ -1,6 +1,6 @@
 import { MdStorefront } from "react-icons/md";
 
-export const store = {
+const store = {
     name: "store",
     title: "Stores",
     type: "document",
@@ -38,3 +38,5 @@ export const store = {
         },
     ],
 };
+
+export default store;
