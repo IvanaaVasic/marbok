@@ -182,7 +182,7 @@ input.searchInput::-webkit-search-cancel-button {
     padding: 0.5rem 1rem;
     border: 1px solid #ddd;
     border-radius: 4px;
-    background: none;
+    background: #bc4d4d;
     cursor: pointer;
     transition: all 0.2s;
     width: 100%;
@@ -190,7 +190,6 @@ input.searchInput::-webkit-search-cancel-button {
     justify-content: center;
     position: sticky;
     top: 100px;
-    background-color: #f8f8f8;
     z-index: 22;
 }
 .storeButton {
@@ -198,9 +197,9 @@ input.searchInput::-webkit-search-cancel-button {
     align-items: center;
     gap: 0.5rem;
     padding: 0.5rem 1rem;
-    border: 1px solid #ddd;
+    border: 1px solid #bc4d4d;
     border-radius: 4px;
-    background: none;
+    background: #bc4d4d;
     cursor: pointer;
     transition: all 0.2s;
 }
@@ -211,7 +210,10 @@ input.searchInput::-webkit-search-cancel-button {
 
 .storeIcon {
     font-size: 1.25rem;
-    color: #666;
+    color: #fff;
+}
+.storeButtonText {
+    color: #fff;
 }
 
 @media only screen and (max-width: 1340px) {

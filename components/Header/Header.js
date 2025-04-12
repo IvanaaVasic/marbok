@@ -69,7 +69,7 @@ function Header({ category, setFilteredProducts, categories, stores }) {
                                 onClick={() => setIsStoreSelectorOpen(true)}
                             >
                                 <MdStorefront className={styles.storeIcon} />
-                                <span>
+                                <span className={styles.storeButtonText}>
                                     {selectedStore
                                         ? selectedStore.name
                                         : "Izaberi Prodavnicu"}
@@ -100,7 +100,7 @@ function Header({ category, setFilteredProducts, categories, stores }) {
                                 onClick={() => setIsStoreSelectorOpen(true)}
                             >
                                 <MdStorefront className={styles.storeIcon} />
-                                <span>
+                                <span className={styles.storeButtonText}>
                                     {selectedStore
                                         ? selectedStore.name
                                         : "Izaberi Prodavnicu"}
@@ -135,7 +135,7 @@ function Header({ category, setFilteredProducts, categories, stores }) {
                     onClick={() => setIsStoreSelectorOpen(true)}
                 >
                     <MdStorefront className={styles.storeIcon} />
-                    <span>
+                    <span className={styles.storeButtonText}>
                         {selectedStore
                             ? selectedStore.name
                             : "Izaberi Prodavnicu"}

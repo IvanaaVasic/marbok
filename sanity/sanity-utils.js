@@ -67,6 +67,7 @@ export async function getStores() {
             address,
             phone,
             email,
+            contactPerson,
             _id
         }`
     );
@@ -118,4 +119,16 @@ export async function getOrders() {
             _id
         }`
     );
+}
+
+export async function createStore(store) {
+    return createClient(clientConfig).create({
+        _type: "store",
+        name: store.name,
+        pib: store.pib,
+        address: store.address,
+        phone: store.phone,
+        email: store.email,
+        contactPerson: store.contactPerson,
+    });
 }

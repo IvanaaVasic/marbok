@@ -16,8 +16,10 @@ import Button from "@/components/Button/Button";
 import Link from "next/link";
 import { FirebaseError } from "firebase/app";
 import styles from "./RegistrationForm.module.css";
-import { FaUser, FaPhoneAlt } from "react-icons/fa";
+import { FaUser, FaPhoneAlt, FaBuilding, FaIdCard } from "react-icons/fa";
+import { FaLocationDot } from "react-icons/fa6";
 import { MdEmail, MdPassword } from "react-icons/md";
+import { createStore } from "@/sanity/sanity-utils";
 
 const errorMap = {
     "auth/email-already-in-use": "Email je već u upotrebi",
@@ -72,10 +74,24 @@ export const RegistrationForm = () => {
                     roles: ["user"],
                     createdDay: new Date().toISOString(),
                     name: values.name,
+                    companyName: values.companyName || null,
+                    pib: values.pib || null,
+                    address: values.address || null,
                 };
 
                 const userDocRef = doc(db, "users", userCredential.user.uid);
                 await setDoc(userDocRef, userData);
+
+                if (values.companyName) {
+                    await createStore({
+                        name: values.companyName,
+                        pib: values.pib,
+                        address: values.address,
+                        phone: values.phone,
+                        email: values.email,
+                        contactPerson: values.name || "",
+                    });
+                }
 
                 setRegistrationSuccessful(true);
                 router.push("/");
@@ -107,11 +123,28 @@ export const RegistrationForm = () => {
                             <div className={styles.textFieldsWrapper}>
                                 <TextField
                                     placeholder="Ime i Prezime"
-                                    className={styles.input}
                                     icon={FaUser}
-                                    {...methods.register("name", {
-                                        required: "Ime i Prezime su obavezni",
+                                    {...methods.register("name")}
+                                />
+                                <TextField
+                                    placeholder="Naziv pravnog lica"
+                                    icon={FaBuilding}
+                                    {...methods.register("companyName")}
+                                />
+                                <TextField
+                                    placeholder="PIB broj"
+                                    icon={FaIdCard}
+                                    {...methods.register("pib", {
+                                        pattern: {
+                                            value: /^[0-9]{9}$/,
+                                            message: "PIB mora imati 9 cifara",
+                                        },
                                     })}
+                                />
+                                <TextField
+                                    placeholder="Adresa"
+                                    icon={FaLocationDot}
+                                    {...methods.register("address")}
                                 />
                                 <TextField
                                     placeholder="Telefon"
