@@ -17,7 +17,7 @@ function Header({ category, setFilteredProducts, categories, stores }) {
     const { data: userData } = useGetCurrentUser({ uid: user?.uid ?? null });
     const roles = useMemo(() => userData?.roles || [], [userData]);
     const isAdmin = roles.includes("admin");
-    const isMerch = roles.includes("merch");
+    const isMerchandiser = roles.includes("merchand");
 
     const router = useRouter();
     const {
@@ -52,6 +52,9 @@ function Header({ category, setFilteredProducts, categories, stores }) {
     return (
         <>
             <div className={styles.logoWrapper}>
+                <Link href={`/`}>
+                    <img className={styles.logo} src="/logo.png" alt="Logo" />
+                </Link>
                 {isCategoryPage && !isLg && (
                     <div className={styles.searchContainer}>
                         <input
@@ -60,22 +63,19 @@ function Header({ category, setFilteredProducts, categories, stores }) {
                             onChange={handleSearch}
                             className={styles.searchInput}
                         />
-                        {isAdmin ||
-                            isMerch(
-                                <button
-                                    className={styles.storeButton}
-                                    onClick={() => setIsStoreSelectorOpen(true)}
-                                >
-                                    <MdStorefront
-                                        className={styles.storeIcon}
-                                    />
-                                    <span>
-                                        {selectedStore
-                                            ? selectedStore.name
-                                            : "Izaberi Prodavnicu"}
-                                    </span>
-                                </button>
-                            )}
+                        {(isAdmin || isMerchandiser) && (
+                            <button
+                                className={styles.storeButton}
+                                onClick={() => setIsStoreSelectorOpen(true)}
+                            >
+                                <MdStorefront className={styles.storeIcon} />
+                                <span>
+                                    {selectedStore
+                                        ? selectedStore.name
+                                        : "Izaberi Prodavnicu"}
+                                </span>
+                            </button>
+                        )}
                     </div>
                 )}
                 {isCategoryPage && isLg && (
@@ -88,29 +88,34 @@ function Header({ category, setFilteredProducts, categories, stores }) {
                         />
                     </div>
                 )}
-                <Link href={`/`}>
+                {/* <Link href={`/`}>
                     <img className={styles.logo} src="/logo.png" alt="Logo" />
-                </Link>
+                </Link> */}
                 <div className={styles.cartNavWrapper}>
-                    {!isCategoryPage && !isLg && (isAdmin || isMerch) && (
-                        <button
-                            className={styles.storeButton}
-                            onClick={() => setIsStoreSelectorOpen(true)}
-                        >
-                            <MdStorefront className={styles.storeIcon} />
-                            <span>
-                                {selectedStore
-                                    ? selectedStore.name
-                                    : "Izaberi Prodavnicu"}
-                            </span>
-                        </button>
+                    {!isCategoryPage &&
+                        !isLg &&
+                        (isAdmin || isMerchandiser) && (
+                            <button
+                                className={styles.storeButton}
+                                onClick={() => setIsStoreSelectorOpen(true)}
+                            >
+                                <MdStorefront className={styles.storeIcon} />
+                                <span>
+                                    {selectedStore
+                                        ? selectedStore.name
+                                        : "Izaberi Prodavnicu"}
+                                </span>
+                            </button>
+                        )}
+                    {!isLg && (
+                        <Navigation categories={categories} isAdmin={isAdmin} />
                     )}
-                    {!isLg && <Navigation categories={categories} />}
                     <Cart />
                     {(isLg || isCategoryPage) && (
                         <NavigationMobile
                             category={category}
                             categories={categories}
+                            isAdmin={isAdmin}
                         />
                     )}
                 </div>
@@ -124,7 +129,7 @@ function Header({ category, setFilteredProducts, categories, stores }) {
                     }}
                 />
             </div>
-            {isLg && (isAdmin || isMerch) && (
+            {isLg && (isAdmin || isMerchandiser) && (
                 <button
                     className={styles.storeButtonMobile}
                     onClick={() => setIsStoreSelectorOpen(true)}

@@ -8,7 +8,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useGetCurrentUser } from "@/hooks/useGetCurrentUser";
 import { UserAvatar } from "../UserAvatar/UserAvatar";
 
-function Navigation({ categories }) {
+function Navigation({ categories, isAdmin }) {
     const router = useRouter();
     const { user, signOutUser } = useAuth();
     const { data: userData } = useGetCurrentUser({ uid: user?.uid ?? null });
@@ -35,6 +35,18 @@ function Navigation({ categories }) {
                     Naslovna
                 </p>
             </Link>
+
+            {isAdmin && (
+                <Link href="/orders" className={styles.listItem}>
+                    <p
+                        className={`${styles.link} ${
+                            pathName === "/orders" ? styles.activeLink : ""
+                        }`}
+                    >
+                        Porudžbine
+                    </p>
+                </Link>
+            )}
 
             <span
                 className={styles.listItem}
