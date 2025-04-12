@@ -33,6 +33,8 @@
     align-items: center;
     border: 1px solid #db5050;
     border-radius: 10px;
+    max-width: 500px;
+    margin: 0 auto;
 }
 .contentContainer {
     padding: 20px;

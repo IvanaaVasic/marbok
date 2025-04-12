@@ -102,7 +102,7 @@ function Navigation({ categories, isAdmin }) {
                     </button>
                 </div>
             ) : (
-                <Link href="/auth/login" className={styles.listItem}>
+                <Link href="/auth" className={styles.listItem}>
                     Prijavi se
                 </Link>
             )}

@@ -138,7 +138,7 @@ function NavigationMobile({ category, categories, isAdmin }) {
                                     </div>
                                 ) : (
                                     <Link
-                                        href="/auth/login"
+                                        href="/auth"
                                         className={styles.menuItem}
                                     >
                                         Prijavi se
