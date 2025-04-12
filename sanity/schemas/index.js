@@ -7,8 +7,10 @@ import mainHeading from "./main-heading-schema";
 import brandImages from "./brand-images-schema";
 import aboutUs from "./about-us-schema";
 import categoryPage from "./category-schema";
+import store from "./store-schema";
+import order from "./order-schema";
 
-const shcemas = [
+const schemas = [
     page,
     productBlock,
     productInfo,
@@ -18,6 +20,8 @@ const shcemas = [
     brandImages,
     aboutUs,
     categoryPage,
+    store,
+    order,
 ];
 
-export default shcemas;
+export default schemas;

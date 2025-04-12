@@ -1,0 +1,81 @@
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    position: relative;
+}
+
+.closeButton {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.closeIcon {
+    font-size: 1.5rem;
+    color: #666;
+}
+
+.title {
+    margin-bottom: 1.5rem;
+    text-align: center;
+    color: #333;
+}
+
+.storeList {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.storeButton {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: none;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+    transition: all 0.2s;
+}
+
+.storeButton:hover {
+    background: #f5f5f5;
+}
+
+.storeIcon {
+    font-size: 1.5rem;
+    color: #666;
+}
+
+.storeInfo h3 {
+    margin: 0;
+    font-size: 1rem;
+}
+
+.storeInfo p {
+    margin: 0.25rem 0 0;
+    font-size: 0.875rem;
+    color: #666;
+}

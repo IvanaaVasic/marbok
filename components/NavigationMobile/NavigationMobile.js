@@ -15,10 +15,23 @@ import { GrCatalog } from "react-icons/gr";
 import { MdContactMail } from "react-icons/md";
 import { BsFillPeopleFill } from "react-icons/bs";
 import { IoMdArrowDropdown } from "react-icons/io";
+import { useAuth } from "@/hooks/useAuth";
+import { useGetCurrentUser } from "@/hooks/useGetCurrentUser";
+import { UserAvatar } from "../UserAvatar/UserAvatar";
 
 export const revalidate = 10;
 
-function NavigationMobile({ category, categories }) {
+function NavigationMobile({ category, categories, isAdmin }) {
+    const { user, signOutUser } = useAuth();
+    const { data: userData } = useGetCurrentUser({ uid: user?.uid ?? null });
+    const handleSignOut = async () => {
+        try {
+            await signOutUser();
+        } catch (error) {
+            console.error("Error signing out:", error);
+        }
+    };
+
     const [isOpen, setIsOpen] = useState(false);
     const [dropdown, setDropdown] = useState(false);
 
@@ -29,6 +42,7 @@ function NavigationMobile({ category, categories }) {
     const isCategoryPage = pathName === "/category/[slug]";
 
     const isMd = useMediaQuery(1000);
+    const isLgCat = useMediaQuery(1360);
 
     const navRef = useRef(null);
 
@@ -64,7 +78,7 @@ function NavigationMobile({ category, categories }) {
 
                 <nav className={styles.navigationContainer}>
                     <ul className={styles.list}>
-                        {((!isCategoryPage && !isMd) || isMd) && (
+                        {((!isCategoryPage && !isMd) || isLgCat) && (
                             <>
                                 <Link href={`/`}>
                                     <li className={clsx(styles.listItem)}>
@@ -107,9 +121,43 @@ function NavigationMobile({ category, categories }) {
                                         <p className={styles.link}>Kontakt</p>
                                     </li>
                                 </Link>
+                                {user ? (
+                                    <div className={styles.userSection}>
+                                        {userData?.name && (
+                                            <UserAvatar
+                                                name={userData.name}
+                                                className={styles.avatar}
+                                            />
+                                        )}
+                                        <button
+                                            onClick={handleSignOut}
+                                            className={styles.authButton}
+                                        >
+                                            Izloguj se
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <Link
+                                        href="/auth/login"
+                                        className={styles.menuItem}
+                                    >
+                                        Prijavi se
+                                    </Link>
+                                )}
+                                {isAdmin && (
+                                    <Link href="/orders">
+                                        <li className={clsx(styles.listItem)}>
+                                            <MdContactMail />
+                                            <p className={styles.link}>
+                                                Porudžbine
+                                            </p>
+                                        </li>
+                                    </Link>
+                                )}
                                 <hr className={styles.line} />
                             </>
                         )}
+
                         {isCategoryPage &&
                             category?.categoryProducts?.map(
                                 ({ title, image }) => (

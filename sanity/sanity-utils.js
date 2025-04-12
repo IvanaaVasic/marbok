@@ -58,3 +58,64 @@ export async function getCategories() {
             }`
     );
 }
+
+export async function getStores() {
+    return createClient(clientConfig).fetch(
+        groq`*[_type == "store"]{
+            name,
+            pib,
+            address,
+            phone,
+            email,
+            _id
+        }`
+    );
+}
+
+export async function createOrder(orderData) {
+    return createClient(clientConfig).create({
+        _type: "order",
+        orderNumber: `ORD-${Date.now()}`,
+        customerName: orderData.firstName,
+        email: orderData.email,
+        phone: orderData.phone,
+        message: orderData.message,
+        items: orderData.items.map((item) => ({
+            ...item,
+            _key: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
+        })),
+        createdAt: new Date().toISOString(),
+    });
+}
+
+export async function getOrder(orderNumber) {
+    return createClient(clientConfig).fetch(
+        groq`*[_type == "order" && orderNumber == $orderNumber][0]{
+            ...,
+            items[] {
+                ...,
+                "productDetails": *[_type == "productInfo" && productKey == ^.productKey][0]{
+                    name,
+                    image,
+                    price,
+                    productKey
+                }
+            }
+        }`,
+        { orderNumber }
+    );
+}
+
+export async function getOrders() {
+    return createClient(clientConfig).fetch(
+        groq`*[_type == "order"] | order(createdAt desc) {
+            orderNumber,
+            customerName,
+            email,
+            phone,
+            items,
+            createdAt,
+            _id
+        }`
+    );
+}

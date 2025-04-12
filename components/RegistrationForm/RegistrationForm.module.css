@@ -1,0 +1,76 @@
+.authContainer {
+    display: flex;
+    justify-content: center;
+    height: 100vh;
+}
+.authWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-width: 300px;
+    width: 100%;
+}
+.registerContainer.registerContainer {
+    padding: 50px 20px;
+    max-width: 500px;
+    margin: 0 auto;
+}
+.heading {
+    font-weight: 600;
+    font-size: 30px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+.intro {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: normal;
+    text-align: center;
+    color: var(--color-grey);
+    margin-bottom: 20px;
+}
+.textFieldsWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+}
+.formWrapper {
+    margin-bottom: 20px;
+}
+.actionBtn {
+    width: 100%;
+}
+.account {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: normal;
+    text-align: center;
+    color: var(--color-grey);
+    text-align: center;
+    width: 100%;
+    margin-top: 15px;
+}
+.signInLink {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: normal;
+    text-align: center;
+    color: #db5050;
+}
+.select {
+    border-radius: 8px;
+    background: #f0e4f2;
+}
+.selectPlaceholder {
+    color: #767676;
+    font-size: 13px;
+    font-weight: 500;
+    opacity: 1;
+}
+@media only screen and (min-width: 600px) {
+}

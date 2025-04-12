@@ -1,0 +1,1 @@
+export const GET_CURRENT_USER_KEY = "[User] GET_CURRENT_USER";

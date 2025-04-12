@@ -1,5 +1,5 @@
 import React from "react";
-import { getCategories, getPages } from "@/sanity/sanity-utils";
+import { getCategories, getPages, getStores } from "@/sanity/sanity-utils";
 import styles from "./page.module.css";
 import Content from "@/components/Content/Content";
 import { useCategories, usePages } from "@/hooks/usePages";
@@ -10,6 +10,7 @@ import clientConfig from "../../sanity/config/client-config";
 export default function Category({
     initialCategory,
     initialPages,
+    initialStores,
     slug,
     category,
 }) {
@@ -17,7 +18,11 @@ export default function Category({
     const pages = usePages() || initialPages;
 
     return (
-        <Layout category={category} categories={categories}>
+        <Layout
+            category={category}
+            categories={categories}
+            stores={initialStores}
+        >
             {(filteredProducts) => (
                 <div className={styles.container}>
                     <Content
@@ -54,8 +59,15 @@ export async function getServerSideProps({ params }) {
                 }
               }`
     );
+    const initialStores = await getStores();
 
     return {
-        props: { initialCategory, initialPages, category, slug: params.slug },
+        props: {
+            initialCategory,
+            initialPages,
+            category,
+            slug: params.slug,
+            initialStores,
+        },
     };
 }

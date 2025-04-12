@@ -9,7 +9,6 @@
 }
 .activeLink {
     border-bottom: 2px solid #bc4d4d;
-    padding-bottom: 5px;
 }
 .listItem {
     display: flex;
@@ -28,4 +27,24 @@
 }
 .arrowUp {
     transform: rotate(180deg);
+}
+
+.authButton {
+    background: none;
+    border: none;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+    padding: 0;
+    text-decoration: none;
+}
+
+.authButton:hover {
+    color: var(--color-brand);
+}
+
+.userSection {
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }

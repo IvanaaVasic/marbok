@@ -6,6 +6,7 @@ import {
     getHeading,
     getBrandImages,
     getCategories,
+    getStores,
 } from "@/sanity/sanity-utils";
 import {
     usePages,
@@ -26,6 +27,7 @@ function Home({
     initialHeading,
     initialBrandImages,
     initialCategory,
+    initialStores,
 }) {
     const pages = usePages() || initialPages;
     const heroImages = useHeroImages() || initialHeroImages;
@@ -38,7 +40,7 @@ function Home({
     );
 
     return (
-        <Layout pages={pages} categories={categories}>
+        <Layout pages={pages} categories={categories} stores={initialStores}>
             {(filteredProducts) => (
                 <div className={styles.container}>
                     <ImagesSlider images={heroImages} />
@@ -60,6 +62,7 @@ export async function getServerSideProps() {
     const initialHeading = await getHeading();
     const initialBrandImages = await getBrandImages();
     const initialCategory = await getCategories();
+    const initialStores = await getStores();
 
     return {
         props: {
@@ -68,6 +71,7 @@ export async function getServerSideProps() {
             initialHeading,
             initialBrandImages,
             initialCategory,
+            initialStores,
         },
     };
 }
