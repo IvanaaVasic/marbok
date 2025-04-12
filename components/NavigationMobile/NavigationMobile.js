@@ -18,6 +18,7 @@ import { IoMdArrowDropdown } from "react-icons/io";
 import { useAuth } from "@/hooks/useAuth";
 import { useGetCurrentUser } from "@/hooks/useGetCurrentUser";
 import { UserAvatar } from "../UserAvatar/UserAvatar";
+import { FaUser } from "react-icons/fa";
 
 export const revalidate = 10;
 
@@ -80,6 +81,38 @@ function NavigationMobile({ category, categories, isAdmin }) {
                     <ul className={styles.list}>
                         {((!isCategoryPage && !isMd) || isLgCat) && (
                             <>
+                                {user ? (
+                                    <>
+                                        <div className={styles.userSection}>
+                                            {userData?.name && (
+                                                <UserAvatar
+                                                    name={userData.name}
+                                                    className={styles.avatar}
+                                                />
+                                            )}
+                                            <button
+                                                onClick={handleSignOut}
+                                                className={styles.authButton}
+                                            >
+                                                Izloguj se
+                                            </button>
+                                        </div>
+                                        <hr className={styles.line} />
+                                    </>
+                                ) : (
+                                    <>
+                                        <Link
+                                            href="/auth"
+                                            className={styles.listItem}
+                                        >
+                                            <FaUser />
+                                            <p className={styles.link}>
+                                                Prijavi se
+                                            </p>
+                                        </Link>
+                                        <hr className={styles.line} />
+                                    </>
+                                )}
                                 <Link href={`/`}>
                                     <li className={clsx(styles.listItem)}>
                                         <HiHome />
@@ -121,29 +154,7 @@ function NavigationMobile({ category, categories, isAdmin }) {
                                         <p className={styles.link}>Kontakt</p>
                                     </li>
                                 </Link>
-                                {user ? (
-                                    <div className={styles.userSection}>
-                                        {userData?.name && (
-                                            <UserAvatar
-                                                name={userData.name}
-                                                className={styles.avatar}
-                                            />
-                                        )}
-                                        <button
-                                            onClick={handleSignOut}
-                                            className={styles.authButton}
-                                        >
-                                            Izloguj se
-                                        </button>
-                                    </div>
-                                ) : (
-                                    <Link
-                                        href="/auth"
-                                        className={styles.menuItem}
-                                    >
-                                        Prijavi se
-                                    </Link>
-                                )}
+
                                 {isAdmin && (
                                     <Link href="/orders">
                                         <li className={clsx(styles.listItem)}>
