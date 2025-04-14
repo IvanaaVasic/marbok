@@ -12,7 +12,6 @@ export default function OrderConfirmation({ order }) {
     const { data: userData } = useGetCurrentUser({ uid: user?.uid ?? null });
     const roles = useMemo(() => userData?.roles || [], [userData]);
     const isAdmin = roles.includes("admin");
-    console.log(isAdmin);
     if (!order) return <div>Porudžbina nije pronađena</div>;
 
     return (
@@ -50,9 +49,26 @@ export default function OrderConfirmation({ order }) {
                         <strong>Poruka:</strong> {order.message}
                     </p>
                 )}
+                {order.pib && (
+                    <p>
+                        <strong>PIB:</strong> {order.pib}
+                    </p>
+                )}
+                {order.pass && (
+                    <p>
+                        <strong>Šifra kupca:</strong> {order.pass}
+                    </p>
+                )}
             </div>
             <div className={styles.orderItems}>
-                <h2>Proizvodi:</h2>
+                <div className={styles.totalPriceContainer}>
+                    <h2>Proizvodi:</h2>
+                    {order.totalPrice && (
+                        <p className={styles.totalPrice}>
+                            <strong>Ukupno:</strong> {order.totalPrice}
+                        </p>
+                    )}
+                </div>
                 {order?.items?.map((item, index) => (
                     <div key={index} className={styles.item}>
                         {item.productDetails?.image && (
@@ -76,7 +92,7 @@ export default function OrderConfirmation({ order }) {
                                 {item.productKey}
                             </p>
                             <p>
-                                <strong>Cena:</strong> {item.price}
+                                <strong>Cena:</strong> {item.price} rsd
                             </p>
                         </div>
                     </div>

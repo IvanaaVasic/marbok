@@ -61,6 +61,21 @@ const order = {
                 timeFormat: "HH:mm",
             },
         },
+        {
+            name: "pib",
+            title: "PIB",
+            type: "string",
+        },
+        {
+            name: "pass",
+            title: "Šifra kupca",
+            type: "string",
+        },
+        {
+            name: "totalPrice",
+            title: "Ukupna cena",
+            type: "string",
+        },
     ],
 };
 

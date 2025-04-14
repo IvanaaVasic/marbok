@@ -52,6 +52,8 @@ function ContactForm({ selectedStore }) {
             email,
             phone,
             message,
+            pib: selectedStore?.pib || "",
+            pass: selectedStore?.pass || "",
             items: cart.map((item) => ({
                 name: item.name,
                 quantity: item.quantity,

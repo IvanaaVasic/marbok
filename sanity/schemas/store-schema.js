@@ -36,6 +36,11 @@ const store = {
             title: "Ime i prezime",
             type: "string",
         },
+        {
+            name: "pass",
+            title: "Sifra placanja",
+            type: "string",
+        },
     ],
 };
 

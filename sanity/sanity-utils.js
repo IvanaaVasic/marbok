@@ -68,12 +68,19 @@ export async function getStores() {
             phone,
             email,
             contactPerson,
+            pass,
             _id
         }`
     );
 }
 
 export async function createOrder(orderData) {
+    const totalPrice = orderData.items.reduce((sum, item) => {
+        const price = parseFloat(item.price.replace(/[^\d.-]/g, ""));
+        const quantity = parseInt(item.quantity);
+        return sum + price * quantity;
+    }, 0);
+
     return createClient(clientConfig).create({
         _type: "order",
         orderNumber: `ORD-${Date.now()}`,
@@ -81,10 +88,13 @@ export async function createOrder(orderData) {
         email: orderData.email,
         phone: orderData.phone,
         message: orderData.message,
+        pib: orderData.pib || "",
+        pass: orderData.pass || "",
         items: orderData.items.map((item) => ({
             ...item,
             _key: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
         })),
+        totalPrice: `${totalPrice} rsd`,
         createdAt: new Date().toISOString(),
     });
 }

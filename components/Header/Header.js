@@ -30,7 +30,6 @@ function Header({ category, setFilteredProducts, categories, stores }) {
     const isCategoryPage = pathName === "/category/[slug]";
     const isMd = useMediaQuery(1000);
     const isLg = useMediaQuery(1380);
-    console.log(isLg);
 
     const handleSearch = (e) => {
         const query = e.target.value.trim().toLowerCase();

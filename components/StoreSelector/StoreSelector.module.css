@@ -11,71 +11,67 @@
     z-index: 1000;
 }
 
-.modal {
+.modalContent {
     background: white;
-    padding: 2rem;
+    padding: 20px;
     border-radius: 8px;
     width: 90%;
     max-width: 500px;
-    position: relative;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
 }
 
-.closeButton {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    background: none;
-    border: none;
-    cursor: pointer;
+.modalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
 }
 
 .closeIcon {
-    font-size: 1.5rem;
-    color: #666;
-}
-
-.title {
-    margin-bottom: 1.5rem;
-    text-align: center;
-    color: #333;
+    cursor: pointer;
+    font-size: 24px;
 }
 
 .storeList {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+    overflow-y: auto;
+    flex-grow: 1;
+    padding-right: 10px;
 }
 
-.storeButton {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 1rem;
+.storeItem {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 8px;
     border: 1px solid #ddd;
     border-radius: 4px;
     background: none;
     cursor: pointer;
-    width: 100%;
     text-align: left;
     transition: all 0.2s;
 }
 
-.storeButton:hover {
+.storeItem:hover {
     background: #f5f5f5;
 }
 
-.storeIcon {
-    font-size: 1.5rem;
-    color: #666;
+.storeList::-webkit-scrollbar {
+    width: 6px;
 }
 
-.storeInfo h3 {
-    margin: 0;
-    font-size: 1rem;
+.storeList::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
 }
 
-.storeInfo p {
-    margin: 0.25rem 0 0;
-    font-size: 0.875rem;
-    color: #666;
+.storeList::-webkit-scrollbar-thumb {
+    background: #bc4d4d;
+    border-radius: 3px;
+}
+
+.storeList::-webkit-scrollbar-thumb:hover {
+    background: #a43d3d;
 }

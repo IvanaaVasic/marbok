@@ -54,3 +54,13 @@
     background: #f5f5f5;
     color: #333;
 }
+
+.totalPrice {
+    font-size: 1.2em;
+    color: #bc4d4d;
+}
+.totalPriceContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
