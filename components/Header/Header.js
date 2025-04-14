@@ -32,10 +32,13 @@ function Header({ category, setFilteredProducts, categories, stores }) {
     const isLg = useMediaQuery(1380);
 
     const handleSearch = (e) => {
-        const query = e.target.value.trim().toLowerCase();
+        const query = e.target.value.toLowerCase();
         const filtered = category.categoryProducts.flatMap((page) =>
             page.contentArea?.filter((area) => {
-                return area.name.toLowerCase().includes(query);
+                return (
+                    area.name.toLowerCase().includes(query) ||
+                    area.productKey.toLowerCase().includes(query)
+                );
             })
         );
 
