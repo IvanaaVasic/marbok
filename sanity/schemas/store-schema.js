@@ -38,7 +38,7 @@ const store = {
         },
         {
             name: "pass",
-            title: "Sifra placanja",
+            title: "Sifra kupca",
             type: "string",
         },
     ],
