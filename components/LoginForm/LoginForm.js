@@ -121,13 +121,13 @@ export const LoginForm = () => {
                             <Link href="/auth/signup">Registruj se</Link>
                         </span>
                     </p>
-                    <p className={styles.account}>
+                    {/* <p className={styles.account}>
                         <span className={styles.signInLink}>
                             <Link href="/forgot-password">
                                 Zaboravila/o si šifru?
                             </Link>
                         </span>
-                    </p>
+                    </p> */}
                 </form>
             </FormProvider>
         </div>

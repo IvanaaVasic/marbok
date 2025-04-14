@@ -1,57 +1,149 @@
 .container.container {
-    background-color: var(--color-input);
-    padding: 20px;
+    background-color: #f8f9fa;
     min-height: calc(100vh - 70px);
     height: 100%;
-    background: #fff;
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+.authWrapper {
+    width: 100%;
+    max-width: 800px;
+    text-align: center;
 }
 
 .logo {
-    max-width: 150px;
-    width: 100%;
-    min-width: 90px;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    margin-left: auto;
-    margin-right: auto;
-    top: 50%;
-    transform: translateY(-50%);
+    max-width: 180px;
+    margin-bottom: 30px;
 }
-.heroWrapper {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    padding: 30px 30px 50px;
+
+.title {
+    font-size: 2.5rem;
+    color: #333;
+    margin-bottom: 40px;
+    font-weight: 600;
 }
-.actionBtn {
-    width: 100%;
-}
+
 .contentBoxesContainer {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    border: 1px solid #db5050;
-    border-radius: 10px;
-    max-width: 500px;
-    margin: 0 auto;
+    gap: 20px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    position: relative;
 }
+
 .contentContainer {
-    padding: 20px;
-    background-color: var(--color-background);
+    padding: 30px;
+    background-color: white;
+    border-radius: 10px;
+    transition: transform 0.2s;
 }
+
+.contentContainer:hover {
+    transform: translateY(-5px);
+}
+
 .contentWrapper {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
+    gap: 15px;
 }
+
+.iconWrapper {
+    background: #bc4d4d;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.icon {
+    color: white;
+    font-size: 24px;
+}
+
+.cardTitle {
+    font-size: 1.5rem;
+    color: #333;
+    margin: 0;
+}
+
 .containerText {
+    font-size: 1rem;
+    color: #666;
+    margin: 0;
+    line-height: 1.5;
+}
+
+.divider {
+    position: relative;
     text-align: center;
-    padding-top: 15px;
-    font-size: 12px;
-    font-weight: 500;
-    line-height: 1;
-    letter-spacing: normal;
-    color: #000;
+    margin: 15px 0;
+}
+
+.divider::before,
+.divider::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 45%;
+    height: 1px;
+    background: #ddd;
+}
+
+.divider::before {
+    left: 0;
+}
+
+.divider::after {
+    right: 0;
+}
+
+.divider span {
+    background: white;
+    padding: 0 15px;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+@media (min-width: 768px) {
+    .contentBoxesContainer {
+        flex-direction: row;
+        gap: 40px;
+    }
+
+    .contentContainer {
+        flex: 1;
+    }
+
+    .divider {
+        margin: 0;
+        display: flex;
+        align-items: center;
+        padding: 0 20px;
+    }
+
+    .divider::before,
+    .divider::after {
+        width: 1px;
+        height: 70%;
+        left: 50%;
+    }
+
+    .divider::before {
+        top: 0;
+    }
+
+    .divider::after {
+        top: auto;
+        bottom: 0;
+    }
 }

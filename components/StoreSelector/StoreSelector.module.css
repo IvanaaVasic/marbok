@@ -52,6 +52,9 @@
     cursor: pointer;
     text-align: left;
     transition: all 0.2s;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
 }
 
 .storeItem:hover {
@@ -74,4 +77,55 @@
 
 .storeList::-webkit-scrollbar-thumb:hover {
     background: #a43d3d;
+}
+
+.searchContainer {
+    position: relative;
+    margin-bottom: 15px;
+}
+
+.searchInput {
+    width: 100%;
+    padding: 10px 35px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.searchInput:focus {
+    outline: none;
+    border-color: #bc4d4d;
+}
+
+.searchIcon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #666;
+    font-size: 20px;
+}
+
+.noResults {
+    text-align: center;
+    color: #666;
+    padding: 20px 0;
+}
+
+.storeInfo h3 {
+    margin: 0;
+    font-size: 16px;
+    color: #333;
+}
+
+.storeInfo p {
+    margin: 5px 0 0;
+    font-size: 14px;
+    color: #666;
+}
+
+.storeIcon {
+    color: #bc4d4d;
+    font-size: 20px;
+    margin-top: 3px;
 }
