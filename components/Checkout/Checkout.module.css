@@ -1,57 +1,74 @@
 .checkoutContainer {
-  display: flex;
-  flex-direction: column;
-  margin-top: 50px;
-  width: 50%;
-  padding: 0 20px;
+    display: flex;
+    flex-direction: column;
+    margin-top: 50px;
+    width: 50%;
+    padding: 0 20px;
 }
 .itemsList {
-  display: flex;
-  flex-direction: column;
-  margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    margin-top: 30px;
 }
 .table {
-  display: table;
-  width: 100%;
-  border-spacing: 0px;
-  margin-top: 30px;
+    display: table;
+    width: 100%;
+    border-spacing: 0px;
+    margin-top: 30px;
 }
 .tableHeader {
-  font-weight: 600;
-  font-size: 13px;
-  border-bottom: 1px solid rgb(224, 224, 224);
-  text-align: left;
-  padding: 16px 10px;
-  text-transform: uppercase;
+    font-weight: 600;
+    font-size: 13px;
+    border-bottom: 1px solid rgb(224, 224, 224);
+    text-align: left;
+    padding: 16px 10px;
+    text-transform: uppercase;
 }
 .infoRow {
-  font-size: 14px;
+    font-size: 14px;
 }
 .tableData {
-  border-bottom: 1px solid rgb(224, 224, 224);
-  text-align: left;
-  padding: 16px 10px;
+    border-bottom: 1px solid rgb(224, 224, 224);
+    text-align: left;
+    padding: 16px 10px;
 }
 .deleteIcon {
-  font-size: 20px;
-  cursor: pointer;
+    font-size: 20px;
+    cursor: pointer;
 }
 .heading {
-  padding: 0 10px;
+    padding: 0 10px;
 }
 .img {
-  border-radius: 50%;
-  width: 35px;
-  height: 35px;
-  border: 2px solid #bc4d4d;
-  object-fit: cover;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    border: 2px solid #bc4d4d;
+    object-fit: cover;
 }
 .infoMessage {
-  text-align: center;
-  padding-top: 50px;
+    text-align: center;
+    padding-top: 50px;
+}
+.totalContainer {
+    display: flex;
+    justify-content: flex-end;
+    padding: 20px;
+    border-top: 2px solid #eee;
+    margin-top: 20px;
+}
+
+.totalSum {
+    font-size: 1.2em;
+    color: #bc4d4d;
+    font-weight: 500;
+}
+
+.totalSum strong {
+    margin-right: 10px;
 }
 @media only screen and (max-width: 920px) {
-  .checkoutContainer {
-    width: 100%;
-  }
+    .checkoutContainer {
+        width: 100%;
+    }
 }
