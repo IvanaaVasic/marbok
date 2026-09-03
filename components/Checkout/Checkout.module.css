@@ -2,7 +2,7 @@
     display: flex;
     flex-direction: column;
     margin-top: 50px;
-    width: 50%;
+    width: min(58%, 900px);
     padding: 0 20px;
 }
 .itemsList {
@@ -31,6 +31,46 @@
     border-bottom: 1px solid rgb(224, 224, 224);
     text-align: left;
     padding: 16px 10px;
+}
+.tableData p {
+    margin: 0;
+}
+.quantityControl {
+    display: inline-flex;
+    align-items: center;
+    overflow: hidden;
+    border: 1px solid #d7d7d7;
+    border-radius: 6px;
+    background: #fff;
+}
+.quantityControl button {
+    width: 30px;
+    height: 32px;
+    border: 0;
+    background: #bc4d4d;
+    color: #fff;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+}
+.quantityControl input {
+    width: 42px;
+    height: 32px;
+    border: 0;
+    outline: 0;
+    text-align: center;
+    font-weight: 700;
+    appearance: textfield;
+}
+.quantityControl input::-webkit-inner-spin-button,
+.quantityControl input::-webkit-outer-spin-button {
+    appearance: none;
+    margin: 0;
+}
+.lineTotal {
+    white-space: nowrap;
+    font-weight: 700;
+    color: #7f2929;
 }
 .deleteIcon {
     font-size: 20px;
@@ -70,5 +110,99 @@
 @media only screen and (max-width: 920px) {
     .checkoutContainer {
         width: 100%;
+    }
+
+    .table {
+        display: block;
+    }
+
+    .table thead {
+        display: none;
+    }
+
+    .table tbody {
+        display: grid;
+        gap: 14px;
+    }
+
+    .infoRow {
+        display: grid;
+        grid-template-columns: 64px 1fr auto;
+        align-items: center;
+        gap: 8px 12px;
+        padding: 12px;
+        border: 1px solid #e3e3e3;
+        border-radius: 10px;
+        box-shadow: 0 4px 14px rgba(29, 30, 34, 0.08);
+    }
+
+    .tableData {
+        border: 0;
+        padding: 0;
+    }
+
+    .tableData:nth-child(1) {
+        grid-row: 1 / span 3;
+    }
+
+    .tableData:nth-child(2) {
+        grid-column: 2;
+        font-weight: 700;
+    }
+
+    .tableData:nth-child(3) {
+        grid-column: 2;
+    }
+
+    .tableData:nth-child(4),
+    .tableData:nth-child(5) {
+        grid-column: 2;
+        color: #666;
+        font-size: 12px;
+    }
+
+    .tableData:nth-child(4)::before {
+        content: "Šifra: ";
+        font-weight: 700;
+    }
+
+    .tableData:nth-child(5)::before {
+        content: "Cena: ";
+        font-weight: 700;
+    }
+
+    .tableData:nth-child(6) {
+        grid-column: 2;
+    }
+
+    .tableData:nth-child(6)::before {
+        content: "Iznos: ";
+        color: #333;
+        font-weight: 600;
+    }
+
+    .tableData:nth-child(7) {
+        grid-column: 3;
+        grid-row: 1;
+    }
+
+    .img {
+        width: 58px;
+        height: 58px;
+    }
+}
+
+@media only screen and (max-width: 520px) {
+    .checkoutContainer {
+        margin-top: 30px;
+        padding: 0 12px;
+    }
+
+    .heading {
+        font-size: 24px;
+    }
+
+    .totalContainer {
+        padding: 18px 4px;
     }
 }

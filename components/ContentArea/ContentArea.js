@@ -23,17 +23,20 @@ function ContentArea({
     const handleAddToCart = async (
         contentAreaName,
         quantity,
+        productId,
         productKey,
         image,
         price
     ) => {
-        if (parseInt(quantity) <= 0) {
-            toast.success("Kolicina mora biti veća od 0!");
+        const parsedQuantity = parseInt(quantity, 10);
+        if (!Number.isFinite(parsedQuantity) || parsedQuantity < 1) {
+            toast.error("Količina mora biti najmanje 1.");
             return;
         }
         const product = {
             name: contentAreaName,
-            quantity: quantity,
+            quantity: String(parsedQuantity),
+            productId: productId,
             productKey: productKey,
             image: image,
             price: price,
@@ -41,6 +44,8 @@ function ContentArea({
 
         try {
             await addToCart.mutateAsync(product);
+            setInternalQuantity("1");
+            toast.success("Proizvod je dodat u korpu.");
         } catch (error) {
             console.error("Error adding product to cart:", error);
         }
@@ -64,12 +69,12 @@ function ContentArea({
     );
 
     const decrement = useCallback(() => {
-        const value = Math.max(parseInt(internalQuantity) - 1, 0);
+        const value = Math.max((parseInt(internalQuantity, 10) || 1) - 1, 1);
         setInternalQuantity(value.toString());
     }, [internalQuantity, setInternalQuantity]);
 
     const increment = useCallback(() => {
-        const value = parseInt(internalQuantity) + 1;
+        const value = (parseInt(internalQuantity, 10) || 0) + 1;
         setInternalQuantity(value.toString());
     }, [internalQuantity, setInternalQuantity]);
 
@@ -119,6 +124,9 @@ function ContentArea({
                             />
                             <input
                                 type="number"
+                                min="1"
+                                inputMode="numeric"
+                                aria-label={`Količina za ${contentArea?.name}`}
                                 value={internalQuantity}
                                 onChange={onChange}
                                 className={styles.input}
@@ -135,15 +143,32 @@ function ContentArea({
 
                         <FaCartShopping
                             className={styles.cartIcon}
+                            role="button"
+                            tabIndex={0}
+                            aria-label={`Dodaj ${contentArea?.name} u korpu`}
                             onClick={() =>
                                 handleAddToCart(
                                     contentArea?.name,
                                     internalQuantity || 0,
+                                    contentArea?._id,
                                     contentArea?.productKey,
                                     contentArea?.image,
                                     contentArea?.price
                                 )
                             }
+                            onKeyDown={(event) => {
+                                if (event.key === "Enter" || event.key === " ") {
+                                    event.preventDefault();
+                                    handleAddToCart(
+                                        contentArea?.name,
+                                        internalQuantity || 1,
+                                        contentArea?._id,
+                                        contentArea?.productKey,
+                                        contentArea?.image,
+                                        contentArea?.price
+                                    );
+                                }
+                            }}
                         />
                         <ToastContainer />
                     </div>

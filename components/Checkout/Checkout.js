@@ -3,10 +3,29 @@ import { MdDelete } from "react-icons/md";
 import { urlFromThumbnail } from "@/utils/image";
 import { useMemo } from "react";
 
-function Checkout({ cart, removeFromCart }) {
+function parsePrice(price) {
+    if (typeof price === "number") return price;
+
+    const normalized = String(price || "")
+        .replace(/\s/g, "")
+        .replace(/\.(?=\d{3}(?:\D|$))/g, "")
+        .replace(",", ".")
+        .replace(/[^\d.-]/g, "");
+
+    return parseFloat(normalized) || 0;
+}
+
+function formatPrice(price) {
+    return new Intl.NumberFormat("sr-Latn-RS", {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2,
+    }).format(price);
+}
+
+function Checkout({ cart, removeFromCart, updateCartQuantity }) {
     const totalSum = useMemo(() => {
         return cart?.reduce((sum, item) => {
-            const price = parseFloat(item.price?.replace(/[^\d.-]/g, "")) || 0;
+            const price = parsePrice(item.price);
             const quantity = parseInt(item.quantity) || 0;
             return sum + price * quantity;
         }, 0);
@@ -21,11 +40,12 @@ function Checkout({ cart, removeFromCart }) {
                         <thead>
                             <tr>
                                 <th className={styles.tableHeader}>Sl.</th>
-                                <th className={styles.tableHeader}>Proiz.</th>
-                                <th className={styles.tableHeader}>Kol.</th>
+                                <th className={styles.tableHeader}>Proizvod</th>
+                                <th className={styles.tableHeader}>Količina</th>
                                 <th className={styles.tableHeader}>Šifra</th>
                                 <th className={styles.tableHeader}>Cena</th>
-                                <th className={styles.tableHeader}>Del.</th>
+                                <th className={styles.tableHeader}>Iznos</th>
+                                <th className={styles.tableHeader}></th>
                             </tr>
                         </thead>
 
@@ -48,7 +68,45 @@ function Checkout({ cart, removeFromCart }) {
                                             <p>{item?.name}</p>
                                         </td>
                                         <td className={styles.tableData}>
-                                            <p>{item?.quantity}</p>
+                                            <div className={styles.quantityControl}>
+                                                <button
+                                                    type="button"
+                                                    onClick={() =>
+                                                        updateCartQuantity(
+                                                            index,
+                                                            (parseInt(item?.quantity, 10) || 1) - 1
+                                                        )
+                                                    }
+                                                    aria-label={`Smanji količinu za ${item?.name}`}
+                                                >
+                                                    −
+                                                </button>
+                                                <input
+                                                    type="number"
+                                                    min="1"
+                                                    inputMode="numeric"
+                                                    value={item?.quantity}
+                                                    onChange={(event) =>
+                                                        updateCartQuantity(
+                                                            index,
+                                                            event.target.value
+                                                        )
+                                                    }
+                                                    aria-label={`Količina za ${item?.name}`}
+                                                />
+                                                <button
+                                                    type="button"
+                                                    onClick={() =>
+                                                        updateCartQuantity(
+                                                            index,
+                                                            (parseInt(item?.quantity, 10) || 0) + 1
+                                                        )
+                                                    }
+                                                    aria-label={`Povećaj količinu za ${item?.name}`}
+                                                >
+                                                    +
+                                                </button>
+                                            </div>
                                         </td>
                                         <td className={styles.tableData}>
                                             <p>{item?.productKey}</p>
@@ -56,8 +114,16 @@ function Checkout({ cart, removeFromCart }) {
                                         <td className={styles.tableData}>
                                             <p>
                                                 {item?.price
-                                                    ? item?.price
+                                                    ? `${item?.price} RSD`
                                                     : "/"}
+                                            </p>
+                                        </td>
+                                        <td className={`${styles.tableData} ${styles.lineTotal}`}>
+                                            <p>
+                                                {formatPrice(
+                                                    parsePrice(item?.price) *
+                                                        (parseInt(item?.quantity, 10) || 0)
+                                                )} RSD
                                             </p>
                                         </td>
                                         <td className={styles.tableData}>
@@ -75,7 +141,7 @@ function Checkout({ cart, removeFromCart }) {
                     </table>
                     <div className={styles.totalContainer}>
                         <p className={styles.totalSum}>
-                            <strong>Ukupno:</strong> {totalSum} rsd
+                            <strong>Ukupno:</strong> {formatPrice(totalSum)} RSD
                         </p>
                     </div>
                 </>
