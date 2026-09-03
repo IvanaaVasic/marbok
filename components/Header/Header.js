@@ -34,6 +34,9 @@ function Header({
     const roles = useMemo(() => userData?.roles || [], [userData]);
     const isAdmin = roles.includes("admin");
     const isMerchandiser = roles.includes("merchand");
+    const canExportCatalog =
+        user?.email?.toLowerCase() ===
+        "nikola.borisavljevic.bgd@gmail.com";
 
     const router = useRouter();
     const {
@@ -131,7 +134,7 @@ function Header({
                     {!isLg && (
                         <Navigation categories={categories} isAdmin={isAdmin} />
                     )}
-                    {user && (
+                    {canExportCatalog && !isLg && (
                         <CatalogExportButton categories={categories || []} />
                     )}
                     <Cart />
@@ -140,6 +143,7 @@ function Header({
                             category={category}
                             categories={categories}
                             isAdmin={isAdmin}
+                            showCatalogExport={canExportCatalog && isLg}
                         />
                     )}
                 </div>

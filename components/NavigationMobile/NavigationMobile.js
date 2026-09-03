@@ -19,10 +19,16 @@ import { useAuth } from "@/hooks/useAuth";
 import { useGetCurrentUser } from "@/hooks/useGetCurrentUser";
 import { UserAvatar } from "../UserAvatar/UserAvatar";
 import { FaUser } from "react-icons/fa";
+import CatalogExportButton from "@/components/CatalogExportButton/CatalogExportButton";
 
 export const revalidate = 10;
 
-function NavigationMobile({ category, categories, isAdmin }) {
+function NavigationMobile({
+    category,
+    categories,
+    isAdmin,
+    showCatalogExport = false,
+}) {
     const { user, signOutUser } = useAuth();
     const { data: userData } = useGetCurrentUser({ uid: user?.uid ?? null });
     const handleSignOut = async () => {
@@ -167,6 +173,15 @@ function NavigationMobile({ category, categories, isAdmin }) {
                                 )}
                                 <hr className={styles.line} />
                             </>
+                        )}
+
+                        {showCatalogExport && (
+                            <li className={clsx(styles.listItem)}>
+                                <CatalogExportButton
+                                    categories={categories || []}
+                                    menu
+                                />
+                            </li>
                         )}
 
                         {isCategoryPage &&
