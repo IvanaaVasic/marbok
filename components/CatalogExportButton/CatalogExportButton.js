@@ -238,7 +238,7 @@ async function createWorkbook(categories) {
     return workbook;
 }
 
-function CatalogExportButton({ categories = [] }) {
+function CatalogExportButton({ categories = [], menu = false }) {
     const [isExporting, setIsExporting] = useState(false);
 
     const handleExport = async () => {
@@ -273,7 +273,9 @@ function CatalogExportButton({ categories = [] }) {
     return (
         <button
             type="button"
-            className={styles.exportButton}
+            className={`${styles.exportButton} ${
+                menu ? styles.menuButton : ""
+            }`}
             onClick={handleExport}
             disabled={isExporting || !categories.length}
             title="Preuzmi trenutnu ponudu u Excel formatu"
