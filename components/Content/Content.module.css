@@ -17,19 +17,19 @@
 }
 
 .img {
+    display: block;
     width: 100%;
-    height: 100%;
+    height: 285px;
     max-width: 100%;
     object-fit: contain;
-    max-height: 285px;
-    min-height: 285px;
+    object-position: center;
     cursor: zoom-in;
     transition: transform 0.25s ease;
 }
 .productImageWrapper {
     position: relative;
     overflow: hidden;
-    padding: 0;
+    padding: 8px;
     border-radius: 12px 12px 0 0;
     background: linear-gradient(180deg, #fff 0%, #fafafa 100%);
 }
@@ -348,8 +348,7 @@ button.quantityBtn {
         padding-top: 45px;
     }
     .img {
-        max-height: 190px;
-        min-height: 190px;
+        height: 190px;
     }
     .productName {
         font-size: 14px;
