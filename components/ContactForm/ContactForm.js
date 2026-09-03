@@ -11,7 +11,6 @@ import { useRouter } from "next/router";
 import { createOrder } from "@/sanity/sanity-utils";
 
 function ContactForm({ selectedStore }) {
-    const [disable, setDisable] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const { cart, clearCart } = useCart();
     const methods = useForm();
@@ -100,31 +99,6 @@ function ContactForm({ selectedStore }) {
     };
 
     useEffect(() => {
-        const { message, firstName, email, phone } = errors;
-        const errorTypes = [
-            message?.type,
-            firstName?.type,
-            email?.type,
-            phone?.type,
-        ];
-        if (
-            errorTypes.includes("required") ||
-            errorTypes.includes("minLength") ||
-            errorTypes.includes("pattern")
-        ) {
-            setDisable(true);
-        } else {
-            setDisable(false);
-        }
-    }, [
-        errors?.firstName?.type,
-        errors?.email?.type,
-        errors?.phone?.type,
-        errors?.message?.type,
-        setDisable,
-    ]);
-
-    useEffect(() => {
         if (selectedStore) {
             setValue("firstName", selectedStore.name);
             setValue("email", selectedStore.email);
@@ -207,7 +181,11 @@ function ContactForm({ selectedStore }) {
                                     : "Pošalji porudžbinu"
                             }
                             size="fullWidth"
-                            disable={disable || isSubmitting || !cart?.length}
+                            disable={
+                                Object.keys(errors).length > 0 ||
+                                isSubmitting ||
+                                !cart?.length
+                            }
                             className={styles.submitButton}
                         />
                     </form>
