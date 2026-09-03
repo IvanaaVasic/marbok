@@ -104,6 +104,19 @@ export async function createOrder(orderData) {
     });
 }
 
+export async function uploadOrderExcel(file, orderNumber) {
+    if (!file) return null;
+
+    const asset = await createClient(clientConfig).assets.upload("file", file, {
+        filename: file.name || `MARBOK_Porudzbina_${orderNumber}.xlsx`,
+        contentType:
+            file.type ||
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
+
+    return asset?.url || null;
+}
+
 export async function getOrder(orderNumber) {
     return createClient(clientConfig).fetch(
         groq`*[_type == "order" && orderNumber == $orderNumber][0]{
