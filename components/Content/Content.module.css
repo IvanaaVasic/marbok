@@ -23,7 +23,37 @@
     object-fit: contain;
     max-height: 250px;
     min-height: 250px;
-    cursor: pointer;
+    cursor: zoom-in;
+    transition: transform 0.25s ease;
+}
+.productImageWrapper {
+    position: relative;
+    overflow: hidden;
+    padding: 12px;
+    border-radius: 12px 12px 0 0;
+    background: linear-gradient(180deg, #fff 0%, #fafafa 100%);
+}
+.productImageWrapper:hover .img {
+    transform: scale(1.035);
+}
+.imageHint {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    padding: 4px 8px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.92);
+    color: #666;
+    font-size: 10px;
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, 5px);
+    transition: opacity 0.2s, transform 0.2s;
+    white-space: nowrap;
+}
+.productImageWrapper:hover .imageHint {
+    opacity: 1;
+    transform: translate(-50%, 0);
 }
 .contentContainer {
     display: grid;
@@ -54,8 +84,10 @@
     width: 150px;
 }
 .productCard {
-    box-shadow: 0px 10px 20px -5px rgba(29, 30, 34, 0.75);
-    border-radius: 7px;
+    overflow: hidden;
+    border: 1px solid #ece7e7;
+    box-shadow: 0 7px 22px rgba(29, 30, 34, 0.12);
+    border-radius: 12px;
     max-width: 300px;
     width: 100%;
     position: relative;
@@ -63,10 +95,18 @@
     min-height: 395px;
     display: flex;
     flex-direction: column;
+    background: #fff;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.productCard:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px rgba(29, 30, 34, 0.18);
 }
 .productName {
-    font-size: 22px;
-    text-align: center;
+    margin: 0;
+    font-size: 20px;
+    line-height: 1.25;
+    text-align: left;
     word-break: break-word;
 }
 .productInfo {
@@ -74,7 +114,7 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
-    border-top: 2px solid #bc4d4d;
+    border-top: 3px solid #bc4d4d;
     height: 100%;
     justify-content: space-between;
 }
@@ -84,6 +124,29 @@
 .fieldInfoWrapper {
     font-family: "RedHat";
     font-size: 16px;
+}
+.fieldInfoContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.priceWrapper {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 9px 10px;
+    border-radius: 7px;
+    background: #fff4f4;
+    color: #7f2929;
+}
+.priceLabel {
+    color: #777;
+    font-size: 12px;
+    text-transform: uppercase;
+}
+.priceWrapper strong {
+    font-size: 18px;
 }
 
 .package {
@@ -133,7 +196,7 @@
 }
 .quantityWrapper {
     display: flex;
-    width: 100%;
+    width: auto;
     align-items: center;
 }
 input.input {
@@ -145,7 +208,8 @@ input.input {
     padding: 5px 0;
     outline: none;
     width: 100%;
-    max-width: 25px;
+    width: 38px;
+    max-width: 38px;
     text-align: center;
 }
 button.quantityBtn {
@@ -157,8 +221,9 @@ button.quantityBtn {
     font-weight: 700;
     border-radius: 5px;
     outline: none;
-    max-width: 25px;
-    height: 25px;
+    width: 30px;
+    max-width: 30px;
+    height: 30px;
 }
 .input::-webkit-inner-spin-button,
 .input::-webkit-outer-spin-button {
@@ -170,12 +235,27 @@ button.quantityBtn {
 .quantityContainer {
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    gap: 10px;
 }
-.cartIcon {
-    font-size: 25px;
-    color: black;
-    margin-right: 10px;
+.addToCartButton {
+    min-height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 7px 12px;
+    border: 0;
+    border-radius: 7px;
+    background: #bc4d4d;
+    color: #fff;
+    font-weight: 700;
     cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+}
+.addToCartButton:hover {
+    background: #9d3838;
+    transform: translateY(-1px);
 }
 
 .categoryIntro {
@@ -281,6 +361,20 @@ button.quantityBtn {
     .productCard {
         min-height: auto;
     }
+    .productInfo {
+        padding: 11px;
+    }
+    .priceWrapper {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 2px;
+    }
+    .priceWrapper strong {
+        font-size: 15px;
+    }
+    .imageHint {
+        display: none;
+    }
 }
 
 @media only screen and (max-width: 600px) {
@@ -305,6 +399,16 @@ button.quantityBtn {
     .contentContainer {
         grid-template-columns: repeat(2, minmax(0, 1fr));
         grid-gap: 30px 10px;
+    }
+    .quantityContainer {
+        align-items: stretch;
+        flex-direction: column;
+    }
+    .quantityWrapper {
+        justify-content: center;
+    }
+    .addToCartButton {
+        width: 100%;
     }
     .package {
         font-size: 13px;

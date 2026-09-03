@@ -6,8 +6,7 @@ import Input from "@/components/Input/Input";
 import Textarea from "@/components/TextArea/TextArea";
 import emailjs from "@emailjs/browser";
 import { useCart } from "@/hooks/useCart";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import { createOrder } from "@/sanity/sanity-utils";
 
@@ -177,7 +176,6 @@ function ContactForm({ selectedStore }) {
                             size="regular"
                             disable={disable}
                         />
-                        <ToastContainer />
                     </form>
                 </FormProvider>
             </div>

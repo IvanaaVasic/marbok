@@ -4,8 +4,7 @@ import { urlFromThumbnail } from "@/utils/image";
 import { FormProvider } from "react-hook-form";
 import Button from "@/components/Button/Button";
 import { FaCartShopping } from "react-icons/fa6";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 import clsx from "clsx";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -83,24 +82,27 @@ function ContentArea({
             key={contentArea?._id}
             className={clsx(styles.productCard, className)}
         >
-            <img
-                src={urlFromThumbnail(contentArea?.image)}
-                alt={contentArea?.name}
-                className={clsx(styles.img, imageClassName)}
-                onClick={() => toggleModal(contentArea?._id)}
-            />
-            {contentArea?.package && (
-                <p className={styles.package}>{contentArea?.package}</p>
-            )}
+            <div className={styles.productImageWrapper}>
+                <img
+                    src={urlFromThumbnail(contentArea?.image)}
+                    alt={contentArea?.name}
+                    className={clsx(styles.img, imageClassName)}
+                    onClick={() => toggleModal(contentArea?._id)}
+                />
+                {contentArea?.package && (
+                    <p className={styles.package}>{contentArea?.package}</p>
+                )}
+                <span className={styles.imageHint}>Klikni za veću sliku</span>
+            </div>
             <div className={styles.productInfo}>
                 {contentArea?.name && (
                     <h3 className={styles.productName}>{contentArea?.name}</h3>
                 )}
                 <div className={styles.fieldInfoContainer}>
                     {contentArea?.price && user && (
-                        <div className={styles.fieldInfoWrapper}>
-                            <span className={styles.fieldName}>Cena: </span>
-                            <span>{contentArea?.price} rsd</span>
+                        <div className={styles.priceWrapper}>
+                            <span className={styles.priceLabel}>Cena</span>
+                            <strong>{contentArea?.price} RSD</strong>
                         </div>
                     )}
                     {contentArea?.productKey && (
@@ -141,10 +143,9 @@ function ContentArea({
                             />
                         </div>
 
-                        <FaCartShopping
-                            className={styles.cartIcon}
-                            role="button"
-                            tabIndex={0}
+                        <button
+                            type="button"
+                            className={styles.addToCartButton}
                             aria-label={`Dodaj ${contentArea?.name} u korpu`}
                             onClick={() =>
                                 handleAddToCart(
@@ -156,21 +157,10 @@ function ContentArea({
                                     contentArea?.price
                                 )
                             }
-                            onKeyDown={(event) => {
-                                if (event.key === "Enter" || event.key === " ") {
-                                    event.preventDefault();
-                                    handleAddToCart(
-                                        contentArea?.name,
-                                        internalQuantity || 1,
-                                        contentArea?._id,
-                                        contentArea?.productKey,
-                                        contentArea?.image,
-                                        contentArea?.price
-                                    );
-                                }
-                            }}
-                        />
-                        <ToastContainer />
+                        >
+                            <FaCartShopping aria-hidden="true" />
+                            <span>Dodaj</span>
+                        </button>
                     </div>
                 </FormProvider>
             </div>
