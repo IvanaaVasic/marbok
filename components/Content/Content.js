@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import styles from "./Content.module.css";
 import Modal from "@/components/Modal/Modal";
 import { useForm } from "react-hook-form";
@@ -7,11 +7,11 @@ import ContentArea from "@/components/ContentArea/ContentArea";
 
 export const revalidate = 10;
 
-function Content({ filteredProducts, categories }) {
+function Content({ filteredProducts = [], searchQuery = "", categories }) {
     const [modalStates, setModalStates] = useState({});
-    const [updatedFilteredProducts, setUpdatedFilteredProducts] = useState([]);
     const { addToCart } = useCart();
     const methods = useForm();
+    const isSearchActive = searchQuery.trim().length > 0;
 
     const toggleModal = (pageId) => {
         setModalStates((prevState) => ({
@@ -32,10 +32,6 @@ function Content({ filteredProducts, categories }) {
         return 0;
     });
 
-    useEffect(() => {
-        setUpdatedFilteredProducts(filteredProducts.filteredProducts);
-    }, [filteredProducts.filteredProducts]);
-
     return (
         <div>
             <div className={styles.categoryIntro}>
@@ -48,7 +44,7 @@ function Content({ filteredProducts, categories }) {
                 </h2>
             </div>
 
-            {!filteredProducts.filteredProducts.length &&
+            {!isSearchActive &&
                 sortedCategories.map((page) => (
                     <div key={page?._id} className={styles.productBlock}>
                         {page?.image && (
@@ -91,20 +87,50 @@ function Content({ filteredProducts, categories }) {
                         </div>
                     </div>
                 ))}
-            {updatedFilteredProducts.length && (
-                <div className={styles.contentContainer}>
-                    {updatedFilteredProducts.map((filteredcontentArea) => (
-                        <>
+            {isSearchActive && (
+                <section className={styles.searchResults}>
+                    <div className={styles.searchResultsHeader}>
+                        <h2>Rezultati pretrage</h2>
+                        <p>
+                            {filteredProducts.length
+                                ? `Pronađeno proizvoda: ${filteredProducts.length}`
+                                : `Nema proizvoda za „${searchQuery}“`}
+                        </p>
+                    </div>
+                    {filteredProducts.length > 0 ? (
+                        <div className={styles.contentContainer}>
+                            {filteredProducts.map((filteredcontentArea) => (
+                                <React.Fragment key={filteredcontentArea?._id}>
                             <ContentArea
-                                key={filteredcontentArea?._id}
                                 contentArea={filteredcontentArea}
                                 addToCart={addToCart}
                                 methods={methods}
                                 toggleModal={toggleModal}
                             />
-                        </>
-                    ))}
-                </div>
+                                    <Modal
+                                        isOpen={modalStates[filteredcontentArea?._id]}
+                                        onClose={() =>
+                                            toggleModal(filteredcontentArea?._id)
+                                        }
+                                        images={[
+                                            filteredcontentArea?.image,
+                                            ...(filteredcontentArea?.blockProductImages
+                                                ?.productImages || []),
+                                        ]}
+                                    />
+                                </React.Fragment>
+                            ))}
+                        </div>
+                    ) : (
+                        <div className={styles.noResults}>
+                            <span aria-hidden="true">⌕</span>
+                            <strong>Proverite naziv ili šifru proizvoda</strong>
+                            <p>
+                                Obrišite tekst iz pretrage da ponovo vidite ceo katalog.
+                            </p>
+                        </div>
+                    )}
+                </section>
             )}
         </div>
     );
