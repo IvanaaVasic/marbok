@@ -31,6 +31,12 @@
     font-size: 19px;
 }
 
+.menuButton {
+    width: 100%;
+    justify-content: flex-start;
+    border-color: rgba(255, 255, 255, 0.65);
+}
+
 @media only screen and (max-width: 700px) {
     .exportButton {
         width: 42px;
@@ -50,5 +56,25 @@
         clip: rect(0, 0, 0, 0);
         white-space: nowrap;
         border: 0;
+    }
+
+    .menuButton {
+        width: 100%;
+        min-width: 0;
+        height: auto;
+        min-height: 42px;
+        padding: 8px 13px;
+        border-radius: 6px;
+    }
+
+    .menuButton .label {
+        position: static;
+        width: auto;
+        height: auto;
+        padding: 0;
+        margin: 0;
+        overflow: visible;
+        clip: auto;
+        white-space: nowrap;
     }
 }
