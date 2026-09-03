@@ -9,6 +9,19 @@ import { useCart } from "@/hooks/useCart";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import { createOrder } from "@/sanity/sanity-utils";
+import { createOrderExcelFile } from "@/utils/orderExcel";
+
+const EMAIL_SERVICE_ID = "service_pn5jvkb";
+const EMAIL_TEMPLATE_ID = "template_ji1obt8";
+const EMAIL_PUBLIC_KEY = "vEKyEbs258TNVtxqI";
+
+function appendFormValue(form, name, value) {
+    const input = document.createElement("input");
+    input.type = "hidden";
+    input.name = name;
+    input.value = value || "";
+    form.appendChild(input);
+}
 
 function ContactForm({ selectedStore }) {
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -24,18 +37,60 @@ function ContactForm({ selectedStore }) {
     const expression =
         /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-    const triggerEmail = async (data) => {
+    const triggerEmail = async (data, excelFile) => {
         try {
+            if (excelFile) {
+                const form = document.createElement("form");
+                form.enctype = "multipart/form-data";
+                Object.entries(data).forEach(([name, value]) =>
+                    appendFormValue(form, name, value)
+                );
+
+                const fileInput = document.createElement("input");
+                fileInput.type = "file";
+                fileInput.name = "order_excel";
+                const fileList = new DataTransfer();
+                fileList.items.add(excelFile);
+                fileInput.files = fileList.files;
+                form.appendChild(fileInput);
+                document.body.appendChild(form);
+
+                try {
+                    await emailjs.sendForm(
+                        EMAIL_SERVICE_ID,
+                        EMAIL_TEMPLATE_ID,
+                        form,
+                        EMAIL_PUBLIC_KEY
+                    );
+                    return { sent: true, excelAttached: true };
+                } finally {
+                    form.remove();
+                }
+            }
+
             await emailjs.send(
-                "service_pn5jvkb",
-                "template_ji1obt8",
+                EMAIL_SERVICE_ID,
+                EMAIL_TEMPLATE_ID,
                 data,
-                "vEKyEbs258TNVtxqI"
+                EMAIL_PUBLIC_KEY
             );
-            return true;
+            return { sent: true, excelAttached: false };
         } catch (error) {
             console.error("Failed to send email", error);
-            return false;
+            if (excelFile) {
+                try {
+                    await emailjs.send(
+                        EMAIL_SERVICE_ID,
+                        EMAIL_TEMPLATE_ID,
+                        data,
+                        EMAIL_PUBLIC_KEY
+                    );
+                    return { sent: true, excelAttached: false };
+                } catch (fallbackError) {
+                    console.error("Failed to send fallback email", fallbackError);
+                }
+            }
+            return { sent: false, excelAttached: false };
         }
     };
     const onSubmit = (cart) => async (data) => {
@@ -71,7 +126,8 @@ function ContactForm({ selectedStore }) {
                 firstName,
                 email,
                 phone,
-                message: `${message}\n\nLink ka potvrdi porudžbine: ${orderUrl}\n\nProizvodi:\n${cart
+                orderNumber: order.orderNumber,
+                message: `${message || ""}\n\nLink ka potvrdi porudžbine: ${orderUrl}\n\nProizvodi:\n${cart
                     ?.map(
                         (item) =>
                             `proizvod: ${item.name}, kolicina: ${item.quantity}, šifra: ${item.productKey}, cena: ${item.price}`
@@ -79,11 +135,27 @@ function ContactForm({ selectedStore }) {
                     .join("\n")}`,
             };
 
-            const emailSent = await triggerEmail(emailData);
+            let orderExcel = null;
+            try {
+                orderExcel = await createOrderExcelFile({
+                    orderNumber: order.orderNumber,
+                    customer: { name: firstName, email, phone },
+                    selectedStore,
+                    items: cart,
+                });
+            } catch (excelError) {
+                console.error("Failed to create order Excel", excelError);
+            }
+
+            const emailResult = await triggerEmail(emailData, orderExcel);
 
             clearCart();
-            if (emailSent) {
-                toast.success("Porudžbina je uspešno poslata.");
+            if (emailResult.sent && emailResult.excelAttached) {
+                toast.success("Porudžbina i Excel su uspešno poslati.");
+            } else if (emailResult.sent) {
+                toast.warning(
+                    "Porudžbina je poslata, ali Excel prilog nije dodat u email."
+                );
             } else {
                 toast.warning(
                     "Porudžbina je sačuvana, ali email obaveštenje nije poslato."

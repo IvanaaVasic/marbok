@@ -21,15 +21,15 @@
     height: 100%;
     max-width: 100%;
     object-fit: contain;
-    max-height: 250px;
-    min-height: 250px;
+    max-height: 285px;
+    min-height: 285px;
     cursor: zoom-in;
     transition: transform 0.25s ease;
 }
 .productImageWrapper {
     position: relative;
     overflow: hidden;
-    padding: 12px;
+    padding: 0;
     border-radius: 12px 12px 0 0;
     background: linear-gradient(180deg, #fff 0%, #fafafa 100%);
 }
@@ -348,8 +348,8 @@ button.quantityBtn {
         padding-top: 45px;
     }
     .img {
-        max-height: 125px;
-        min-height: 125px;
+        max-height: 190px;
+        min-height: 190px;
     }
     .productName {
         font-size: 14px;
