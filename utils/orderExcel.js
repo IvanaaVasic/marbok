@@ -24,7 +24,7 @@ async function imageAsDataUrl(source) {
     if (!originalUrl) return null;
 
     const separator = originalUrl.includes("?") ? "&" : "?";
-    const imageUrl = `${originalUrl}${separator}w=120&h=120&fit=max&fm=jpg&q=60&bg=ffffff`;
+    const imageUrl = `${originalUrl}${separator}w=90&h=90&fit=max&fm=jpg&q=48&bg=ffffff`;
     const response = await fetch(imageUrl);
     if (!response.ok) return null;
 
@@ -166,7 +166,7 @@ export async function createOrderExcelFile({
                         });
                         worksheet.addImage(imageId, {
                             tl: { col: 0.18, row: row.number - 0.88 },
-                            ext: { width: 68, height: 68 },
+                            ext: { width: 60, height: 60 },
                             editAs: "oneCell",
                         });
                     })

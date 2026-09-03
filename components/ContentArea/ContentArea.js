@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from "react";
 import styles from "@/components/Content/Content.module.css";
-import { urlFromThumbnail } from "@/utils/image";
+import { urlFromOriginalImage } from "@/utils/image";
 import { FormProvider } from "react-hook-form";
 import Button from "@/components/Button/Button";
 import { FaCartShopping } from "react-icons/fa6";
@@ -84,7 +84,7 @@ function ContentArea({
         >
             <div className={styles.productImageWrapper}>
                 <img
-                    src={urlFromThumbnail(contentArea?.image)}
+                    src={urlFromOriginalImage(contentArea?.image)}
                     alt={contentArea?.name}
                     className={clsx(styles.img, imageClassName)}
                     onClick={() => toggleModal(contentArea?._id)}

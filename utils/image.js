@@ -8,4 +8,16 @@ function urlFromThumbnail(source) {
   return imageUrlBuilder(clientConfig)?.image(source)?.url();
 }
 
-export { urlFromThumbnail };
+function urlFromOriginalImage(source) {
+  if (!source) {
+    return null;
+  }
+
+  return imageUrlBuilder(clientConfig)
+    ?.image(source)
+    ?.ignoreImageParams()
+    ?.auto("format")
+    ?.url();
+}
+
+export { urlFromThumbnail, urlFromOriginalImage };

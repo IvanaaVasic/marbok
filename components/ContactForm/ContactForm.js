@@ -14,6 +14,11 @@ import { createOrderExcelFile } from "@/utils/orderExcel";
 const EMAIL_SERVICE_ID = "service_pn5jvkb";
 const EMAIL_TEMPLATE_ID = "template_ji1obt8";
 const EMAIL_PUBLIC_KEY = "vEKyEbs258TNVtxqI";
+const EMAIL_RETRY_DELAY_MS = 1500;
+
+function wait(ms) {
+    return new Promise((resolve) => window.setTimeout(resolve, ms));
+}
 
 function appendFormValue(form, name, value) {
     const input = document.createElement("input");
@@ -79,6 +84,9 @@ function ContactForm({ selectedStore }) {
             console.error("Failed to send email", error);
             if (excelFile) {
                 try {
+                    // EmailJS limits how quickly consecutive requests can be made.
+                    // Give the plain-email fallback its own request window.
+                    await wait(EMAIL_RETRY_DELAY_MS);
                     await emailjs.send(
                         EMAIL_SERVICE_ID,
                         EMAIL_TEMPLATE_ID,
