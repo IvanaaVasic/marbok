@@ -44,15 +44,15 @@ function Textarea({
         onChange={handleChange}
       />
       {errors?.[registerField]?.type === "required" && (
-        <p className={styles.error}>This field is required</p>
+        <p className={styles.error}>Ovo polje je obavezno</p>
       )}
       {errors?.[registerField]?.type === "minLength" && (
         <p className={styles.error}>
-          {`${label} cannot be less than ${minLength} characters`}
+          {`${label} ne sme imati manje od ${minLength} karaktera`}
         </p>
       )}
       {errors?.[registerField]?.type === "pattern" && (
-        <p className={styles.error}>{`Please enter a valid ${errorMsg}`}</p>
+        <p className={styles.error}>{`Unesite ispravan podatak: ${errorMsg}`}</p>
       )}
     </>
   );

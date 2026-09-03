@@ -12,6 +12,7 @@ import { createOrder } from "@/sanity/sanity-utils";
 
 function ContactForm({ selectedStore }) {
     const [disable, setDisable] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const { cart, clearCart } = useCart();
     const methods = useForm();
     const router = useRouter();
@@ -25,25 +26,27 @@ function ContactForm({ selectedStore }) {
         /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
     const triggerEmail = async (data) => {
-        await emailjs
-            .send(
+        try {
+            await emailjs.send(
                 "service_pn5jvkb",
                 "template_ji1obt8",
                 data,
                 "vEKyEbs258TNVtxqI"
-            )
-            .then((success) => {
-                toast.success("Uspešno ste poslali upit! Hvala vam!");
-                // setTimeout(() => {
-                //     router.push("/");
-                // }, 4000);
-            })
-            .catch((err) => {
-                toast.error("Email nije poslat! Molimo pokušajte ponovo!");
-                console.error("Failed to send email", err);
-            });
+            );
+            return true;
+        } catch (error) {
+            console.error("Failed to send email", error);
+            return false;
+        }
     };
     const onSubmit = (cart) => async (data) => {
+        if (isSubmitting) return;
+        if (!cart?.length) {
+            toast.error("Dodajte bar jedan proizvod u korpu.");
+            return;
+        }
+
+        setIsSubmitting(true);
         const { firstName, email, phone, message } = data;
 
         const orderData = {
@@ -77,14 +80,22 @@ function ContactForm({ selectedStore }) {
                     .join("\n")}`,
             };
 
-            await triggerEmail(emailData);
+            const emailSent = await triggerEmail(emailData);
 
             clearCart();
-
+            if (emailSent) {
+                toast.success("Porudžbina je uspešno poslata.");
+            } else {
+                toast.warning(
+                    "Porudžbina je sačuvana, ali email obaveštenje nije poslato."
+                );
+            }
             router.push(`/order/${order.orderNumber}`);
         } catch (error) {
             console.error("Failed to create order:", error);
             toast.error("Došlo je do greške! Molimo pokušajte ponovo!");
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -131,7 +142,25 @@ function ContactForm({ selectedStore }) {
         <div className={`${styles.sectionWrapper} ${styles.formSection}`}>
             <div className={styles.formWrapper}>
                 <h1 className={styles.contactHeader}>Pošaljite porudžbinu</h1>
-                <p className={styles.subtitle}>Pošaljite upit proizvoda</p>
+                <p className={styles.subtitle}>
+                    Proverite korpu i unesite podatke za porudžbinu.
+                </p>
+                {selectedStore && (
+                    <div className={styles.selectedStore}>
+                        <span>Porudžbina za</span>
+                        <strong>{selectedStore.name}</strong>
+                        <small>
+                            {selectedStore.pib && `PIB: ${selectedStore.pib}`}
+                            {selectedStore.pass &&
+                                ` · Šifra kupca: ${selectedStore.pass}`}
+                        </small>
+                    </div>
+                )}
+                {!cart?.length && (
+                    <div className={styles.emptyCartWarning}>
+                        Korpa je prazna. Dodajte proizvode pre slanja porudžbine.
+                    </div>
+                )}
                 <FormProvider {...methods}>
                     <form
                         className={styles.form}
@@ -166,15 +195,20 @@ function ContactForm({ selectedStore }) {
                         />
                         <Textarea
                             label="Poruka"
-                            placeholder="Your Message"
+                            placeholder="Dodatna napomena za porudžbinu..."
                             registerField="message"
                         />
                         <Button
                             btnType="submit"
                             theme="primary"
-                            content="pošalji"
-                            size="regular"
-                            disable={disable}
+                            content={
+                                isSubmitting
+                                    ? "Šaljem porudžbinu..."
+                                    : "Pošalji porudžbinu"
+                            }
+                            size="fullWidth"
+                            disable={disable || isSubmitting || !cart?.length}
+                            className={styles.submitButton}
                         />
                     </form>
                 </FormProvider>
