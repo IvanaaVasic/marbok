@@ -11,14 +11,18 @@ import { useStore } from "@/context/StoreContext";
 function Contact({ initialPages, initialCategory, initialStores }) {
     const pages = usePages() || initialPages;
     const categories = useCategories() || initialCategory;
-    const { cart, removeFromCart } = useCart();
+    const { cart, removeFromCart, updateCartQuantity } = useCart();
     const { selectedStore } = useStore();
 
     return (
         <Layout pages={pages} categories={categories} stores={initialStores}>
             {(filteredProducts) => (
                 <div className={styles.container}>
-                    <Checkout cart={cart} removeFromCart={removeFromCart} />
+                    <Checkout
+                        cart={cart}
+                        removeFromCart={removeFromCart}
+                        updateCartQuantity={updateCartQuantity}
+                    />
                     <div className={styles.line}></div>
                     <ContactForm selectedStore={selectedStore} />
                 </div>
