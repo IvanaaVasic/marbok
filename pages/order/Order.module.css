@@ -3,12 +3,29 @@
     margin: 2rem auto;
     padding: 0 1rem;
 }
+.container h1 {
+    margin: 2px 0 0;
+    color: #7f2929;
+}
+.eyebrow {
+    color: #999;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+}
 
 .orderInfo {
-    background: #f5f5f5;
-    padding: 1rem;
-    border-radius: 8px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 25px;
+    background: #f8f3f3;
+    padding: 1.25rem;
+    border-radius: 12px;
     margin: 1rem 0;
+}
+.orderInfo p,
+.itemDetails p {
+    margin: 4px 0;
 }
 
 .orderItems {
@@ -21,7 +38,9 @@
     border: 1px solid #ddd;
     padding: 1rem;
     margin: 1rem 0;
-    border-radius: 8px;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 4px 14px rgba(29, 30, 34, 0.06);
 }
 
 .productImage {
@@ -63,4 +82,58 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+.itemTotal {
+    color: #7f2929;
+    font-size: 17px;
+}
+.printButton {
+    display: block;
+    margin: 28px 0 28px auto;
+    padding: 11px 18px;
+    border: 0;
+    border-radius: 7px;
+    background: #bc4d4d;
+    color: #fff;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+@media only screen and (max-width: 600px) {
+    .header,
+    .totalPriceContainer {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .orderInfo {
+        grid-template-columns: 1fr;
+    }
+
+    .item {
+        align-items: center;
+    }
+
+    .productImage {
+        width: 75px;
+        height: 75px;
+    }
+}
+
+@media print {
+    .backLink,
+    .printButton {
+        display: none;
+    }
+
+    .container {
+        max-width: none;
+        margin: 0;
+    }
+
+    .item {
+        break-inside: avoid;
+        box-shadow: none;
+    }
 }

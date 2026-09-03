@@ -7,17 +7,45 @@ import styles from "./Order.module.css";
 import { useGetCurrentUser } from "@/hooks/useGetCurrentUser";
 import { useAuth } from "@/hooks/useAuth";
 
+function parsePrice(price) {
+    const normalized = String(price || "")
+        .replace(/\s/g, "")
+        .replace(/\.(?=\d{3}(?:\D|$))/g, "")
+        .replace(",", ".")
+        .replace(/[^\d.-]/g, "");
+    return parseFloat(normalized) || 0;
+}
+
+function formatPrice(price) {
+    return new Intl.NumberFormat("sr-Latn-RS", {
+        maximumFractionDigits: 2,
+    }).format(price);
+}
+
 export default function OrderConfirmation({ order }) {
     const { user } = useAuth();
     const { data: userData } = useGetCurrentUser({ uid: user?.uid ?? null });
     const roles = useMemo(() => userData?.roles || [], [userData]);
     const isAdmin = roles.includes("admin");
+    const calculatedTotal = useMemo(
+        () =>
+            order?.items?.reduce(
+                (sum, item) =>
+                    sum +
+                    parsePrice(item.price) * (parseInt(item.quantity, 10) || 0),
+                0
+            ) || 0,
+        [order?.items]
+    );
     if (!order) return <div>Porudžbina nije pronađena</div>;
 
     return (
         <div className={styles.container}>
             <div className={styles.header}>
-                <h1>Potvrda porudžbine</h1>
+                <div>
+                    <span className={styles.eyebrow}>PORUDŽBINA</span>
+                    <h1>{order.orderNumber}</h1>
+                </div>
                 {isAdmin ? (
                     <Link href="/orders" className={styles.backLink}>
                         Nazad na porudžbine
@@ -62,12 +90,10 @@ export default function OrderConfirmation({ order }) {
             </div>
             <div className={styles.orderItems}>
                 <div className={styles.totalPriceContainer}>
-                    <h2>Proizvodi:</h2>
-                    {order.totalPrice && (
-                        <p className={styles.totalPrice}>
-                            <strong>Ukupno:</strong> {order.totalPrice}
-                        </p>
-                    )}
+                    <h2>Proizvodi</h2>
+                    <p className={styles.totalPrice}>
+                        <strong>Ukupno:</strong> {formatPrice(calculatedTotal)} RSD
+                    </p>
                 </div>
                 {order?.items?.map((item, index) => (
                     <div key={index} className={styles.item}>
@@ -94,10 +120,25 @@ export default function OrderConfirmation({ order }) {
                             <p>
                                 <strong>Cena:</strong> {item.price} rsd
                             </p>
+                            <p className={styles.itemTotal}>
+                                <strong>Iznos:</strong>{" "}
+                                {formatPrice(
+                                    parsePrice(item.price) *
+                                        (parseInt(item.quantity, 10) || 0)
+                                )}{" "}
+                                RSD
+                            </p>
                         </div>
                     </div>
                 ))}
             </div>
+            <button
+                type="button"
+                className={styles.printButton}
+                onClick={() => window.print()}
+            >
+                Odštampaj porudžbinu
+            </button>
         </div>
     );
 }

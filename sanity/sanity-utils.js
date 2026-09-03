@@ -76,8 +76,13 @@ export async function getStores() {
 
 export async function createOrder(orderData) {
     const totalPrice = orderData.items.reduce((sum, item) => {
-        const price = parseFloat(item.price.replace(/[^\d.-]/g, ""));
-        const quantity = parseInt(item.quantity);
+        const normalizedPrice = String(item.price || "")
+            .replace(/\s/g, "")
+            .replace(/\.(?=\d{3}(?:\D|$))/g, "")
+            .replace(",", ".")
+            .replace(/[^\d.-]/g, "");
+        const price = parseFloat(normalizedPrice) || 0;
+        const quantity = parseInt(item.quantity, 10) || 0;
         return sum + price * quantity;
     }, 0);
 
@@ -124,6 +129,9 @@ export async function getOrders() {
             customerName,
             email,
             phone,
+            pib,
+            pass,
+            totalPrice,
             items,
             createdAt,
             _id
