@@ -13,7 +13,22 @@ import { useGetCurrentUser } from "@/hooks/useGetCurrentUser";
 import { useAuth } from "@/hooks/useAuth";
 import CatalogExportButton from "@/components/CatalogExportButton/CatalogExportButton";
 
-function Header({ category, setFilteredProducts, categories, stores }) {
+function normalizeSearchValue(value) {
+    return String(value || "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLocaleLowerCase("sr-Latn-RS")
+        .trim();
+}
+
+function Header({
+    category,
+    setFilteredProducts,
+    searchQuery,
+    setSearchQuery,
+    categories,
+    stores,
+}) {
     const { user } = useAuth();
     const { data: userData } = useGetCurrentUser({ uid: user?.uid ?? null });
     const roles = useMemo(() => userData?.roles || [], [userData]);
@@ -33,23 +48,22 @@ function Header({ category, setFilteredProducts, categories, stores }) {
     const isLg = useMediaQuery(1380);
 
     const handleSearch = (e) => {
-        const query = e.target.value.toLowerCase();
-        const filtered = category.categoryProducts.flatMap((page) =>
-            page.contentArea?.filter((area) => {
+        const inputValue = e.target.value;
+        const query = normalizeSearchValue(inputValue);
+        setSearchQuery(inputValue);
+
+        const filtered = (category?.categoryProducts || []).flatMap((page) =>
+            (page?.contentArea || []).filter((area) => {
+                const name = normalizeSearchValue(area?.name);
+                const productKey = normalizeSearchValue(area?.productKey);
                 return (
-                    area.name.toLowerCase().includes(query) ||
-                    area.productKey.toLowerCase().includes(query)
+                    name.includes(query) ||
+                    productKey.includes(query)
                 );
             })
         );
 
-        setFilteredProducts((prevFilteredProducts) => {
-            if (query === "") {
-                return [];
-            } else {
-                return filtered;
-            }
-        });
+        setFilteredProducts(query ? filtered : []);
     };
 
     return (
@@ -62,9 +76,11 @@ function Header({ category, setFilteredProducts, categories, stores }) {
                     <div className={styles.searchContainer}>
                         <input
                             type="search"
-                            placeholder="Pretraži..."
+                            placeholder="Naziv ili šifra proizvoda..."
+                            value={searchQuery}
                             onChange={handleSearch}
                             className={styles.searchInput}
+                            aria-label="Pretraži proizvode po nazivu ili šifri"
                         />
                         {(isAdmin || isMerchandiser) && (
                             <button
@@ -85,9 +101,11 @@ function Header({ category, setFilteredProducts, categories, stores }) {
                     <div className={styles.searchContainer}>
                         <input
                             type="search"
-                            placeholder="Pretraži..."
+                            placeholder="Naziv ili šifra proizvoda..."
+                            value={searchQuery}
                             onChange={handleSearch}
                             className={styles.searchInput}
+                            aria-label="Pretraži proizvode po nazivu ili šifri"
                         />
                     </div>
                 )}

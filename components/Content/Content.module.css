@@ -201,6 +201,49 @@ button.quantityBtn {
     background-color: #fff;
     padding: 0 20px;
 }
+.searchResults {
+    min-height: 420px;
+    padding-top: 15px;
+}
+.searchResultsHeader {
+    text-align: center;
+    padding: 20px 20px 0;
+}
+.searchResultsHeader h2 {
+    margin: 0;
+    color: #bc4d4d;
+    font-family: "RedHatBold";
+    font-size: 32px;
+}
+.searchResultsHeader p {
+    margin: 8px 0 0;
+    color: #666;
+}
+.noResults {
+    width: min(520px, calc(100% - 30px));
+    margin: 40px auto;
+    padding: 38px 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    text-align: center;
+    border: 1px solid #eadada;
+    border-radius: 12px;
+    background: #fffafa;
+}
+.noResults span {
+    color: #bc4d4d;
+    font-size: 48px;
+    line-height: 1;
+}
+.noResults strong {
+    font-size: 20px;
+}
+.noResults p {
+    margin: 0;
+    color: #666;
+}
 
 @media only screen and (max-width: 1340px) {
     .contentContainer {
@@ -275,6 +318,9 @@ button.quantityBtn {
     }
     .categoryIntro {
         padding: 60px 0;
+    }
+    .searchResultsHeader h2 {
+        font-size: 26px;
     }
 }
 @media only screen and (max-width: 380px) {

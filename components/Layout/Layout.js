@@ -5,6 +5,7 @@ import Head from "next/head";
 
 function Layout({ children, category, footerClassName, categories, stores }) {
     const [filteredProducts, setFilteredProducts] = useState([]);
+    const [searchQuery, setSearchQuery] = useState("");
 
     return (
         <div>
@@ -15,9 +16,11 @@ function Layout({ children, category, footerClassName, categories, stores }) {
                 category={category}
                 categories={categories}
                 setFilteredProducts={setFilteredProducts}
+                searchQuery={searchQuery}
+                setSearchQuery={setSearchQuery}
                 stores={stores}
             />
-            {children({ category, filteredProducts })}
+            {children({ category, filteredProducts, searchQuery })}
             <Footer footerClassName={footerClassName} />
         </div>
     );

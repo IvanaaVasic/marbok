@@ -23,12 +23,13 @@ export default function Category({
             categories={categories}
             stores={initialStores}
         >
-            {(filteredProducts) => (
+            {({ filteredProducts, searchQuery }) => (
                 <div className={styles.container}>
                     <Content
                         pages={pages}
                         categories={category}
                         filteredProducts={filteredProducts}
+                        searchQuery={searchQuery}
                     />
                 </div>
             )}
