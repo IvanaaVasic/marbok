@@ -1,64 +1,64 @@
-import React, { useState, useMemo } from "react";
-import styles from "./StoreSelector.module.css";
+import { useState, useMemo } from "react";
+import Dialog from "@mui/material/Dialog";
 import { IoClose } from "react-icons/io5";
-import { MdStorefront, MdSearch } from "react-icons/md";
+import { MdStorefront, MdSearch, MdCheck, MdLocationOn } from "react-icons/md";
+import { filterStores } from "@/utils/storeSearch";
+import styles from "./StoreSelector.module.css";
 
-function StoreSelector({ stores, isOpen, onClose, onStoreSelect }) {
+export default function StoreSelector({ stores = [], selectedStore, isOpen, onClose, onStoreSelect }) {
     const [searchQuery, setSearchQuery] = useState("");
-
-    const filteredStores = useMemo(() => {
-        return stores?.filter(
-            (store) =>
-                store.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                store.address.toLowerCase().includes(searchQuery.toLowerCase())
-        );
-    }, [stores, searchQuery]);
-
-    if (!isOpen) return null;
-
+    const [field, setField] = useState("all");
+    const [sort, setSort] = useState("asc");
+    const filtered = useMemo(() => filterStores(stores, searchQuery, field, sort), [stores, searchQuery, field, sort]);
+    const reset = () => { setSearchQuery(""); setField("all"); setSort("asc"); };
     return (
-        <div className={styles.modalOverlay} onClick={onClose}>
-            <div
-                className={styles.modalContent}
-                onClick={(e) => e.stopPropagation()}
-            >
-                <div className={styles.modalHeader}>
-                    <h2>Izaberi Prodavnicu</h2>
-                    <IoClose className={styles.closeIcon} onClick={onClose} />
+        <Dialog open={Boolean(isOpen)} onClose={onClose} fullWidth maxWidth="sm"
+            aria-labelledby="store-selector-title" PaperProps={{ className: styles.paper }}>
+            <div className={styles.header}>
+                <div><span className={styles.eyebrow}>PORUDŽBINA ZA PRODAVNICU</span><h2 id="store-selector-title">Izaberi prodavnicu</h2></div>
+                <button type="button" className={styles.iconButton} onClick={onClose} aria-label="Zatvori izbor prodavnice"><IoClose /></button>
+            </div>
+            {selectedStore && <div className={styles.current}>
+                <MdCheck aria-hidden="true" /><div><span>Trenutno izabrana</span><strong>{selectedStore.name}</strong><small>{selectedStore.address}</small></div>
+            </div>}
+            <div className={styles.controls}>
+                <div className={styles.searchBox}>
+                    <MdSearch aria-hidden="true" />
+                    <input autoFocus type="search" value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
+                        placeholder="Naziv, adresa, PIB ili šifra…" aria-label="Pretraži prodavnice" />
                 </div>
-                <div className={styles.searchContainer}>
-                    <MdSearch className={styles.searchIcon} />
-                    <input
-                        type="text"
-                        placeholder="Pretraži prodavnice..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className={styles.searchInput}
-                    />
+                <div className={styles.filters}>
+                    <label>Pretraži po<select value={field} onChange={e => setField(e.target.value)}>
+                        <option value="all">Svim podacima</option><option value="name">Nazivu</option>
+                        <option value="address">Adresi / mestu</option><option value="pib">PIB-u</option>
+                        <option value="pass">Šifri kupca</option><option value="contactPerson">Kontakt osobi</option>
+                        <option value="phone">Telefonu</option><option value="email">Mejlu</option>
+                    </select></label>
+                    <label>Redosled<select value={sort} onChange={e => setSort(e.target.value)}>
+                        <option value="asc">Naziv A–Ž</option><option value="desc">Naziv Ž–A</option>
+                    </select></label>
                 </div>
-                <div className={styles.storeList}>
-                    {filteredStores?.map((store) => (
-                        <button
-                            key={store._id}
-                            className={styles.storeItem}
-                            onClick={() => onStoreSelect(store)}
-                        >
-                            <MdStorefront className={styles.storeIcon} />
-                            <div className={styles.storeInfo}>
-                                <h3>{store.name}</h3>
-                                <p>{store.address}</p>
-                            </div>
-                        </button>
-                    ))}
-                    {filteredStores?.length === 0 && (
-                        <p className={styles.noResults}>
-                            Nema rezultata pretrage
-                        </p>
-                    )}
+                <div className={styles.results}><span aria-live="polite">Prikazano {filtered.length} od {stores?.length || 0}</span>
+                    {(searchQuery || field !== "all" || sort !== "asc") && <button type="button" onClick={reset}>Poništi filtere</button>}
                 </div>
             </div>
-        </div>
+            <div className={styles.storeList}>
+                {filtered.map(store => {
+                    const active = store._id === selectedStore?._id;
+                    return <button type="button" key={store._id} aria-pressed={active}
+                        className={`${styles.storeItem} ${active ? styles.selected : ""}`} onClick={() => onStoreSelect(store)}>
+                        <span className={styles.storeIcon}><MdStorefront aria-hidden="true" /></span>
+                        <span className={styles.storeInfo}><strong>{store.name || "Prodavnica bez naziva"}</strong>
+                            {store.address && <span className={styles.address}><MdLocationOn aria-hidden="true" />{store.address}</span>}
+                            {(store.pib || store.pass) && <span className={styles.metadata}>{store.pib && <span>PIB {store.pib}</span>}{store.pass && <span>Šifra {store.pass}</span>}</span>}
+                            {store.contactPerson && <span className={styles.contact}>{store.contactPerson}</span>}
+                        </span>
+                        {active && <MdCheck className={styles.check} aria-label="Izabrana prodavnica" />}
+                    </button>;
+                })}
+                {!filtered.length && <div className={styles.empty}><MdSearch /><h3>Nema pronađenih prodavnica</h3><p>Probaj deo naziva, adresu ili PIB.</p><button type="button" onClick={reset}>Prikaži sve prodavnice</button></div>}
+            </div>
+            <div className={styles.footer}>Izaberi prodavnicu za koju praviš porudžbinu.</div>
+        </Dialog>
     );
 }
-
-export default StoreSelector;

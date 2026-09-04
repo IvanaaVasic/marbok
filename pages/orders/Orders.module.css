@@ -150,3 +150,29 @@
         grid-template-columns: 1fr;
     }
 }
+
+.swipeHint { color: #776868; font-size: 14px; margin: 16px 0 0; }
+.swipeRow { position: relative; overflow: hidden; border-radius: 12px; background: #b92e39; min-width: 0; }
+.orderCard { position: relative; height: 100%; touch-action: pan-y; transition: transform .18s ease; will-change: transform; }
+.orderCard:hover { transform: none; }
+.deleteAction { position: absolute; right: 0; top: 0; height: 100%; width: 88px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 7px; background: #b92e39; color: #fff; border: 0; font: inherit; font-size: 14px; cursor: pointer; }
+.deleteAction svg { font-size: 28px; }
+.deleteAction:focus-visible { outline: 3px solid white; outline-offset: -5px; }
+.moreButton { min-width: 44px; height: 44px; border: 0; background: #f8f3f3; border-radius: 50%; display: grid; place-items: center; color: #793737; font-size: 25px; cursor: pointer; flex-shrink: 0; }
+.detailsLink { display: block; text-decoration: none; color: inherit; }
+.orderNumber { font-size: 15px; overflow-wrap: anywhere; }
+.orderDate { display: block; margin-top: 4px; }
+.orderMeta span { font-size: 13px; }
+.searchInput { font: inherit; font-size: 16px; min-width: 0; }
+.cardFooter { flex-wrap: wrap; }
+.cardFooter span { font-size: 14px; }
+.confirmDialog { padding: 28px; color: #342525; font-family: inherit; }
+.confirmDialog h2 { font-size: 24px; margin: 12px 0; }
+.confirmDialog p { line-height: 1.7; overflow-wrap: anywhere; }
+.confirmIcon { color: #b92e39; font-size: 36px; }
+.confirmActions { display: flex; gap: 10px; margin-top: 24px; }
+.confirmActions button { flex: 1; min-height: 44px; padding: 12px; border: 1px solid #dccccc; border-radius: 8px; font: inherit; font-size: 14px; cursor: pointer; background: white; color: #342525; }
+.confirmActions .confirmDelete { background: #b92e39; color: white; border-color: #b92e39; }
+.confirmActions button:disabled { opacity: .6; cursor: wait; }
+.confirmActions button:focus-visible, .moreButton:focus-visible, .detailsLink:focus-visible { outline: 2px solid #963737; outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) { .orderCard { transition: none; } }
