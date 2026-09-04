@@ -1,121 +1,99 @@
-import { getOrders } from "@/sanity/sanity-utils";
 import Link from "next/link";
-import { formatDate } from "@/utils/dateFormat";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect, useCallback, useRef } from "react";
+import Dialog from "@mui/material/Dialog";
+import { MdDeleteOutline } from "react-icons/md";
+import { toast } from "react-toastify";
 import { useAuth } from "@/hooks/useAuth";
-import { useGetCurrentUser } from "@/hooks/useGetCurrentUser";
-
+import { isOwner } from "@/utils/adminAccess";
+import { normalizeSearch } from "@/utils/storeSearch";
+import SwipeOrderCard from "@/components/SwipeOrderCard/SwipeOrderCard";
 import styles from "./Orders.module.css";
 
-export default function Orders({ orders }) {
-    const [searchQuery, setSearchQuery] = useState("");
+export default function Orders() {
     const { user, loading: isAuthLoading } = useAuth();
-    const { data: userData, isLoading: isUserLoading } = useGetCurrentUser({
-        uid: user?.uid ?? null,
-    });
-    const isAdmin = (userData?.roles || []).includes("admin");
+    const [orders, setOrders] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
+    const [searchQuery, setSearchQuery] = useState("");
+    const [openId, setOpenId] = useState(null);
+    const [pending, setPending] = useState(null);
+    const [deleting, setDeleting] = useState(false);
+    const deleteLock = useRef(false);
+    const allowed = isOwner(user);
 
-    const filteredOrders = useMemo(() => {
-        const query = searchQuery.trim().toLocaleLowerCase("sr-Latn-RS");
-        if (!query) return orders;
+    const load = useCallback(async (signal) => {
+        if (!isOwner(user)) return;
+        setLoading(true); setError("");
+        try {
+            const token = await user.getIdToken();
+            const response = await fetch("/api/orders", { headers: { Authorization: `Bearer ${token}` }, signal });
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.error || "Učitavanje nije uspelo.");
+            if (!signal?.aborted) setOrders(data.orders);
+        } catch (err) {
+            if (!signal?.aborted) setError(err.message || "Učitavanje nije uspelo.");
+        } finally { if (!signal?.aborted) setLoading(false); }
+    }, [user]);
+    useEffect(() => {
+        const controller = new AbortController();
+        setOrders([]); setPending(null); setOpenId(null);
+        if (allowed) load(controller.signal);
+        return () => controller.abort();
+    }, [allowed, load]);
 
-        return orders.filter((order) =>
-            [
-                order.orderNumber,
-                order.customerName,
-                order.email,
-                order.phone,
-                order.pib,
-                order.pass,
-            ].some((value) =>
-                String(value || "")
-                    .toLocaleLowerCase("sr-Latn-RS")
-                    .includes(query)
-            )
-        );
+    const filtered = useMemo(() => {
+        const terms = normalizeSearch(searchQuery).split(/\s+/).filter(Boolean);
+        return orders.filter(order => {
+            const text = [order.orderNumber, order.customerName, order.email, order.phone, order.pib, order.pass]
+                .map(normalizeSearch).join(" ");
+            return terms.every(term => text.includes(term));
+        });
     }, [orders, searchQuery]);
 
-    if (isAuthLoading || (user && isUserLoading)) {
-        return <div className={styles.statusMessage}>Učitavanje porudžbina...</div>;
-    }
-
-    if (!user || !isAdmin) {
-        return (
-            <div className={styles.statusMessage}>
-                <h1>Porudžbine</h1>
-                <p>Ova stranica je dostupna samo administratoru.</p>
-                <Link href="/auth" className={styles.primaryLink}>
-                    Prijavi se
-                </Link>
-            </div>
-        );
-    }
-
-    return (
-        <div className={styles.container}>
-            <div className={styles.header}>
-                <h1>Porudžbine</h1>
-                <Link href="/" className={styles.backLink}>
-                    Nazad na početnu
-                </Link>
-            </div>
-            <div className={styles.toolbar}>
-                <div>
-                    <strong>{orders.length}</strong>
-                    <span> ukupno porudžbina</span>
-                </div>
-                <input
-                    type="search"
-                    value={searchQuery}
-                    onChange={(event) => setSearchQuery(event.target.value)}
-                    placeholder="Broj, kupac, PIB ili šifra..."
-                    aria-label="Pretraži porudžbine"
-                    className={styles.searchInput}
-                />
-            </div>
-            <div className={styles.ordersList}>
-                {filteredOrders.map((order) => (
-                    <Link
-                        href={`/order/${order.orderNumber}`}
-                        key={order._id}
-                        className={styles.orderCard}
-                    >
-                        <div className={styles.cardHeader}>
-                            <span className={styles.orderNumber}>
-                                {order.orderNumber}
-                            </span>
-                            <span className={styles.orderDate}>
-                                {formatDate(new Date(order.createdAt))}
-                            </span>
-                        </div>
-                        <h3>{order.customerName || "Kupac bez naziva"}</h3>
-                        <div className={styles.orderMeta}>
-                            {order.pib && <span>PIB: {order.pib}</span>}
-                            {order.pass && <span>Šifra kupca: {order.pass}</span>}
-                            <span>Artikala: {order.items?.length || 0}</span>
-                        </div>
-                        <div className={styles.cardFooter}>
-                            <strong>{order.totalPrice || "Iznos nije sačuvan"}</strong>
-                            <span>Otvori detalje →</span>
-                        </div>
-                    </Link>
-                ))}
-            </div>
-            {!filteredOrders.length && (
-                <div className={styles.emptyState}>
-                    Nema porudžbina koje odgovaraju pretrazi „{searchQuery}“.
-                </div>
-            )}
-        </div>
-    );
-}
-
-export async function getServerSideProps() {
-    const orders = await getOrders();
-
-    return {
-        props: {
-            orders,
-        },
+    const remove = async () => {
+        if (!pending || !isOwner(user) || deleteLock.current) return;
+        const order = pending;
+        deleteLock.current = true; setDeleting(true);
+        try {
+            const token = await user.getIdToken();
+            const response = await fetch(`/api/orders/${encodeURIComponent(order._id)}`, {
+                method: "DELETE", headers: { Authorization: `Bearer ${token}` },
+            });
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.error || "Brisanje nije uspelo.");
+            setOrders(current => current.filter(item => item._id !== order._id));
+            setPending(null); setOpenId(null);
+            toast.success("Porudžbina je obrisana.");
+        } catch (err) { toast.error(err.message || "Porudžbina nije obrisana. Pokušaj ponovo."); }
+        finally { deleteLock.current = false; setDeleting(false); }
     };
+
+    if (isAuthLoading) return <div className={styles.statusMessage}>Učitavanje…</div>;
+    if (!allowed) return <div className={styles.statusMessage}><h1>Porudžbine</h1><p>Ova stranica je dostupna samo vlasniku naloga.</p><Link href="/auth" className={styles.primaryLink}>Prijavi se</Link></div>;
+    return <div className={styles.container}>
+        <div className={styles.header}><h1>Porudžbine</h1><Link href="/" className={styles.backLink}>Nazad na početnu</Link></div>
+        <div className={styles.toolbar}>
+            <div><strong>{orders.length}</strong><span> ukupno porudžbina</span></div>
+            <input type="search" value={searchQuery} onChange={event => { setSearchQuery(event.target.value); setOpenId(null); }}
+                placeholder="Broj, kupac, PIB ili šifra…" aria-label="Pretraži porudžbine" className={styles.searchInput} />
+        </div>
+        <p className={styles.swipeHint}>Prevuci porudžbinu ulevo za brisanje ili otvori dugme sa tri tačke.</p>
+        {loading ? <p role="status">Učitavanje porudžbina…</p> : error ? <div role="alert" className={styles.emptyState}><p>{error}</p><button onClick={() => load()} className={styles.backLink}>Pokušaj ponovo</button></div> : <>
+            <div className={styles.ordersList}>{filtered.map(order => <SwipeOrderCard key={order._id} order={order}
+                open={openId === order._id} onToggle={open => setOpenId(open ? order._id : null)} onDelete={setPending} />)}</div>
+            {!filtered.length && <div className={styles.emptyState}>{searchQuery ? `Nema porudžbina za pretragu „${searchQuery}“.` : "Još nema porudžbina."}</div>}
+        </>}
+        <Dialog open={Boolean(pending)} onClose={() => { if (!deleting) setPending(null); }}
+            aria-labelledby="delete-order-title" aria-describedby="delete-order-description" maxWidth="xs" fullWidth>
+            <div className={styles.confirmDialog}>
+                <MdDeleteOutline className={styles.confirmIcon} aria-hidden="true" />
+                <h2 id="delete-order-title">Obriši porudžbinu?</h2>
+                <p id="delete-order-description">{pending?.orderNumber}<br /><strong>{pending?.customerName}</strong><br />Porudžbina će biti trajno obrisana.</p>
+                <div className={styles.confirmActions}>
+                    <button autoFocus disabled={deleting} onClick={() => setPending(null)}>Odustani</button>
+                    <button disabled={deleting} onClick={remove} className={styles.confirmDelete}>{deleting ? "Brisanje…" : "Obriši porudžbinu"}</button>
+                </div>
+            </div>
+        </Dialog>
+    </div>;
 }

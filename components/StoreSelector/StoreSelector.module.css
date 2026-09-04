@@ -1,131 +1,42 @@
-.modalOverlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-}
-
-.modalContent {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    width: 90%;
-    max-width: 500px;
-    max-height: 80vh;
-    display: flex;
-    flex-direction: column;
-}
-
-.modalHeader {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #eee;
-}
-
-.closeIcon {
-    cursor: pointer;
-    font-size: 24px;
-}
-
-.storeList {
-    overflow-y: auto;
-    flex-grow: 1;
-    padding-right: 10px;
-}
-
-.storeItem {
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    background: none;
-    cursor: pointer;
-    text-align: left;
-    transition: all 0.2s;
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-}
-
-.storeItem:hover {
-    background: #f5f5f5;
-}
-
-.storeList::-webkit-scrollbar {
-    width: 6px;
-}
-
-.storeList::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 3px;
-}
-
-.storeList::-webkit-scrollbar-thumb {
-    background: #bc4d4d;
-    border-radius: 3px;
-}
-
-.storeList::-webkit-scrollbar-thumb:hover {
-    background: #a43d3d;
-}
-
-.searchContainer {
-    position: relative;
-    margin-bottom: 15px;
-}
-
-.searchInput {
-    width: 100%;
-    padding: 10px 35px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 14px;
-}
-
-.searchInput:focus {
-    outline: none;
-    border-color: #bc4d4d;
-}
-
-.searchIcon {
-    position: absolute;
-    left: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #666;
-    font-size: 20px;
-}
-
-.noResults {
-    text-align: center;
-    color: #666;
-    padding: 20px 0;
-}
-
-.storeInfo h3 {
-    margin: 0;
-    font-size: 16px;
-    color: #333;
-}
-
-.storeInfo p {
-    margin: 5px 0 0;
-    font-size: 14px;
-    color: #666;
-}
-
-.storeIcon {
-    color: #bc4d4d;
-    font-size: 20px;
-    margin-top: 3px;
+.paper { border-radius: 20px !important; max-height: 90dvh !important; color: #342525 !important; font-family: inherit !important; }
+.header { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 24px 24px 18px; }
+.eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .09em; color: #963737; }
+.header h2 { margin: 5px 0 0; font-size: 26px; line-height: 1.2; }
+.iconButton { display: grid; place-items: center; flex-shrink: 0; width: 44px; height: 44px; border: 1px solid #e9e1e1; border-radius: 50%; background: white; cursor: pointer; color: inherit; font-size: 24px; }
+.current { display: flex; align-items: center; gap: 12px; margin: 0 24px 16px; padding: 12px 16px; border-left: 3px solid #963737; border-radius: 8px; background: #f9eeee; }
+.current > svg { font-size: 22px; flex-shrink: 0; color: #963737; }
+.current div { display: grid; gap: 3px; min-width: 0; overflow-wrap: anywhere; }
+.current span, .current small { font-size: 13px; color: #655454; }
+.current strong { font-size: 16px; }
+.controls { padding: 0 24px; }
+.searchBox { display: flex; align-items: center; gap: 10px; border: 1px solid #d9cdcd; border-radius: 10px; padding: 0 12px; }
+.searchBox:focus-within { border-color: #963737; box-shadow: 0 0 0 3px #96373715; }
+.searchBox > svg { font-size: 24px; color: #806c6c; flex-shrink: 0; }
+.searchBox input { border: 0; outline: 0; padding: 14px 0; font: inherit; font-size: 16px; width: 100%; min-width: 0; background: transparent; }
+.filters { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
+.filters label { display: grid; gap: 5px; color: #655454; font-size: 14px; }
+.filters select { width: 100%; min-width: 0; padding: 10px; background: #fff; color: #342525; border: 1px solid #dfd5d5; border-radius: 8px; font: inherit; font-size: 16px; }
+.results { display: flex; justify-content: space-between; align-items: center; min-height: 44px; gap: 8px; font-size: 13px; color: #766666; }
+.results button, .empty button { border: 0; background: transparent; color: #963737; text-decoration: underline; font: inherit; cursor: pointer; min-height: 44px; }
+.storeList { overflow-y: auto; overscroll-behavior: contain; padding: 0 24px 12px; min-height: 90px; }
+.storeItem { display: flex; align-items: center; width: 100%; gap: 12px; padding: 16px 12px; margin-bottom: 8px; border: 1px solid #e6dfdf; border-radius: 12px; background: #fff; text-align: left; font: inherit; color: inherit; cursor: pointer; }
+.storeItem:hover, .selected { background: #fff8f8; border-color: #b04b4b; }
+.storeIcon { display: grid; place-items: center; width: 40px; height: 40px; flex-shrink: 0; border-radius: 10px; background: #f8eeee; color: #a13c3c; font-size: 24px; }
+.storeInfo { display: grid; gap: 7px; min-width: 0; overflow-wrap: anywhere; flex: 1; }
+.storeInfo strong { font-size: 16px; line-height: 1.3; }
+.address { display: flex; align-items: flex-start; gap: 3px; font-size: 14px; color: #6d5f5f; }
+.address svg { flex-shrink: 0; margin-top: 2px; }
+.metadata { display: flex; flex-wrap: wrap; gap: 6px; font-size: 12px; color: #655454; }
+.metadata > span { background: #f4f1f1; padding: 3px 6px; border-radius: 4px; }
+.contact { color: #6d5f5f; font-size: 13px; }
+.check { flex-shrink: 0; color: #963737; font-size: 22px; }
+.empty { padding: 30px 8px; text-align: center; color: #756565; }
+.empty > svg { font-size: 32px; }.empty h3 { color: #342525; font-size: 18px; }
+.footer { padding: 12px 24px; border-top: 1px solid #eee; color: #766666; font-size: 13px; }
+.paper button:focus-visible, .paper select:focus-visible { outline: 2px solid #963737; outline-offset: 2px; }
+@media (max-width: 600px) {
+    .paper { margin: 12px !important; width: calc(100% - 24px) !important; max-height: calc(100dvh - 24px) !important; }
+    .header { padding: 20px 16px 16px; }.header h2 { font-size: 23px; }
+    .controls { padding: 0 16px; }.storeList { padding: 0 16px 8px; }
+    .current { margin: 0 16px 14px; }.footer { padding: 12px 16px; }
 }

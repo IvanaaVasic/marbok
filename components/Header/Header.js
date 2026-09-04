@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { isOwner } from "@/utils/adminAccess";
 import NavigationMobile from "@/components/NavigationMobile/NavigationMobile";
 import styles from "@/pages/category/page.module.css";
 import Cart from "@/components/Cart/Cart";
@@ -9,7 +9,7 @@ import { useMediaQuery } from "@/hooks/useMediaQuery";
 import StoreSelector from "@/components/StoreSelector/StoreSelector";
 import { useStore } from "@/context/StoreContext";
 import { MdStorefront } from "react-icons/md";
-import { useGetCurrentUser } from "@/hooks/useGetCurrentUser";
+
 import { useAuth } from "@/hooks/useAuth";
 import CatalogExportButton from "@/components/CatalogExportButton/CatalogExportButton";
 
@@ -30,13 +30,8 @@ function Header({
     stores,
 }) {
     const { user } = useAuth();
-    const { data: userData } = useGetCurrentUser({ uid: user?.uid ?? null });
-    const roles = useMemo(() => userData?.roles || [], [userData]);
-    const isAdmin = roles.includes("admin");
-    const isMerchandiser = roles.includes("merchand");
-    const canExportCatalog =
-        user?.email?.toLowerCase() ===
-        "nikola.borisavljevic.bgd@gmail.com";
+    const isAdmin = isOwner(user);
+    const canExportCatalog = isAdmin;
 
     const router = useRouter();
     const {
@@ -47,7 +42,6 @@ function Header({
     } = useStore();
     const pathName = router.pathname;
     const isCategoryPage = pathName === "/category/[slug]";
-    const isMd = useMediaQuery(1000);
     const isLg = useMediaQuery(1380);
 
     const handleSearch = (e) => {
@@ -85,19 +79,6 @@ function Header({
                             className={styles.searchInput}
                             aria-label="Pretraži proizvode po nazivu ili šifri"
                         />
-                        {(isAdmin || isMerchandiser) && (
-                            <button
-                                className={styles.storeButton}
-                                onClick={() => setIsStoreSelectorOpen(true)}
-                            >
-                                <MdStorefront className={styles.storeIcon} />
-                                <span className={styles.storeButtonText}>
-                                    {selectedStore
-                                        ? selectedStore.name
-                                        : "Izaberi Prodavnicu"}
-                                </span>
-                            </button>
-                        )}
                     </div>
                 )}
                 {isCategoryPage && isLg && (
@@ -116,26 +97,22 @@ function Header({
                     <img className={styles.logo} src="/logo.png" alt="Logo" />
                 </Link> */}
                 <div className={styles.cartNavWrapper}>
-                    {!isCategoryPage &&
-                        !isLg &&
-                        (isAdmin || isMerchandiser) && (
-                            <button
-                                className={styles.storeButton}
-                                onClick={() => setIsStoreSelectorOpen(true)}
-                            >
-                                <MdStorefront className={styles.storeIcon} />
-                                <span className={styles.storeButtonText}>
-                                    {selectedStore
-                                        ? selectedStore.name
-                                        : "Izaberi Prodavnicu"}
-                                </span>
-                            </button>
-                        )}
                     {!isLg && (
                         <Navigation categories={categories} isAdmin={isAdmin} />
                     )}
                     {canExportCatalog && !isLg && (
                         <CatalogExportButton categories={categories || []} />
+                    )}
+                    {isAdmin && (
+                        <button type="button"
+                            className={`${styles.storeAction} ${selectedStore ? styles.storeActionSelected : ""}`}
+                            onClick={() => setIsStoreSelectorOpen(true)}
+                            aria-label={selectedStore ? `Promeni prodavnicu: ${selectedStore.name}` : "Izaberi prodavnicu"}
+                            title={selectedStore ? selectedStore.name : "Izaberi prodavnicu"}
+                            aria-haspopup="dialog" aria-expanded={isStoreSelectorOpen}>
+                            <MdStorefront aria-hidden="true" />
+                            <span>{selectedStore ? "Izabrana" : "Prodavnica"}</span>
+                        </button>
                     )}
                     <Cart />
                     {(isLg || isCategoryPage) && (
@@ -147,29 +124,17 @@ function Header({
                         />
                     )}
                 </div>
-                <StoreSelector
+                {isAdmin && <StoreSelector
                     stores={stores}
+                    selectedStore={selectedStore}
                     isOpen={isStoreSelectorOpen}
                     onClose={() => setIsStoreSelectorOpen(false)}
                     onStoreSelect={(store) => {
                         handleStoreSelect(store);
                         setIsStoreSelectorOpen(false);
                     }}
-                />
+                />}
             </div>
-            {isLg && (isAdmin || isMerchandiser) && (
-                <button
-                    className={styles.storeButtonMobile}
-                    onClick={() => setIsStoreSelectorOpen(true)}
-                >
-                    <MdStorefront className={styles.storeIcon} />
-                    <span className={styles.storeButtonText}>
-                        {selectedStore
-                            ? selectedStore.name
-                            : "Izaberi Prodavnicu"}
-                    </span>
-                </button>
-            )}
         </>
     );
 }
