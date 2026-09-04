@@ -1,3 +1,4 @@
+import { orderItems, parseOrderPrice, formatOrderPrice } from "@/utils/orderDocument";
 import { useMemo } from "react";
 import { getOrder } from "@/sanity/sanity-utils";
 import { urlFromThumbnail } from "@/utils/image";
@@ -37,6 +38,7 @@ export default function OrderConfirmation({ order }) {
             ) || 0,
         [order?.items]
     );
+    const printItems = useMemo(() => orderItems(order), [order]);
     if (!order) return <div>Porudžbina nije pronađena</div>;
 
     return (
@@ -132,6 +134,17 @@ export default function OrderConfirmation({ order }) {
                     </div>
                 ))}
             </div>
+            <table className={styles.printTable}>
+                <colgroup><col style={{width: "9%"}} /><col style={{width: "13%"}} /><col style={{width: "36%"}} /><col style={{width: "15%"}} /><col style={{width: "9%"}} /><col style={{width: "18%"}} /></colgroup>
+                <thead><tr><th>Slika</th><th>Šifra</th><th>Naziv / pakovanje</th><th>Cena RSD</th><th>Kol.</th><th>Iznos RSD</th></tr></thead>
+                <tbody>{printItems.map((item, index) => <tr key={index}>
+                    <td>{item.image && <img src={urlFromThumbnail(item.image)} alt="" />}</td>
+                    <td>{item.productKey || "—"}</td><td>{item.name}{item.package && <small>Pakovanje: {item.package}</small>}</td>
+                    <td>{item.price === undefined || item.price === "" ? "—" : formatOrderPrice(parseOrderPrice(item.price))}</td>
+                    <td>{item.quantity}</td><td>{item.price === undefined || item.price === "" ? "—" : formatOrderPrice(parseOrderPrice(item.price) * (parseInt(item.quantity, 10) || 0))}</td>
+                </tr>)}</tbody>
+            </table>
+            <p className={styles.printTotal}>Ukupno: {formatPrice(calculatedTotal)} RSD</p>
             <button
                 type="button"
                 className={styles.printButton}

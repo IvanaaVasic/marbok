@@ -1,0 +1,16 @@
+.content { padding: 24px; font-family: inherit; color: #342525; }
+.header { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.header h2 { margin: 0; font-size: 23px; }
+.header button { border: 0; background: transparent; font-size: 24px; min-width: 44px; height: 44px; cursor: pointer; }
+.content p { font-size: 14px; line-height: 1.5; }
+.orderNumber { color: #963737; overflow-wrap: anywhere; }
+.fileRow { display: flex; gap: 8px; align-items: center; padding: 16px 0; border-top: 1px solid #eee; }
+.fileRow > div { flex: 1; display: grid; gap: 5px; }.fileRow strong { font-size: 17px; }.fileRow span { font-size: 12px; color: #766; }
+.fileRow button { display: flex; align-items: center; justify-content: center; gap: 6px; border: 0; border-radius: 8px; background: #963737; color: white; min-height: 44px; padding: 10px; font: inherit; font-size: 14px; cursor: pointer; }
+.fileRow .download { background: #f8eeee; color: #963737; min-width: 44px; font-size: 22px; }
+.content button:disabled { opacity: .45; cursor: default; }
+.message { font-size: 14px; padding: 12px; background: #fff5ed; border-radius: 8px; line-height: 1.5; }
+.message button { display: block; border: 0; background: transparent; color: #963737; padding: 10px 0; cursor: pointer; }
+.deleteButton { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; min-height: 44px; margin-top: 20px; padding: 12px; border: 1px solid #d9c3c3; background: white; color: #a52e38; border-radius: 8px; font: inherit; font-size: 14px; cursor: pointer; }
+.content button:focus-visible { outline: 2px solid #963737; outline-offset: 3px; }
+@media (max-width: 400px) { .content { padding: 16px; }.header h2 { font-size: 21px; } }

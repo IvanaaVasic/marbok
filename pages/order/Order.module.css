@@ -137,3 +137,26 @@
         box-shadow: none;
     }
 }
+
+.printTable, .printTotal { display: none; }
+@page { size: A4 portrait; margin: 10mm; }
+@media print {
+    .container { margin: 0; padding: 0; width: 100%; max-width: none; color: #111; font-size: 9pt; }
+    .container h1 { font-size: 15pt; color: #222; overflow-wrap: anywhere; }
+    .header { display: block; margin: 0 0 3mm; }
+    .eyebrow { font-size: 8pt; color: #555; }
+    .orderInfo { display: grid; grid-template-columns: 1fr 1fr; gap: 1mm 5mm; padding: 0 0 3mm; margin: 0 0 3mm; background: white; border-radius: 0; border-bottom: 1px solid #bbb; }
+    .orderInfo p { margin: 0; font-size: 8.5pt; line-height: 1.35; overflow-wrap: anywhere; }
+    .orderItems { display: none; }
+    .printTable { display: table; width: 100%; table-layout: fixed; border-collapse: collapse; font-size: 8.5pt; }
+    .printTable thead { display: table-header-group; }
+    .printTable tr { break-inside: avoid; page-break-inside: avoid; }
+    .printTable th, .printTable td { border: .2mm solid #ccc; padding: 1.2mm; vertical-align: middle; text-align: left; line-height: 1.25; overflow-wrap: anywhere; }
+    .printTable th { background: #f2f2f2; font-size: 8pt; font-weight: 700; }
+    .printTable td:first-child { text-align: center; }
+    .printTable td:nth-child(4), .printTable td:nth-child(6) { text-align: right; }
+    .printTable td:nth-child(5) { text-align: center; }
+    .printTable img { display: block; width: 10mm; height: 10mm; object-fit: contain; margin: 0 auto; }
+    .printTable small { display: block; font-size: 7.5pt; color: #555; margin-top: .5mm; }
+    .printTotal { display: block; font-weight: 700; font-size: 11pt; text-align: right; margin: 3mm 0; break-inside: avoid; }
+}

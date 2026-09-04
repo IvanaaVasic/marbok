@@ -1,11 +1,11 @@
 import { useState, useMemo } from "react";
 import Dialog from "@mui/material/Dialog";
 import { IoClose } from "react-icons/io5";
-import { MdStorefront, MdSearch, MdCheck, MdLocationOn } from "react-icons/md";
+import { MdStorefront, MdSearch, MdCheck, MdLocationOn, MdDeleteOutline } from "react-icons/md";
 import { filterStores } from "@/utils/storeSearch";
 import styles from "./StoreSelector.module.css";
 
-export default function StoreSelector({ stores = [], selectedStore, isOpen, onClose, onStoreSelect }) {
+export default function StoreSelector({ stores = [], selectedStore, isOpen, onClose, onStoreSelect, onClearSelection }) {
     const [searchQuery, setSearchQuery] = useState("");
     const [field, setField] = useState("all");
     const [sort, setSort] = useState("asc");
@@ -16,7 +16,10 @@ export default function StoreSelector({ stores = [], selectedStore, isOpen, onCl
             aria-labelledby="store-selector-title" PaperProps={{ className: styles.paper }}>
             <div className={styles.header}>
                 <div><span className={styles.eyebrow}>PORUDŽBINA ZA PRODAVNICU</span><h2 id="store-selector-title">Izaberi prodavnicu</h2></div>
-                <button type="button" className={styles.iconButton} onClick={onClose} aria-label="Zatvori izbor prodavnice"><IoClose /></button>
+                <div className={styles.headerActions}>
+                {selectedStore && <button type="button" className={styles.iconButton} onClick={onClearSelection}
+                    title="Poništi izbor prodavnice" aria-label="Poništi izbor prodavnice"><MdDeleteOutline /></button>}
+                <button type="button" className={styles.iconButton} onClick={onClose} aria-label="Zatvori izbor prodavnice"><IoClose /></button></div>
             </div>
             {selectedStore && <div className={styles.current}>
                 <MdCheck aria-hidden="true" /><div><span>Trenutno izabrana</span><strong>{selectedStore.name}</strong><small>{selectedStore.address}</small></div>
@@ -24,7 +27,7 @@ export default function StoreSelector({ stores = [], selectedStore, isOpen, onCl
             <div className={styles.controls}>
                 <div className={styles.searchBox}>
                     <MdSearch aria-hidden="true" />
-                    <input autoFocus type="search" value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
+                    <input type="search" value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
                         placeholder="Naziv, adresa, PIB ili šifra…" aria-label="Pretraži prodavnice" />
                 </div>
                 <div className={styles.filters}>

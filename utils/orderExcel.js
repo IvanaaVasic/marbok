@@ -24,8 +24,8 @@ async function imageAsDataUrl(source) {
     if (!originalUrl) return null;
 
     const separator = originalUrl.includes("?") ? "&" : "?";
-    const imageUrl = `${originalUrl}${separator}w=90&h=90&fit=max&fm=jpg&q=48&bg=ffffff`;
-    const response = await fetch(imageUrl);
+    const imageUrl = `${originalUrl}${separator}w=90&h=90&fit=fill&fm=jpg&q=48&bg=ffffff`;
+    const response = await fetch(imageUrl, { signal: AbortSignal.timeout(12000) });
     if (!response.ok) return null;
 
     const blob = await response.blob();
@@ -58,6 +58,7 @@ export async function createOrderExcelFile({
     customer,
     selectedStore,
     items,
+    createdAt,
 }) {
     const ExcelJS = (await import("exceljs")).default;
     const workbook = new ExcelJS.Workbook();
@@ -106,7 +107,7 @@ export async function createOrderExcelFile({
         : `Datum: ${new Intl.DateTimeFormat("sr-Latn-RS", {
               dateStyle: "medium",
               timeStyle: "short",
-          }).format(new Date())}`;
+          }).format(new Date(createdAt || Date.now()))}`;
     worksheet.getCell("A4").fill = {
         type: "pattern",
         pattern: "solid",
