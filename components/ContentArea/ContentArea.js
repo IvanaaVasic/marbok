@@ -1,10 +1,13 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useRef, useEffect } from "react";
 import styles from "@/components/Content/Content.module.css";
 import { urlFromOriginalImage } from "@/utils/image";
 import { FormProvider } from "react-hook-form";
 import Button from "@/components/Button/Button";
 import { FaCartShopping } from "react-icons/fa6";
 import { toast } from "react-toastify";
+import { MdCheck } from "react-icons/md";
+import { useProductSelection } from "@/context/ProductSelectionContext";
+import { createProductHold, productIdentity } from "@/utils/productSelection";
 import clsx from "clsx";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -15,7 +18,23 @@ function ContentArea({
     toggleModal,
     className,
     imageClassName,
+    categoryTitle,
+    groupTitle,
 }) {
+    const selection = useProductSelection();
+    const entry = { product: contentArea, categoryTitle, groupTitle };
+    const selected = selection.items.some(item => productIdentity(item.product) === productIdentity(contentArea));
+    const latest = useRef(null);
+    latest.current = () => { if (selection.allowed) selection.begin(entry); };
+    const hold = useRef(null);
+    if (!hold.current) hold.current = createProductHold(() => latest.current());
+    useEffect(() => { if (!selection.allowed) hold.current.dispose(); }, [selection.allowed]);
+    useEffect(() => () => hold.current.dispose(), []);
+    const handleImageClick = () => {
+        if (hold.current.consumeClick()) return;
+        if (selection.active) selection.toggle(entry);
+        else toggleModal(contentArea?._id);
+    };
     const [internalQuantity, setInternalQuantity] = useState("1");
     const { user } = useAuth();
 
@@ -80,19 +99,40 @@ function ContentArea({
     return (
         <div
             key={contentArea?._id}
-            className={clsx(styles.productCard, className)}
+            className={clsx(styles.productCard, className, { [styles.offerSelected]: selected })}
         >
-            <div className={styles.productImageWrapper}>
+            <div className={clsx(styles.productImageWrapper, { [styles.offerSelectable]: selection.allowed })}>
+                {selection.active && <button type="button" className={styles.selectionCircle}
+                    aria-label={`${selected ? "Ukloni" : "Izaberi"} ${contentArea?.name} za ponudu`}
+                    aria-pressed={selected} onClick={() => selection.toggle(entry)}>
+                    {selected && <MdCheck aria-hidden="true" />}
+                </button>}
                 <img
                     src={urlFromOriginalImage(contentArea?.image)}
                     alt={contentArea?.name}
                     className={clsx(styles.img, imageClassName)}
-                    onClick={() => toggleModal(contentArea?._id)}
+                    role="button" tabIndex={0}
+                    aria-label={selection.active ? `${selected ? "Ukloni" : "Izaberi"} ${contentArea?.name} za ponudu` : `Uvećaj sliku: ${contentArea?.name}`}
+                    onPointerDown={selection.allowed ? event => hold.current.down(event) : undefined}
+                    onPointerMove={selection.allowed ? event => hold.current.move(event) : undefined}
+                    onPointerUp={() => hold.current.end()}
+                    onPointerCancel={() => hold.current.end()}
+                    onPointerLeave={() => hold.current.end()}
+                    onContextMenu={selection.allowed ? event => event.preventDefault() : undefined}
+                    onDragStart={selection.allowed ? event => event.preventDefault() : undefined}
+                    onKeyDown={event => {
+                        if (event.key === " " || event.key === "Enter") {
+                            event.preventDefault();
+                            if (event.key === " " && selection.allowed && !selection.active) selection.begin(entry);
+                            else handleImageClick();
+                        }
+                    }}
+                    onClick={handleImageClick}
                 />
                 {contentArea?.package && (
                     <p className={styles.package}>{contentArea?.package}</p>
                 )}
-                <span className={styles.imageHint}>Klikni za veću sliku</span>
+                <span className={styles.imageHint}>{selection.active ? "Dodirni za izbor" : "Klikni za veću sliku"}</span>
             </div>
             <div className={styles.productInfo}>
                 {contentArea?.name && (
