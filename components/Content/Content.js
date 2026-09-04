@@ -3,11 +3,13 @@ import styles from "./Content.module.css";
 import Modal from "@/components/Modal/Modal";
 import { useForm } from "react-hook-form";
 import { useCart } from "@/hooks/useCart";
+import { useProductSelection } from "@/context/ProductSelectionContext";
 import ContentArea from "@/components/ContentArea/ContentArea";
 
 export const revalidate = 10;
 
 function Content({ filteredProducts = [], searchQuery = "", categories }) {
+    const selection = useProductSelection();
     const [modalStates, setModalStates] = useState({});
     const { addToCart } = useCart();
     const methods = useForm();
@@ -44,6 +46,10 @@ function Content({ filteredProducts = [], searchQuery = "", categories }) {
                 </h2>
             </div>
 
+            {selection.allowed && <div className={styles.selectionIntro}>
+                <span>{selection.active ? "Dodirni kružiće da izabereš proizvode za ponudu." : "Zadrži prst na slici za izbor proizvoda."}</span>
+                {!selection.active && <button onClick={() => selection.begin()}>Izaberi za ponudu</button>}
+            </div>}
             {!isSearchActive &&
                 sortedCategories.map((page) => (
                     <div key={page?._id} className={styles.productBlock}>
@@ -66,6 +72,8 @@ function Content({ filteredProducts = [], searchQuery = "", categories }) {
                                     <ContentArea
                                         key={contentArea?._id}
                                         contentArea={contentArea}
+                                        categoryTitle={categories.title}
+                                        groupTitle={page.title}
                                         addToCart={addToCart}
                                         methods={methods}
                                         toggleModal={toggleModal}
@@ -103,6 +111,8 @@ function Content({ filteredProducts = [], searchQuery = "", categories }) {
                                 <React.Fragment key={filteredcontentArea?._id}>
                             <ContentArea
                                 contentArea={filteredcontentArea}
+                                categoryTitle={categories.title}
+                                groupTitle={categories.categoryProducts.find(group => group.contentArea?.some(product => product._id === filteredcontentArea._id))?.title}
                                 addToCart={addToCart}
                                 methods={methods}
                                 toggleModal={toggleModal}

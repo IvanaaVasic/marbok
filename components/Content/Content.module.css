@@ -439,3 +439,13 @@ button.quantityBtn {
         width: 100%;
     }
 }
+
+.selectionIntro { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px; padding: 16px; font-size: 14px; color: #766; }
+.selectionIntro button { min-height: 44px; border: 1px solid #dcc; border-radius: 8px; padding: 10px 14px; font: inherit; font-weight: 700; color: #963737; background: #fff; cursor: pointer; }
+.offerSelectable img { -webkit-touch-callout: none; user-select: none; -webkit-user-select: none; touch-action: pan-y; }
+.selectionCircle { position: absolute; top: 8px; left: 8px; z-index: 3; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; border: 2px solid #917575; background: #ffffffed; color: white; cursor: pointer; box-shadow: 0 1px 5px #0002; font-size: 23px; }
+.selectionCircle::before { content: ""; position: absolute; inset: -4px; }
+.selectionCircle[aria-pressed="true"] { background: #963737; border-color: #963737; }
+.offerSelected { outline: 3px solid #963737; outline-offset: -2px; }
+.selectionCircle:focus-visible, .offerSelectable img:focus-visible { outline: 3px solid #963737; outline-offset: 3px; }
+@media print { .selectionIntro, .selectionCircle { display: none; } }
