@@ -6,6 +6,12 @@ import { createRequire } from 'node:module';
 import path from 'node:path';
 const source = await readFile('utils/productSelection.js', 'utf8');
 const { toggleProduct, selectedCategories, createProductHold } = await import('data:text/javascript;base64,' + Buffer.from(source).toString('base64'));
+const storageSource = await readFile('utils/selectionStorage.js', 'utf8');
+const { readSelection, writeSelection, clearStoredSelection } = await import('data:text/javascript;base64,' + Buffer.from(storageSource).toString('base64'));
+function memoryStorage() {
+    const values = new Map();
+    return { getItem: key => values.get(key) ?? null, setItem: (key, value) => values.set(key, value), removeItem: key => values.delete(key) };
+}
 const first = { product: { _id: 'one', name: 'Čokolada', productKey: '0001', package: '24 kom', price: '125' }, categoryTitle: 'Slatkiši', groupTitle: 'Čokolade' };
 const second = { product: { _id: 'two', name: 'Deterdžent', productKey: '0002', package: '1 L', price: '240' }, categoryTitle: 'Hemija', groupTitle: 'Pranje' };
 
@@ -57,7 +63,13 @@ test('selected Excel contains exactly the chosen products in separate category t
     });
     const require = createRequire(import.meta.url);
     const { createCatalogWorkbook } = require(path.join(cache, 'workbook.cjs'));
-    const workbook = await createCatalogWorkbook(selectedCategories([first, second]), { selectedOnly: true });
+    const storage = memoryStorage();
+    writeSelection(storage, { uid: 'owner', active: true, items: [first] });
+    // A category navigation creates a fresh provider and restores the first selection.
+    const restoredSelection = readSelection(storage, 'owner');
+    const combined = toggleProduct(restoredSelection.items, second);
+    writeSelection(storage, { ...restoredSelection, items: combined });
+    const workbook = await createCatalogWorkbook(selectedCategories(readSelection(storage, 'owner').items), { selectedOnly: true });
     const ExcelJS = require('exceljs'); const restored = new ExcelJS.Workbook();
     await restored.xlsx.load(await workbook.xlsx.writeBuffer());
     assert.equal(restored.worksheets.length, 2);
@@ -74,4 +86,36 @@ test('selected Excel contains exactly the chosen products in separate category t
     }
     const all = await createCatalogWorkbook(selectedCategories([first, second]));
     assert.ok(all.worksheets[0].getCell('A1').value.includes('KATALOG PROIZVODA'));
+});
+
+
+test('selection survives multiple full-page category navigations', () => {
+    const storage = memoryStorage();
+    writeSelection(storage, { uid: 'owner', active: true, items: [first] });
+    const nextCategory = readSelection(storage, 'owner');
+    assert.deepEqual(nextCategory.items, [first]);
+    writeSelection(storage, { ...nextCategory, items: toggleProduct(nextCategory.items, second) });
+    assert.deepEqual(readSelection(storage, 'owner').items, [first, second]);
+    assert.deepEqual(selectedCategories(readSelection(storage, 'owner').items).map(category => category.title), ['Slatkiši', 'Hemija']);
+});
+test('trash clears persisted selection and cannot resurrect it on navigation', () => {
+    const storage = memoryStorage();
+    writeSelection(storage, { uid: 'owner', active: true, items: [first, second] });
+    writeSelection(storage, { uid: 'owner', active: false, items: [] });
+    assert.deepEqual(readSelection(storage, 'owner'), { uid: 'owner', active: false, items: [] });
+});
+test('selection belongs to one account and logout erases it', () => {
+    const storage = memoryStorage();
+    writeSelection(storage, { uid: 'owner', active: true, items: [first] });
+    assert.equal(readSelection(storage, 'other').items.length, 0);
+    clearStoredSelection(storage);
+    assert.equal(readSelection(storage, 'owner').items.length, 0);
+});
+test('unavailable storage or invalid data cannot crash the picker', () => {
+    const broken = { getItem() { throw Error('blocked'); }, setItem() { throw Error('full'); }, removeItem() { throw Error('blocked'); } };
+    assert.equal(readSelection(broken, 'owner').items.length, 0);
+    assert.equal(writeSelection(broken, { uid: 'owner', active: true, items: [first] }), false);
+    assert.doesNotThrow(() => clearStoredSelection(broken));
+    assert.equal(readSelection({ getItem: () => '{invalid' }, 'owner').items.length, 0);
+    assert.equal(readSelection(null, 'owner').items.length, 0);
 });
