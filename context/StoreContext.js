@@ -34,6 +34,11 @@ export function StoreProvider({ children }) {
         Cookies.set("selectedStore", JSON.stringify(store), { expires: 7 });
     };
 
+    const clearStoreSelection = () => {
+        setSelectedStore(null);
+        Cookies.remove("selectedStore");
+    };
+
     return (
         <StoreContext.Provider
             value={{
@@ -41,6 +46,7 @@ export function StoreProvider({ children }) {
                 isStoreSelectorOpen,
                 setIsStoreSelectorOpen,
                 handleStoreSelect,
+                clearStoreSelection,
             }}
         >
             {children}

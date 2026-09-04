@@ -39,6 +39,7 @@ function Header({
         isStoreSelectorOpen,
         setIsStoreSelectorOpen,
         handleStoreSelect,
+        clearStoreSelection,
     } = useStore();
     const pathName = router.pathname;
     const isCategoryPage = pathName === "/category/[slug]";
@@ -127,6 +128,7 @@ function Header({
                 {isAdmin && <StoreSelector
                     stores={stores}
                     selectedStore={selectedStore}
+                    onClearSelection={clearStoreSelection}
                     isOpen={isStoreSelectorOpen}
                     onClose={() => setIsStoreSelectorOpen(false)}
                     onStoreSelect={(store) => {

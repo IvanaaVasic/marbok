@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { useAuth } from "@/hooks/useAuth";
 import { isOwner } from "@/utils/adminAccess";
 import { normalizeSearch } from "@/utils/storeSearch";
+import OrderActions from "@/components/OrderActions/OrderActions";
 import SwipeOrderCard from "@/components/SwipeOrderCard/SwipeOrderCard";
 import styles from "./Orders.module.css";
 
@@ -16,6 +17,7 @@ export default function Orders() {
     const [error, setError] = useState("");
     const [searchQuery, setSearchQuery] = useState("");
     const [openId, setOpenId] = useState(null);
+    const [actionOrder, setActionOrder] = useState(null);
     const [pending, setPending] = useState(null);
     const [deleting, setDeleting] = useState(false);
     const deleteLock = useRef(false);
@@ -36,7 +38,7 @@ export default function Orders() {
     }, [user]);
     useEffect(() => {
         const controller = new AbortController();
-        setOrders([]); setPending(null); setOpenId(null);
+        setOrders([]); setPending(null); setOpenId(null); setActionOrder(null);
         if (allowed) load(controller.signal);
         return () => controller.abort();
     }, [allowed, load]);
@@ -77,12 +79,13 @@ export default function Orders() {
             <input type="search" value={searchQuery} onChange={event => { setSearchQuery(event.target.value); setOpenId(null); }}
                 placeholder="Broj, kupac, PIB ili šifra…" aria-label="Pretraži porudžbine" className={styles.searchInput} />
         </div>
-        <p className={styles.swipeHint}>Prevuci porudžbinu ulevo za brisanje ili otvori dugme sa tri tačke.</p>
+        <p className={styles.swipeHint}>Tri tačke: deljenje PDF-a i Excela. Prevuci ulevo za brisanje.</p>
         {loading ? <p role="status">Učitavanje porudžbina…</p> : error ? <div role="alert" className={styles.emptyState}><p>{error}</p><button onClick={() => load()} className={styles.backLink}>Pokušaj ponovo</button></div> : <>
             <div className={styles.ordersList}>{filtered.map(order => <SwipeOrderCard key={order._id} order={order}
-                open={openId === order._id} onToggle={open => setOpenId(open ? order._id : null)} onDelete={setPending} />)}</div>
+                open={openId === order._id} onToggle={open => setOpenId(open ? order._id : null)} onDelete={setPending} onActions={setActionOrder} />)}</div>
             {!filtered.length && <div className={styles.emptyState}>{searchQuery ? `Nema porudžbina za pretragu „${searchQuery}“.` : "Još nema porudžbina."}</div>}
         </>}
+        <OrderActions key={actionOrder?._id || "closed"} order={actionOrder} onClose={() => setActionOrder(null)} onDelete={setPending} />
         <Dialog open={Boolean(pending)} onClose={() => { if (!deleting) setPending(null); }}
             aria-labelledby="delete-order-title" aria-describedby="delete-order-description" maxWidth="xs" fullWidth>
             <div className={styles.confirmDialog}>

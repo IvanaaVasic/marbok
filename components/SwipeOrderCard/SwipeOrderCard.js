@@ -4,7 +4,7 @@ import { MdDeleteOutline, MdMoreHoriz } from "react-icons/md";
 import { formatDate } from "@/utils/dateFormat";
 import styles from "@/pages/orders/Orders.module.css";
 
-export default function SwipeOrderCard({ order, open, onToggle, onDelete }) {
+export default function SwipeOrderCard({ order, open, onToggle, onDelete, onActions }) {
     const start = useRef(null);
     const dragged = useRef(false);
     const [offset, setOffset] = useState(null);
@@ -45,7 +45,7 @@ export default function SwipeOrderCard({ order, open, onToggle, onDelete }) {
             }}>
             <div className={styles.cardHeader}><span className={styles.orderNumber}>{order.orderNumber}</span>
                 <button type="button" className={styles.moreButton} aria-label={`Opcije porudžbine ${order.orderNumber}`}
-                    aria-expanded={open} onClick={() => onToggle(!open)}><MdMoreHoriz aria-hidden="true" /></button></div>
+                    aria-haspopup="dialog" onClick={() => onActions(order)}><MdMoreHoriz aria-hidden="true" /></button></div>
             <span className={styles.orderDate}>{formatDate(new Date(order.createdAt))}</span>
             <Link href={`/order/${order.orderNumber}`} className={styles.detailsLink}
                 onClick={event => { if (open) { event.preventDefault(); onToggle(false); } }}>

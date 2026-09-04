@@ -105,3 +105,12 @@ test('store search handles diacritics, multiple terms, IDs, empty fields and sor
     assert.equal(stores[0]._id, '1');
     assert.deepEqual(filterStores(undefined, ''), []);
 });
+
+test('full order export endpoint also requires the owner session', async () => {
+    const anonymous = await harness();
+    const req = request('GET'); req.headers = {}; const res = response();
+    await anonymous.del(req, res); assert.equal(res.code, 401); assert.equal(anonymous.calls.reads, 0);
+    const other = await harness({ localId: 'other', email: 'buyer@example.com' });
+    const forbidden = response(); await other.del(request('GET'), forbidden);
+    assert.equal(forbidden.code, 403); assert.equal(other.calls.reads, 0);
+});

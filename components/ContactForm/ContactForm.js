@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styles from "../Input/Input.module.css";
 import { useForm, FormProvider } from "react-hook-form";
 import Button from "@/components/Button/Button";
@@ -130,12 +130,18 @@ function ContactForm({ selectedStore }) {
         }
     };
 
+    const previousStore = useRef(null);
     useEffect(() => {
         if (selectedStore) {
             setValue("firstName", selectedStore.name);
             setValue("email", selectedStore.email);
             setValue("phone", selectedStore.phone);
+        } else if (previousStore.current) {
+            setValue("firstName", "");
+            setValue("email", "");
+            setValue("phone", "");
         }
+        previousStore.current = selectedStore;
     }, [selectedStore, setValue]);
 
     const clearInputError = (fieldName) => {
