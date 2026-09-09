@@ -326,6 +326,25 @@ button.quantityBtn {
     color: #666;
 }
 
+/* Širi desktop: manje kartica u redu daje proizvodima više prostora,
+   dok contain zadržava celu fotografiju bez isecanja. */
+@media only screen and (min-width: 1341px) {
+    .contentContainer {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-gap: 44px 24px;
+        padding-left: 70px;
+        padding-right: 70px;
+    }
+
+    .productCard {
+        max-width: 440px;
+    }
+
+    .productImageWrapper {
+        height: 360px;
+    }
+}
+
 @media only screen and (max-width: 1340px) {
     .contentContainer {
         grid-template-columns: repeat(3, minmax(0, 1fr));
