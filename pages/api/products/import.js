@@ -101,6 +101,7 @@ export default async function handler(req, res) {
         return res.status(200).json({ created: prepared.length, skipped, errors });
     } catch (error) {
         console.error("Product import failed:", error);
-        return res.status(502).json({ error: "Proizvodi trenutno nisu upisani. Nijedan proizvod iz ove grupe nije dodat." });
+        const reason = String(error?.message || "Nepoznata greška").slice(0, 220);
+        return res.status(502).json({ error: `Sanity nije prihvatio ovu grupu: ${reason}` });
     }
 }
