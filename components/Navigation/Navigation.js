@@ -59,6 +59,19 @@ function Navigation({ categories, isAdmin }) {
             <span
                 className={styles.listItem}
                 onClick={() => setDropdown((prev) => !prev)}
+                onMouseEnter={() => setDropdown(true)}
+                onMouseLeave={() => setDropdown(false)}
+                onFocus={() => setDropdown(true)}
+                onBlur={(event) => {
+                    if (!event.currentTarget.contains(event.relatedTarget)) setDropdown(false);
+                }}
+                onKeyDown={(event) => {
+                    if (event.key === "Escape") setDropdown(false);
+                }}
+                role="button"
+                tabIndex={0}
+                aria-haspopup="menu"
+                aria-expanded={dropdown}
             >
                 <p
                     className={`${styles.link} ${
@@ -77,6 +90,7 @@ function Navigation({ categories, isAdmin }) {
                         submenus={categories}
                         dropdown={dropdown}
                         className={styles.dropdown}
+                        desktop
                     />
                 )}
             </span>
