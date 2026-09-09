@@ -180,6 +180,14 @@ function NavigationMobile({
                                         </li>
                                     </Link>
                                 )}
+                                {isAdmin && (
+                                    <Link href="/odobravanje-naloga">
+                                        <li className={clsx(styles.listItem)}>
+                                            <FaUser />
+                                            <p className={styles.link}>Odobravanje naloga</p>
+                                        </li>
+                                    </Link>
+                                )}
                                 <hr className={styles.line} />
                             </>
                         )}

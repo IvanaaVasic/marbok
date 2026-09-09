@@ -8,7 +8,6 @@ export async function getPages() {
         "image": image.asset->url,
         title,
         contentArea[]->{
-          price,
           productKey,
           image,
           package,
@@ -46,7 +45,6 @@ export async function getCategories() {
                 "image": image.asset->url,
                 title,
                 contentArea[]->{
-                  price,
                   productKey,
                   image,
                   package,
@@ -61,7 +59,7 @@ export async function getCategories() {
 
 export async function getStores() {
     return createClient(clientConfig).fetch(
-        groq`*[_type == "store"]{
+        groq`*[_type == "store" && (!defined(approvalStatus) || approvalStatus == "approved")]{
             name,
             pib,
             address,
@@ -161,5 +159,8 @@ export async function createStore(store) {
         phone: store.phone,
         email: store.email,
         contactPerson: store.contactPerson,
+        firebaseUid: store.firebaseUid,
+        approvalStatus: store.approvalStatus,
+        registeredAt: store.registeredAt,
     });
 }

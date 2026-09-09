@@ -9,16 +9,21 @@ import { downloadFile } from "@/utils/shareFile";
 import { auth } from "@/config/firebase";
 import { isOwner } from "@/utils/adminAccess";
 import styles from "./ProductSelectionBar.module.css";
+import { useCatalogAccess } from "@/context/CatalogAccessContext";
 
 export default function ProductSelectionBar() {
     const { allowed, active, items, toggle, clear } = useProductSelection();
+    const { prices } = useCatalogAccess();
     const [busy, setBusy] = useState(false);
     const [review, setReview] = useState(false);
     const exporting = useRef(false);
     if (!allowed || !active) return null;
     const exportSelected = async () => {
         if (!items.length || exporting.current || !isOwner(auth.currentUser)) return;
-        const snapshot = [...items];
+        const snapshot = items.map((entry) => ({
+            ...entry,
+            product: { ...entry.product, price: prices[entry.product._id] ?? entry.product.price ?? "" },
+        }));
         exporting.current = true; setBusy(true);
         try {
             const { createCatalogWorkbook } = await import("@/utils/catalogWorkbook");

@@ -49,7 +49,6 @@ export async function getServerSideProps({ params }) {
                   "image": image.asset->url,
                   title,
                   contentArea[]->{
-                    price,
                     productKey,
                     image,
                     package,

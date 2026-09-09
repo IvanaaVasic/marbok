@@ -9,7 +9,7 @@ import { MdCheck } from "react-icons/md";
 import { useProductSelection } from "@/context/ProductSelectionContext";
 import { createProductHold, productIdentity } from "@/utils/productSelection";
 import clsx from "clsx";
-import { useAuth } from "@/hooks/useAuth";
+import { useCatalogAccess } from "@/context/CatalogAccessContext";
 
 function ContentArea({
     contentArea,
@@ -22,7 +22,10 @@ function ContentArea({
     groupTitle,
 }) {
     const selection = useProductSelection();
-    const entry = { product: contentArea, categoryTitle, groupTitle };
+    const { prices, canSeePrices } = useCatalogAccess();
+    const price = prices[contentArea?._id] ?? "";
+    const pricedProduct = { ...contentArea, price };
+    const entry = { product: pricedProduct, categoryTitle, groupTitle };
     const selected = selection.items.some(item => productIdentity(item.product) === productIdentity(contentArea));
     const latest = useRef(null);
     latest.current = () => { if (selection.allowed) selection.begin(entry); };
@@ -36,7 +39,6 @@ function ContentArea({
         else toggleModal(contentArea?._id);
     };
     const [internalQuantity, setInternalQuantity] = useState("1");
-    const { user } = useAuth();
 
     const handleAddToCart = async (
         contentAreaName,
@@ -139,10 +141,10 @@ function ContentArea({
                     <h3 className={styles.productName}>{contentArea?.name}</h3>
                 )}
                 <div className={styles.fieldInfoContainer}>
-                    {contentArea?.price && user && (
+                    {price !== "" && canSeePrices && (
                         <div className={styles.priceWrapper}>
                             <span className={styles.priceLabel}>Cena</span>
-                            <strong>{contentArea?.price} RSD</strong>
+                            <strong>{price} RSD</strong>
                         </div>
                     )}
                     {contentArea?.productKey && (
@@ -154,7 +156,7 @@ function ContentArea({
                         </div>
                     )}
                 </div>
-                <FormProvider {...methods}>
+                {canSeePrices && <FormProvider {...methods}>
                     <div className={styles.quantityContainer}>
                         <div className={styles.quantityWrapper}>
                             <Button
@@ -194,7 +196,7 @@ function ContentArea({
                                     contentArea?._id,
                                     contentArea?.productKey,
                                     contentArea?.image,
-                                    contentArea?.price
+                                    price
                                 )
                             }
                         >
@@ -202,7 +204,7 @@ function ContentArea({
                             <span>Dodaj</span>
                         </button>
                     </div>
-                </FormProvider>
+                </FormProvider>}
             </div>
         </div>
     );

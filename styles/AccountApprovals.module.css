@@ -1,0 +1,35 @@
+.page { max-width: 1120px; margin: 0 auto; padding: 56px 24px 90px; min-height: 65vh; }
+.heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; margin-bottom: 28px; }
+.heading h1 { margin: 0 0 8px; font-size: clamp(28px, 4vw, 42px); }
+.heading p { margin: 0; color: #666; }
+.heading button { border: 1px solid #992e2e; color: #992e2e; background: white; border-radius: 8px; padding: 10px 16px; cursor: pointer; }
+.list { display: grid; gap: 16px; }
+.card { display: flex; justify-content: space-between; gap: 24px; padding: 22px; border: 1px solid #e1e1e1; border-radius: 12px; background: #fff; box-shadow: 0 4px 18px rgba(0,0,0,.05); }
+.info { flex: 1; min-width: 0; }
+.titleRow { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
+.titleRow h2 { margin: 0; font-size: 20px; }
+.status { padding: 5px 9px; border-radius: 999px; font-size: 12px; font-weight: 700; background: #eee; }
+.pending { color: #745800; background: #fff1b9; }
+.approved { color: #14672f; background: #dff4e5; }
+.rejected { color: #8b2525; background: #f8dddd; }
+.card dl { display: grid; grid-template-columns: repeat(3, minmax(120px, 1fr)); gap: 14px 22px; margin: 20px 0 0; }
+.card dl div { min-width: 0; }
+.card dt { color: #777; font-size: 12px; text-transform: uppercase; }
+.card dd { margin: 4px 0 0; overflow-wrap: anywhere; }
+.actions { display: flex; align-items: flex-end; gap: 10px; }
+.actions button { border: 0; border-radius: 8px; padding: 11px 15px; font-weight: 700; cursor: pointer; white-space: nowrap; }
+.actions button:disabled, .heading button:disabled { opacity: .55; cursor: wait; }
+.reject { background: #f4e4e4; color: #822626; }
+.approve { background: #8f2929; color: white; }
+.empty { padding: 50px 20px; text-align: center; border: 1px dashed #ccc; border-radius: 12px; color: #666; }
+@media (max-width: 760px) {
+    .page { padding: 34px 16px 70px; }
+    .card { flex-direction: column; }
+    .card dl { grid-template-columns: 1fr 1fr; }
+    .actions { justify-content: flex-end; }
+}
+@media (max-width: 460px) {
+    .heading { flex-direction: column; }
+    .card dl { grid-template-columns: 1fr; }
+    .actions { display: grid; grid-template-columns: 1fr 1fr; }
+}

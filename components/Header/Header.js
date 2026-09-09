@@ -12,6 +12,7 @@ import { MdStorefront } from "react-icons/md";
 
 import { useAuth } from "@/hooks/useAuth";
 import CatalogExportButton from "@/components/CatalogExportButton/CatalogExportButton";
+import { useCatalogAccess } from "@/context/CatalogAccessContext";
 
 function normalizeSearchValue(value) {
     return String(value || "")
@@ -30,6 +31,7 @@ function Header({
     stores,
 }) {
     const { user } = useAuth();
+    const { canSeePrices } = useCatalogAccess();
     const isAdmin = isOwner(user);
     const canExportCatalog = isAdmin;
 
@@ -115,7 +117,7 @@ function Header({
                             <span>{selectedStore ? "Izabrana" : "Prodavnica"}</span>
                         </button>
                     )}
-                    <Cart />
+                    {canSeePrices && <Cart />}
                     {(isLg || isCategoryPage) && (
                         <NavigationMobile
                             category={category}

@@ -56,6 +56,14 @@ function Navigation({ categories, isAdmin }) {
                 </Link>
             )}
 
+            {isAdmin && (
+                <Link href="/odobravanje-naloga" className={styles.listItem}>
+                    <p className={`${styles.link} ${pathName === "/odobravanje-naloga" ? styles.activeLink : ""}`}>
+                        Nalozi
+                    </p>
+                </Link>
+            )}
+
             <span
                 className={styles.listItem}
                 onClick={() => setDropdown((prev) => !prev)}
