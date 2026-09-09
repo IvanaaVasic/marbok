@@ -2,16 +2,29 @@ import { useState } from "react";
 import { FaFileExcel } from "react-icons/fa6";
 import { createCatalogWorkbook } from "@/utils/catalogWorkbook";
 import styles from "./CatalogExportButton.module.css";
+import { useCatalogAccess } from "@/context/CatalogAccessContext";
 
 function CatalogExportButton({ categories = [], menu = false }) {
     const [isExporting, setIsExporting] = useState(false);
+    const { prices } = useCatalogAccess();
+
+    const categoriesWithPrices = categories.map((category) => ({
+        ...category,
+        categoryProducts: (category.categoryProducts || []).map((section) => ({
+            ...section,
+            contentArea: (section.contentArea || []).map((product) => ({
+                ...product,
+                price: prices[product._id] ?? "",
+            })),
+        })),
+    }));
 
     const handleExport = async () => {
         if (isExporting || !categories.length) return;
         setIsExporting(true);
 
         try {
-            const workbook = await createCatalogWorkbook(categories);
+            const workbook = await createCatalogWorkbook(categoriesWithPrices);
             const buffer = await workbook.xlsx.writeBuffer();
             const blob = new Blob([buffer], {
                 type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",

@@ -1,0 +1,12 @@
+.banner {
+    padding: 11px 20px;
+    background: #fff4cf;
+    border-bottom: 1px solid #e7c96c;
+    color: #5f4a09;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+}
+.banner a { color: inherit; text-decoration: underline; }
+.rejected { background: #fde8e8; border-color: #e9a4a4; color: #7d2020; }
+.error { background: #f1f1f1; border-color: #c8c8c8; color: #444; }

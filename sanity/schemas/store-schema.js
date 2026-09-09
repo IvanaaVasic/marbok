@@ -41,6 +41,29 @@ const store = {
             title: "Sifra kupca",
             type: "string",
         },
+        {
+            name: "firebaseUid",
+            title: "Firebase UID",
+            type: "string",
+            hidden: true,
+        },
+        {
+            name: "approvalStatus",
+            title: "Status pristupa cenama",
+            type: "string",
+            options: {
+                list: [
+                    { title: "Čeka odobrenje", value: "pending" },
+                    { title: "Odobren", value: "approved" },
+                    { title: "Odbijen", value: "rejected" },
+                ],
+            },
+        },
+        {
+            name: "registeredAt",
+            title: "Vreme registracije",
+            type: "datetime",
+        },
     ],
 };
 

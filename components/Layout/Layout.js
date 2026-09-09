@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
 import Head from "next/head";
+import AccessStatusBanner from "@/components/AccessStatusBanner/AccessStatusBanner";
 
 function Layout({ children, category, footerClassName, categories, stores }) {
     const [filteredProducts, setFilteredProducts] = useState([]);
@@ -33,6 +34,7 @@ function Layout({ children, category, footerClassName, categories, stores }) {
                 setSearchQuery={setSearchQuery}
                 stores={stores}
             />
+            <AccessStatusBanner />
             {children({ category, filteredProducts, searchQuery })}
             <Footer footerClassName={footerClassName} />
         </div>

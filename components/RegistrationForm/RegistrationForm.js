@@ -20,6 +20,11 @@ import { FaUser, FaPhoneAlt, FaBuilding, FaIdCard } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
 import { MdEmail, MdPassword } from "react-icons/md";
 import { createStore } from "@/sanity/sanity-utils";
+import emailjs from "@emailjs/browser";
+
+const EMAIL_SERVICE_ID = "service_pn5jvkb";
+const EMAIL_TEMPLATE_ID = "template_ji1obt8";
+const EMAIL_PUBLIC_KEY = "vEKyEbs258TNVtxqI";
 
 const errorMap = {
     "auth/email-already-in-use": "Email je već u upotrebi",
@@ -77,20 +82,37 @@ export const RegistrationForm = () => {
                     companyName: values.companyName || null,
                     pib: values.pib || null,
                     address: values.address || null,
+                    approvalStatus: "pending",
                 };
 
                 const userDocRef = doc(db, "users", userCredential.user.uid);
                 await setDoc(userDocRef, userData);
 
-                if (values.companyName) {
-                    await createStore({
-                        name: values.companyName,
-                        pib: values.pib,
-                        address: values.address,
-                        phone: values.phone,
+                await createStore({
+                    name: values.companyName || values.name || values.email,
+                    pib: values.pib,
+                    address: values.address,
+                    phone: values.phone,
+                    email: values.email,
+                    contactPerson: values.name || "",
+                    firebaseUid: userCredential.user.uid,
+                    approvalStatus: "pending",
+                    registeredAt: new Date().toISOString(),
+                });
+
+                // Registracija ostaje uspešna čak i ako email servis privremeno zakaže;
+                // zahtev je svakako vidljiv vlasniku u listi za odobravanje.
+                try {
+                    await emailjs.send(EMAIL_SERVICE_ID, EMAIL_TEMPLATE_ID, {
+                        firstName: values.name || values.companyName || "Novi korisnik",
                         email: values.email,
-                        contactPerson: values.name || "",
-                    });
+                        phone: values.phone,
+                        orderNumber: "NOVA REGISTRACIJA",
+                        orderExcelUrl: "",
+                        message: `Novi zahtev za pristup cenama.\n\nFirma: ${values.companyName || "—"}\nPIB: ${values.pib || "—"}\nAdresa: ${values.address || "—"}\n\nOdobri ili odbij zahtev na: ${window.location.origin}/odobravanje-naloga`,
+                    }, EMAIL_PUBLIC_KEY);
+                } catch (notificationError) {
+                    console.error("Registration notification failed", notificationError);
                 }
 
                 setRegistrationSuccessful(true);
@@ -226,7 +248,7 @@ export const RegistrationForm = () => {
                                     className={styles.spinner}
                                 />
                                 <Typography variant="overline" marginLeft={1}>
-                                    Redirecting...
+                                    Zahtev je poslat. Preusmeravanje...
                                 </Typography>
                             </div>
                         )}

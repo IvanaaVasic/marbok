@@ -7,16 +7,25 @@ import { useCart } from "@/hooks/useCart";
 import Checkout from "@/components/Checkout/Checkout";
 
 import { useStore } from "@/context/StoreContext";
+import { useCatalogAccess } from "@/context/CatalogAccessContext";
 
 function Contact({ initialPages, initialCategory, initialStores }) {
     const pages = usePages() || initialPages;
     const categories = useCategories() || initialCategory;
     const { cart, removeFromCart, updateCartQuantity } = useCart();
     const { selectedStore } = useStore();
+    const { canSeePrices, loading: accessLoading, status } = useCatalogAccess();
 
     return (
         <Layout pages={pages} categories={categories} stores={initialStores}>
-            {(filteredProducts) => (
+            {() => accessLoading ? (
+                <div className={styles.accessMessage}>Provera pristupa...</div>
+            ) : !canSeePrices ? (
+                <div className={styles.accessMessage}>
+                    <h1>Poručivanje još nije dostupno</h1>
+                    <p>{status === "guest" ? "Prijavi se odobrenim nalogom da vidiš cene i pošalješ porudžbinu." : "Tvoj nalog čeka odobrenje za pristup cenama i poručivanju."}</p>
+                </div>
+            ) : (
                 <div className={styles.container}>
                     <Checkout
                         cart={cart}
