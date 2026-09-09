@@ -121,9 +121,6 @@ async function downloadTemplate(categories) {
         { header: "CENA", key: "price", width: 15 },
         { header: "SLIKA", key: "image", width: 28 },
     ];
-    const firstCategory = categories[0];
-    const firstSection = firstCategory?.categoryProducts?.[0];
-    sheet.addRow({ category: firstCategory?.title || "", section: firstSection?.title || "", name: "Primer proizvoda", productKey: "8057", package: "24/1*8", price: "465", image: "8057.jpg" });
     sheet.getRow(1).font = { bold: true, color: { argb: "FFFFFFFF" } };
     sheet.getRow(1).fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FFBC4D4D" } };
     sheet.views = [{ state: "frozen", ySplit: 1 }];
@@ -203,6 +200,7 @@ export default function ProductImport({ categories = [] }) {
         setError(""); setResult(null);
         let created = 0, skipped = 0;
         const errors = [];
+        const skippedItems = [];
         setProgress({ done: 0, total: preview.length });
         try {
             const token = await auth.currentUser.getIdToken(true);
@@ -222,9 +220,17 @@ export default function ProductImport({ categories = [] }) {
                 if (!response.ok) throw new Error(data.error || `Uvoz nije uspeo (greška ${response.status}).`);
                 created += data.created || 0; skipped += data.skipped || 0;
                 errors.push(...(data.errors || []));
+                skippedItems.push(...(data.skippedItems || []));
                 setProgress({ done: Math.min(offset + batch.length, preview.length), total: preview.length });
             }
-            setResult({ created, skipped, errors });
+            if (!created) {
+                setResult(null);
+                setError(skipped
+                    ? `Nijedan proizvod nije dodat. Sve unete šifre već postoje na sajtu: ${skippedItems.map((item) => item.productKey).join(", ")}. Unesi novu, jedinstvenu šifru.`
+                    : "Nijedan proizvod nije dodat. Proveri označene redove i pokušaj ponovo.");
+            } else {
+                setResult({ created, skipped, errors: [...errors, ...skippedItems] });
+            }
         } catch (err) { setError(err.message || "Uvoz je prekinut. Već završene grupe su sačuvane."); setProgress(null); }
     };
 
