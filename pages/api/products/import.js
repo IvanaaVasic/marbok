@@ -60,6 +60,7 @@ export default async function handler(req, res) {
         const seenKeys = new Set();
         const valid = [];
         const errors = [];
+        const skippedItems = [];
         let skipped = 0;
 
         products.forEach((product, index) => {
@@ -70,10 +71,17 @@ export default async function handler(req, res) {
             const key = normalize(productKey);
             if (!name || !productKey) errors.push({ row, message: "Nedostaje naziv ili šifra proizvoda." });
             else if (!block) errors.push({ row, message: "Izabrana sekcija nije pronađena." });
-            else if (existingKeys.has(key) || seenKeys.has(key)) skipped += 1;
+            else if (existingKeys.has(key) || seenKeys.has(key)) {
+                skipped += 1;
+                skippedItems.push({
+                    row,
+                    productKey,
+                    message: existingKeys.has(key) ? "Šifra već postoji na sajtu." : "Ista šifra je ponovljena u Excelu.",
+                });
+            }
             else { seenKeys.add(key); valid.push({ ...product, row, name, productKey, block }); }
         });
-        if (!valid.length) return res.status(200).json({ created: 0, skipped, errors });
+        if (!valid.length) return res.status(200).json({ created: 0, skipped, skippedItems, errors });
 
         const prepared = await Promise.all(valid.map(async (product) => {
             try { return { ...product, sanityImage: await uploadImage(client, product.image) }; }
@@ -98,7 +106,7 @@ export default async function handler(req, res) {
                 .append("contentArea", [{ _type: "reference", _key: crypto.randomBytes(12).toString("hex"), _ref: id }]));
         });
         await transaction.commit({ autoGenerateArrayKeys: true });
-        return res.status(200).json({ created: prepared.length, skipped, errors });
+        return res.status(200).json({ created: prepared.length, skipped, skippedItems, errors });
     } catch (error) {
         console.error("Product import failed:", error);
         const reason = String(error?.message || "Nepoznata greška").slice(0, 220);
