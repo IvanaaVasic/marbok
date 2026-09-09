@@ -19,6 +19,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useGetCurrentUser } from "@/hooks/useGetCurrentUser";
 import { UserAvatar } from "../UserAvatar/UserAvatar";
 import { FaUser } from "react-icons/fa";
+import { FaFileExcel } from "react-icons/fa6";
 import CatalogExportButton from "@/components/CatalogExportButton/CatalogExportButton";
 
 export const revalidate = 10;
@@ -168,6 +169,14 @@ function NavigationMobile({
                                             <p className={styles.link}>
                                                 Porudžbine
                                             </p>
+                                        </li>
+                                    </Link>
+                                )}
+                                {isAdmin && (
+                                    <Link href="/uvoz-proizvoda">
+                                        <li className={clsx(styles.listItem)}>
+                                            <FaFileExcel />
+                                            <p className={styles.link}>Uvoz proizvoda</p>
                                         </li>
                                     </Link>
                                 )}
