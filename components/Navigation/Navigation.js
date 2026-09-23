@@ -26,16 +26,6 @@ function Navigation({ categories, isAdmin }) {
 
     return (
         <div className={styles.container}>
-            <Link href={`/`} className={styles.listItem}>
-                <p
-                    className={`${styles.link} ${
-                        pathName === "/" ? styles.activeLink : ""
-                    }`}
-                >
-                    Naslovna
-                </p>
-            </Link>
-
             {isAdmin && (
                 <Link href="/orders" className={styles.listItem}>
                     <p
@@ -66,7 +56,10 @@ function Navigation({ categories, isAdmin }) {
 
             <span
                 className={styles.listItem}
-                onClick={() => setDropdown((prev) => !prev)}
+                onClick={(event) => {
+                    if (event.target.closest("a")) return;
+                    setDropdown((prev) => !prev);
+                }}
                 onMouseEnter={() => setDropdown(true)}
                 onMouseLeave={() => setDropdown(false)}
                 onFocus={() => setDropdown(true)}
@@ -81,13 +74,16 @@ function Navigation({ categories, isAdmin }) {
                 aria-haspopup="menu"
                 aria-expanded={dropdown}
             >
-                <p
+                <Link
+                    href="/catalog"
                     className={`${styles.link} ${
-                        pathName === "/catalog" ? styles.activeLink : ""
+                        pathName === "/catalog" || pathName === "/category/[slug]"
+                            ? styles.activeLink
+                            : ""
                     }`}
                 >
                     Katalog proizvoda
-                </p>
+                </Link>
                 <IoMdArrowDropdown
                     className={`${styles.dropdownIcon} ${
                         dropdown && styles.arrowUp
