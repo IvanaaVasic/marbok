@@ -10,7 +10,6 @@ import styles from "./NavigationMobile.module.css";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
-import { HiHome } from "react-icons/hi2";
 import { GrCatalog } from "react-icons/gr";
 import { MdContactMail } from "react-icons/md";
 import { BsFillPeopleFill } from "react-icons/bs";
@@ -120,12 +119,6 @@ function NavigationMobile({
                                         <hr className={styles.line} />
                                     </>
                                 )}
-                                <Link href={`/`}>
-                                    <li className={clsx(styles.listItem)}>
-                                        <HiHome />
-                                        <p className={styles.link}>Naslovna</p>
-                                    </li>
-                                </Link>
                                 <li
                                     className={clsx(styles.categoriesWrapper)}
                                     onClick={() => setDropdown((prev) => !prev)}
