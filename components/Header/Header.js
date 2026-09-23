@@ -69,7 +69,7 @@ function Header({
     return (
         <>
             <div className={styles.logoWrapper}>
-                <Link href={`/`}>
+                <Link href={`/catalog`}>
                     <img className={styles.logo} src="/logo.png" alt="Logo" />
                 </Link>
                 {isCategoryPage && !isLg && (
@@ -96,7 +96,7 @@ function Header({
                         />
                     </div>
                 )}
-                {/* <Link href={`/`}>
+                {/* <Link href={`/catalog`}>
                     <img className={styles.logo} src="/logo.png" alt="Logo" />
                 </Link> */}
                 <div className={styles.cartNavWrapper}>
