@@ -73,7 +73,7 @@ export default function Orders() {
     if (isAuthLoading) return <div className={styles.statusMessage}>Učitavanje…</div>;
     if (!allowed) return <div className={styles.statusMessage}><h1>Porudžbine</h1><p>Ova stranica je dostupna samo vlasniku naloga.</p><Link href="/auth" className={styles.primaryLink}>Prijavi se</Link></div>;
     return <div className={styles.container}>
-        <div className={styles.header}><h1>Porudžbine</h1><Link href="/" className={styles.backLink}>Nazad na početnu</Link></div>
+        <div className={styles.header}><h1>Porudžbine</h1><Link href="/catalog" className={styles.backLink}>Nazad na katalog</Link></div>
         <div className={styles.toolbar}>
             <div><strong>{orders.length}</strong><span> ukupno porudžbina</span></div>
             <input type="search" value={searchQuery} onChange={event => { setSearchQuery(event.target.value); setOpenId(null); }}
