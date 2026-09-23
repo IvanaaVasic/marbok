@@ -235,7 +235,7 @@ export default function ProductImport({ categories = [] }) {
     };
 
     return <main className={styles.page}><section className={styles.card}>
-        <Link href="/" className={styles.backLink}>← Nazad na sajt</Link>
+        <Link href="/catalog" className={styles.backLink}>← Nazad na katalog</Link>
         <div className={styles.heading}><div><span className={styles.eyebrow}>Samo za vlasnika</span><h1>Uvoz proizvoda iz Excela</h1><p>Kategoriju i sekciju izaberi u Excelu, a ovde samo dodaj Excel i slike.</p></div><button type="button" className={styles.templateButton} onClick={() => downloadTemplate(categories)}><FaFileExcel /> Preuzmi novi šablon</button></div>
         <div className={styles.uploadGrid}>
             <label className={styles.uploadBox}><FaFileExcel /><strong>1. Izaberi popunjen Excel</strong><span>{fileName || "XLSX fajl sa najviše 200 redova"}</span><input type="file" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" onChange={handleExcel} /></label>
