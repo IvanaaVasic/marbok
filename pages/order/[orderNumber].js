@@ -53,8 +53,8 @@ export default function OrderConfirmation({ order }) {
                         Nazad na porudžbine
                     </Link>
                 ) : (
-                    <Link href="/" className={styles.backLink}>
-                        Nazad na početnu
+                    <Link href="/catalog" className={styles.backLink}>
+                        Nazad na katalog
                     </Link>
                 )}
             </div>
