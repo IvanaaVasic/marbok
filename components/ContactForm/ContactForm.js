@@ -29,18 +29,32 @@ function ContactForm({ selectedStore }) {
     const expression =
         /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-    const triggerEmail = async (data) => {
+    const triggerEmail = async (data, orderNumber, orderUrl, orderExcelUrl) => {
         try {
-            await emailjs.send(
-                EMAIL_SERVICE_ID,
-                EMAIL_TEMPLATE_ID,
-                data,
-                EMAIL_PUBLIC_KEY
-            );
+            const response = await fetch("/api/orders/send-email", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ orderNumber, orderExcelUrl }),
+            });
+            if (!response.ok) {
+                const result = await response.json().catch(() => ({}));
+                throw new Error(result.error || "Serversko slanje emaila nije uspelo.");
+            }
             return true;
-        } catch (error) {
-            console.error("Failed to send email", error);
-            return false;
+        } catch (serverError) {
+            console.error("Server email delivery failed; trying browser fallback", serverError);
+            try {
+                await emailjs.send(
+                    EMAIL_SERVICE_ID,
+                    EMAIL_TEMPLATE_ID,
+                    data,
+                    EMAIL_PUBLIC_KEY
+                );
+                return true;
+            } catch (browserError) {
+                console.error("Browser email fallback failed", browserError);
+                return false;
+            }
         }
     };
     const onSubmit = (cart) => async (data) => {
@@ -108,7 +122,12 @@ function ContactForm({ selectedStore }) {
                     .join("\n")}`,
             };
 
-            const emailSent = await triggerEmail(emailData);
+            const emailSent = await triggerEmail(
+                emailData,
+                order.orderNumber,
+                orderUrl,
+                orderExcelUrl
+            );
 
             clearCart();
             if (emailSent && orderExcelUrl) {

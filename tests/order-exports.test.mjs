@@ -10,7 +10,7 @@ const require = createRequire(import.meta.url);
 const root = process.cwd();
 const cache = path.join(root, 'node_modules/.cache/marbok-export-check');
 await mkdir(cache, { recursive: true });
-await build({ stdin: { contents: 'export {createOrderPdfFile} from "./utils/orderPdf"; export {createOrderExcelFile} from "./utils/orderExcel";', resolveDir: root },
+await build({ stdin: { contents: 'export {createOrderPdfFile} from "./utils/orderPdf"; export {createOrderExcelFile} from "./utils/orderExcel"; export {buildOrderEmailParams} from "./server/orderEmail";', resolveDir: root },
     bundle: true, platform: 'node', format: 'cjs', outfile: path.join(cache, 'exports.cjs'),
     external: ['jspdf', 'jspdf-autotable', 'exceljs'],
     plugins: [{ name: 'test-image-resolver', setup(build) {
@@ -18,7 +18,7 @@ await build({ stdin: { contents: 'export {createOrderPdfFile} from "./utils/orde
         build.onLoad({ filter: /.*/, namespace: 'fixture' }, () => ({ contents: 'export const urlFromThumbnail = source => source;' }));
     }}],
 });
-const { createOrderPdfFile, createOrderExcelFile } = require(path.join(cache, 'exports.cjs'));
+const { createOrderPdfFile, createOrderExcelFile, buildOrderEmailParams } = require(path.join(cache, 'exports.cjs'));
 const order = { orderNumber: 'ORD-TEST-50', companyName: 'Primer trgovina doo', customerName: 'Đorđe Živković - Čačak', createdAt: '2026-09-04T09:00:00Z',
     email: 'primer@example.com', phone: '060 123 456', pib: '123456789', pass: '00018',
     items: Array.from({ length: 50 }, (_, index) => ({ name: `Artikal ${index + 1}: Čokoladne bombone sa lešnikom i mlečnim punjenjem`,
@@ -73,4 +73,17 @@ test('native sharing receives a File; cancellation is quiet and unsupported shar
         Object.defineProperty(globalThis, 'navigator', previous);
         globalThis.document = oldDocument;
     }
+});
+test('order email contains company, contact, links and every ordered product', () => {
+    const params = buildOrderEmailParams(order, {
+        orderUrl: 'https://marbok.vercel.app/order/ORD-TEST-50',
+        orderExcelUrl: 'https://cdn.sanity.io/order.xlsx',
+    });
+    assert.equal(params.companyName, order.companyName);
+    assert.equal(params.pib, order.pib);
+    assert.equal(params.firstName, order.customerName);
+    assert.ok(params.message.includes('Link ka potvrdi porudžbine'));
+    assert.ok(params.message.includes('order.xlsx'));
+    assert.ok(params.message.includes('Artikal 1'));
+    assert.ok(params.message.includes('Artikal 50'));
 });
