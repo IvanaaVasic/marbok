@@ -29,8 +29,8 @@
 .productImageWrapper {
     position: relative;
     overflow: hidden;
-    height: 300px;
-    padding: 12px;
+    height: 320px;
+    padding: 7px;
     border-radius: 16px 16px 0 0;
     background: #fff;
 }
@@ -161,13 +161,13 @@
 
 .package {
     background-color: #bc4d4d;
-    border-radius: 0 10px 10px 0;
+    border-radius: 10px 0 0 10px;
     width: fit-content;
     color: #fff;
     padding: 7px 11px;
     position: absolute;
-    left: 0;
-    bottom: 14px;
+    right: 0;
+    top: 16px;
     font-size: 14px;
     font-family: "RedHatBold", "RedHat", sans-serif;
     box-shadow: 0 3px 10px rgba(76, 18, 18, 0.18);
@@ -352,7 +352,7 @@ button.quantityBtn {
         max-width: 440px;
     }
 
-    .productImageWrapper { height: 340px; }
+    .productImageWrapper { height: 370px; }
 }
 
 @media only screen and (max-width: 1340px) {
@@ -425,8 +425,8 @@ button.quantityBtn {
         padding: 24px 10px 44px;
     }
     .productImageWrapper {
-        height: clamp(170px, 47vw, 205px);
-        padding: 7px;
+        height: clamp(190px, 54vw, 225px);
+        padding: 3px;
     }
     .quantityContainer {
         align-items: center;
@@ -459,7 +459,7 @@ button.quantityBtn {
         font-size: 13px;
     }
     .package {
-        bottom: 8px;
+        top: 8px;
         font-size: 12px;
         padding: 5px 8px;
     }

@@ -51,14 +51,15 @@ function ContactForm({ selectedStore }) {
         }
 
         setIsSubmitting(true);
-        const { firstName, email, phone, message } = data;
+        const { companyName, pib, firstName, email, phone, message } = data;
 
         const orderData = {
+            companyName,
+            pib,
             firstName,
             email,
             phone,
             message,
-            pib: selectedStore?.pib || "",
             pass: selectedStore?.pass || "",
             items: cart.map((item) => ({
                 name: item.name,
@@ -76,7 +77,7 @@ function ContactForm({ selectedStore }) {
             try {
                 const orderExcel = await createOrderExcelFile({
                     orderNumber: order.orderNumber,
-                    customer: { name: firstName, email, phone },
+                    customer: { companyName, pib, name: firstName, email, phone },
                     selectedStore,
                     items: cart,
                 });
@@ -92,12 +93,14 @@ function ContactForm({ selectedStore }) {
                 ? `\n\nExcel porudžbina (preuzimanje): ${orderExcelUrl}`
                 : "";
             const emailData = {
+                companyName,
+                pib,
                 firstName,
                 email,
                 phone,
                 orderNumber: order.orderNumber,
                 orderExcelUrl: orderExcelUrl || "",
-                message: `${message || ""}\n\nLink ka potvrdi porudžbine: ${orderUrl}${excelLine}\n\nProizvodi:\n${cart
+                message: `Firma: ${companyName}\nPIB: ${pib}\nKontakt osoba: ${firstName}\n\n${message || ""}\n\nLink ka potvrdi porudžbine: ${orderUrl}${excelLine}\n\nProizvodi:\n${cart
                     ?.map(
                         (item) =>
                             `proizvod: ${item.name}, kolicina: ${item.quantity}, šifra: ${item.productKey}, cena: ${item.price}`
@@ -133,10 +136,14 @@ function ContactForm({ selectedStore }) {
     const previousStore = useRef(null);
     useEffect(() => {
         if (selectedStore) {
-            setValue("firstName", selectedStore.name);
+            setValue("companyName", selectedStore.name || "");
+            setValue("pib", selectedStore.pib || "");
+            setValue("firstName", selectedStore.contactPerson || "");
             setValue("email", selectedStore.email);
             setValue("phone", selectedStore.phone);
         } else if (previousStore.current) {
+            setValue("companyName", "");
+            setValue("pib", "");
             setValue("firstName", "");
             setValue("email", "");
             setValue("phone", "");
@@ -178,6 +185,27 @@ function ContactForm({ selectedStore }) {
                         className={styles.form}
                         onSubmit={handleSubmit(onSubmit(cart))}
                     >
+                        <Input
+                            label="Naziv firme"
+                            inputType="text"
+                            placeholder="Naziv firme..."
+                            registerField="companyName"
+                            required
+                            minLength={2}
+                            onChange={() => clearInputError("companyName")}
+                        />
+                        <Input
+                            label="PIB"
+                            inputType="text"
+                            inputMode="numeric"
+                            maxLength={9}
+                            placeholder="PIB firme (9 cifara)..."
+                            registerField="pib"
+                            required
+                            expression={/^\d{9}$/}
+                            errorMsg="PIB oznaku od 9 cifara"
+                            onChange={() => clearInputError("pib")}
+                        />
                         <Input
                             label="Ime"
                             inputType="text"

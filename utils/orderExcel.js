@@ -96,18 +96,26 @@ export async function createOrderExcelFile({
     worksheet.getCell("A2").alignment = { horizontal: "center" };
 
     worksheet.mergeCells("A3:F3");
-    worksheet.getCell("A3").value = `Kupac: ${customer.name} | Email: ${customer.email} | Telefon: ${customer.phone}`;
+    const companyName = customer.companyName || selectedStore?.name || "";
+    const pib = customer.pib || selectedStore?.pib || "";
+    worksheet.getCell("A3").value = [
+        companyName && `Firma: ${companyName}`,
+        pib && `PIB: ${pib}`,
+        customer.name && `Kontakt: ${customer.name}`,
+    ].filter(Boolean).join(" | ");
     worksheet.getCell("A3").alignment = { horizontal: "center", wrapText: true };
 
     worksheet.mergeCells("A4:F4");
-    worksheet.getCell("A4").value = selectedStore
-        ? `Prodavnica: ${selectedStore.name}${
-              selectedStore.pib ? ` | PIB: ${selectedStore.pib}` : ""
-          }${selectedStore.pass ? ` | Šifra kupca: ${selectedStore.pass}` : ""}`
-        : `Datum: ${new Intl.DateTimeFormat("sr-Latn-RS", {
-              dateStyle: "medium",
-              timeStyle: "short",
-          }).format(new Date(createdAt || Date.now()))}`;
+    const formattedDate = new Intl.DateTimeFormat("sr-Latn-RS", {
+        dateStyle: "medium",
+        timeStyle: "short",
+    }).format(new Date(createdAt || Date.now()));
+    worksheet.getCell("A4").value = [
+        customer.email && `Email: ${customer.email}`,
+        customer.phone && `Telefon: ${customer.phone}`,
+        selectedStore?.pass && `Šifra kupca: ${selectedStore.pass}`,
+        `Datum: ${formattedDate}`,
+    ].filter(Boolean).join(" | ");
     worksheet.getCell("A4").fill = {
         type: "pattern",
         pattern: "solid",

@@ -46,7 +46,7 @@ export default function Orders() {
     const filtered = useMemo(() => {
         const terms = normalizeSearch(searchQuery).split(/\s+/).filter(Boolean);
         return orders.filter(order => {
-            const text = [order.orderNumber, order.customerName, order.email, order.phone, order.pib, order.pass]
+            const text = [order.orderNumber, order.companyName, order.customerName, order.email, order.phone, order.pib, order.pass]
                 .map(normalizeSearch).join(" ");
             return terms.every(term => text.includes(term));
         });
@@ -91,7 +91,7 @@ export default function Orders() {
             <div className={styles.confirmDialog}>
                 <MdDeleteOutline className={styles.confirmIcon} aria-hidden="true" />
                 <h2 id="delete-order-title">Obriši porudžbinu?</h2>
-                <p id="delete-order-description">{pending?.orderNumber}<br /><strong>{pending?.customerName}</strong><br />Porudžbina će biti trajno obrisana.</p>
+                <p id="delete-order-description">{pending?.orderNumber}<br /><strong>{pending?.companyName || pending?.customerName}</strong><br />Porudžbina će biti trajno obrisana.</p>
                 <div className={styles.confirmActions}>
                     <button autoFocus disabled={deleting} onClick={() => setPending(null)}>Odustani</button>
                     <button disabled={deleting} onClick={remove} className={styles.confirmDelete}>{deleting ? "Brisanje…" : "Obriši porudžbinu"}</button>

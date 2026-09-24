@@ -65,8 +65,18 @@ export default function OrderConfirmation({ order }) {
                 <p>
                     <strong>Broj porudžbine:</strong> {order.orderNumber}
                 </p>
+                {order.companyName && (
+                    <p>
+                        <strong>Naziv firme:</strong> {order.companyName}
+                    </p>
+                )}
+                {order.pib && (
+                    <p>
+                        <strong>PIB:</strong> {order.pib}
+                    </p>
+                )}
                 <p>
-                    <strong>Ime:</strong> {order.customerName}
+                    <strong>Kontakt osoba:</strong> {order.customerName}
                 </p>
                 <p>
                     <strong>Email:</strong> {order.email}
@@ -77,11 +87,6 @@ export default function OrderConfirmation({ order }) {
                 {order.message && (
                     <p>
                         <strong>Poruka:</strong> {order.message}
-                    </p>
-                )}
-                {order.pib && (
-                    <p>
-                        <strong>PIB:</strong> {order.pib}
                     </p>
                 )}
                 {order.pass && (

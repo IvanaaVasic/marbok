@@ -49,8 +49,9 @@ export default function SwipeOrderCard({ order, open, onToggle, onDelete, onActi
             <span className={styles.orderDate}>{formatDate(new Date(order.createdAt))}</span>
             <Link href={`/order/${order.orderNumber}`} className={styles.detailsLink}
                 onClick={event => { if (open) { event.preventDefault(); onToggle(false); } }}>
-                <h3>{order.customerName || "Kupac bez naziva"}</h3>
+                <h3>{order.companyName || order.customerName || "Kupac bez naziva"}</h3>
                 <div className={styles.orderMeta}>
+                    {order.companyName && order.customerName && <span>Kontakt: {order.customerName}</span>}
                     {order.pib && <span>PIB: {order.pib}</span>}
                     {order.pass && <span>Šifra kupca: {order.pass}</span>}
                     <span>Artikala: {order.itemCount || 0}</span>

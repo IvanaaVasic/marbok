@@ -12,6 +12,11 @@ const order = {
             type: "string",
         },
         {
+            name: "companyName",
+            title: "Naziv firme",
+            type: "string",
+        },
+        {
             name: "customerName",
             title: "Customer Name",
             type: "string",
