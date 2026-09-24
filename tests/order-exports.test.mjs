@@ -19,7 +19,7 @@ await build({ stdin: { contents: 'export {createOrderPdfFile} from "./utils/orde
     }}],
 });
 const { createOrderPdfFile, createOrderExcelFile } = require(path.join(cache, 'exports.cjs'));
-const order = { orderNumber: 'ORD-TEST-50', customerName: 'Đorđe Živković - Čačak', createdAt: '2026-09-04T09:00:00Z',
+const order = { orderNumber: 'ORD-TEST-50', companyName: 'Primer trgovina doo', customerName: 'Đorđe Živković - Čačak', createdAt: '2026-09-04T09:00:00Z',
     email: 'primer@example.com', phone: '060 123 456', pib: '123456789', pass: '00018',
     items: Array.from({ length: 50 }, (_, index) => ({ name: `Artikal ${index + 1}: Čokoladne bombone sa lešnikom i mlečnim punjenjem`,
         productKey: String(13000 + index), package: '24 x 18 g', quantity: 3, price: '1.250,50' })) };
@@ -37,7 +37,7 @@ test('50-item PDF preserves Serbian letters and uses at most 4 A4 pages', async 
 });
 test('Excel preserves all 50 rows, historical date, amounts and order identity', async () => {
     const file = await createOrderExcelFile({ orderNumber: order.orderNumber, createdAt: order.createdAt,
-        customer: { name: order.customerName, email: order.email, phone: order.phone }, items: order.items });
+        customer: { companyName: order.companyName, pib: order.pib, name: order.customerName, email: order.email, phone: order.phone }, items: order.items });
     const ExcelJS = require('exceljs'); const workbook = new ExcelJS.Workbook();
     await workbook.xlsx.load(await file.arrayBuffer());
     const sheet = workbook.worksheets[0];
@@ -47,6 +47,8 @@ test('Excel preserves all 50 rows, historical date, amounts and order identity',
     assert.equal(sheet.getCell('E6').value, 3);
     assert.equal(sheet.getCell('F56').value, '187.575 RSD');
     assert.ok(sheet.getCell('A3').value.includes(order.customerName));
+    assert.ok(sheet.getCell('A3').value.includes(order.companyName));
+    assert.ok(sheet.getCell('A3').value.includes(order.pib));
     assert.ok(sheet.getCell('A4').value.includes('2026'));
 });
 test('native sharing receives a File; cancellation is quiet and unsupported sharing downloads', async () => {

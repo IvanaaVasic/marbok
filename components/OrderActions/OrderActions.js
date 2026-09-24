@@ -39,8 +39,8 @@ export default function OrderActions({ order, onClose, onDelete }) {
                 prepare("pdf", async () => (await import("@/utils/orderPdf")).createOrderPdfFile(full)),
                 prepare("excel", async () => (await import("@/utils/orderExcel")).createOrderExcelFile({
                     orderNumber: full.orderNumber, createdAt: full.createdAt,
-                    customer: { name: full.customerName || "", email: full.email || "", phone: full.phone || "" },
-                    selectedStore: full.pib || full.pass ? { name: full.customerName, pib: full.pib, pass: full.pass } : null,
+                    customer: { companyName: full.companyName || "", pib: full.pib || "", name: full.customerName || "", email: full.email || "", phone: full.phone || "" },
+                    selectedStore: full.pass ? { name: full.companyName, pib: full.pib, pass: full.pass } : null,
                     items: orderItems(full),
                 })),
             ]);

@@ -87,6 +87,7 @@ export async function createOrder(orderData) {
     return createClient(clientConfig).create({
         _type: "order",
         orderNumber: `ORD-${Date.now()}`,
+        companyName: orderData.companyName || "",
         customerName: orderData.firstName,
         email: orderData.email,
         phone: orderData.phone,
@@ -137,6 +138,7 @@ export async function getOrders() {
     return createClient(clientConfig).fetch(
         groq`*[_type == "order"] | order(createdAt desc) {
             orderNumber,
+            companyName,
             customerName,
             email,
             phone,

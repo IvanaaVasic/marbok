@@ -15,6 +15,8 @@ function Input({
   className,
   value,
   onChange,
+  inputMode,
+  maxLength,
 }) {
   const methods = useFormContext();
   const {
@@ -33,6 +35,8 @@ function Input({
       <label className={styles.label}>{label}</label>
       <input
         type={inputType}
+        inputMode={inputMode}
+        maxLength={maxLength}
         placeholder={placeholder}
         className={clsx(styles.fields, className)}
         {...register(registerField, {

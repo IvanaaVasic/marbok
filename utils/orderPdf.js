@@ -36,7 +36,8 @@ export async function createOrderPdfFile(order, resources = {}) {
     doc.text(String(order.orderNumber || ""), 10, 23);
     const date = order.createdAt ? new Date(order.createdAt).toLocaleString("sr-Latn-RS") : "";
     const details = [
-        `Kupac: ${order.customerName || ""}`,
+        order.companyName && `Firma: ${order.companyName}`,
+        `Kontakt osoba: ${order.customerName || ""}`,
         [date && `Datum: ${date}`, order.pib && `PIB: ${order.pib}`, order.pass && `Šifra kupca: ${order.pass}`].filter(Boolean).join(" | "),
         [order.email && `Email: ${order.email}`, order.phone && `Telefon: ${order.phone}`].filter(Boolean).join(" | "),
         order.message && `Napomena: ${order.message}`,
