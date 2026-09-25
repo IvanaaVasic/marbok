@@ -42,7 +42,7 @@ export async function getServerSideProps({ params }) {
     const initialCategory = await getCategories();
     const initialPages = await getPages();
     const category = await createClient(clientConfig).fetch(
-        `*[_type == "categoryPage" && slug.current == "${slug}"][0]{
+        `*[_type == "categoryPage" && slug.current == $slug][0]{
             title,
               slug,
                 categoryProducts[]->{
@@ -57,7 +57,7 @@ export async function getServerSideProps({ params }) {
                     blockProductImages,
                   }
                 }
-              }`
+              }`, { slug }
     );
     const initialStores = await getStores();
 

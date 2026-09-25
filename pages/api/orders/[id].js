@@ -1,5 +1,4 @@
-import { createClient } from "next-sanity";
-import clientConfig from "@/sanity/config/client-config";
+import { serverSanityClient } from "@/server/sanityClient";
 import { requireOwner } from "@/server/requireOwner";
 
 export default async function handler(req, res) {
@@ -14,7 +13,7 @@ export default async function handler(req, res) {
     }
     try {
         if (req.method === "GET") {
-            const order = await createClient({ ...clientConfig, useCdn: false }).fetch(
+            const order = await serverSanityClient().fetch(
                 '*[_type == "order" && _id == $id][0]{..., items[]{..., "productDetails": *[_type == "productInfo" && productKey == ^.productKey][0]{name, image, productKey, package}}}',
                 { id }
             );
@@ -22,7 +21,7 @@ export default async function handler(req, res) {
             return res.status(200).json({ order });
         }
         // A constrained query can only delete this order, never a store or product.
-        await createClient({ ...clientConfig, useCdn: false }).delete({
+        await serverSanityClient().delete({
             query: '*[_type == "order" && _id == $id]', params: { id },
         });
         return res.status(200).json({ deletedId: id });
