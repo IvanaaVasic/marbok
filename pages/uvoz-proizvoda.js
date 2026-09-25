@@ -1,6 +1,5 @@
 import Head from "next/head";
-import { createClient } from "next-sanity";
-import clientConfig from "@/sanity/config/client-config";
+import { serverSanityClient } from "@/server/sanityClient";
 import ProductImport from "@/components/ProductImport/ProductImport";
 
 export default function ProductImportPage({ categories }) {
@@ -8,6 +7,6 @@ export default function ProductImportPage({ categories }) {
 }
 
 export async function getServerSideProps() {
-    const categories = await createClient(clientConfig).fetch(`*[_type == "categoryPage"] | order(title asc){_id,title,"slug":slug.current,categoryProducts[]->{_id,title}}`);
+    const categories = await serverSanityClient().fetch(`*[_type == "categoryPage"] | order(title asc){_id,title,"slug":slug.current,categoryProducts[]->{_id,title}}`);
     return { props: { categories: categories || [] } };
 }

@@ -1,8 +1,10 @@
 import { createClient, groq } from "next-sanity";
 import clientConfig from "./config/client-config";
+import { auth } from "@/config/firebase";
 
 export async function getPages() {
-    return createClient(clientConfig).fetch(
+    if (typeof window !== "undefined") return browserCatalog("pages");
+    return serverClient().fetch(
         groq`*[_type == "page" && _id == 'be35d245-f2fa-4f0b-b0aa-27c099c40c55'][0]{
       content[]->{
         "image": image.asset->url,
@@ -21,23 +23,28 @@ export async function getPages() {
 }
 
 export async function getImages() {
-    return createClient(clientConfig).fetch(groq`*[_type == "heroImages"]`);
+    if (typeof window !== "undefined") return browserCatalog("images");
+    return serverClient().fetch(groq`*[_type == "heroImages"]`);
 }
 
 export async function getHeading() {
-    return createClient(clientConfig).fetch(groq`*[_type == "mainHeading"]`);
+    if (typeof window !== "undefined") return browserCatalog("heading");
+    return serverClient().fetch(groq`*[_type == "mainHeading"]`);
 }
 
 export async function getBrandImages() {
-    return createClient(clientConfig).fetch(groq`*[_type == "brandImages"]`);
+    if (typeof window !== "undefined") return browserCatalog("brands");
+    return serverClient().fetch(groq`*[_type == "brandImages"]`);
 }
 
 export async function getAboutUs() {
-    return createClient(clientConfig).fetch(groq`*[_type == "aboutUs"]`);
+    if (typeof window !== "undefined") return browserCatalog("about");
+    return serverClient().fetch(groq`*[_type == "aboutUs"]`);
 }
 
 export async function getCategories() {
-    return createClient(clientConfig).fetch(
+    if (typeof window !== "undefined") return browserCatalog("categories");
+    return serverClient().fetch(
         groq`*[_type == "categoryPage"]{
                 title,
                 slug,
@@ -57,112 +64,20 @@ export async function getCategories() {
     );
 }
 
-export async function getStores() {
-    return createClient(clientConfig).fetch(
-        groq`*[_type == "store" && (!defined(approvalStatus) || approvalStatus == "approved")]{
-            name,
-            pib,
-            address,
-            phone,
-            email,
-            contactPerson,
-            pass,
-            _id
-        }`
-    );
+// Public catalog reads only. Mutations and private records live in authenticated API routes.
+export async function getStores() { return []; }
+
+function serverClient() {
+    if (!process.env.SANITY_API_TOKEN) throw new Error("SANITY_API_TOKEN missing");
+    return createClient({ ...clientConfig, token: process.env.SANITY_API_TOKEN, useCdn: false });
 }
 
-export async function createOrder(orderData) {
-    const totalPrice = orderData.items.reduce((sum, item) => {
-        const normalizedPrice = String(item.price || "")
-            .replace(/\s/g, "")
-            .replace(/\.(?=\d{3}(?:\D|$))/g, "")
-            .replace(",", ".")
-            .replace(/[^\d.-]/g, "");
-        const price = parseFloat(normalizedPrice) || 0;
-        const quantity = parseInt(item.quantity, 10) || 0;
-        return sum + price * quantity;
-    }, 0);
-
-    return createClient(clientConfig).create({
-        _type: "order",
-        orderNumber: `ORD-${Date.now()}`,
-        companyName: orderData.companyName || "",
-        customerName: orderData.firstName,
-        email: orderData.email,
-        phone: orderData.phone,
-        message: orderData.message,
-        pib: orderData.pib || "",
-        pass: orderData.pass || "",
-        items: orderData.items.map((item) => ({
-            ...item,
-            _key: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
-        })),
-        totalPrice: `${totalPrice} rsd`,
-        createdAt: new Date().toISOString(),
+async function browserCatalog(kind) {
+    const token = await auth.currentUser?.getIdToken();
+    if (!token) throw new Error("Prijava je potrebna.");
+    const response = await fetch(`/api/catalog-data?kind=${encodeURIComponent(kind)}`, {
+        headers: { Authorization: `Bearer ${token}` },
     });
-}
-
-export async function uploadOrderExcel(file, orderNumber) {
-    if (!file) return null;
-
-    const asset = await createClient(clientConfig).assets.upload("file", file, {
-        filename: file.name || `MARBOK_Porudzbina_${orderNumber}.xlsx`,
-        contentType:
-            file.type ||
-            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    });
-
-    return asset?.url || null;
-}
-
-export async function getOrder(orderNumber) {
-    return createClient(clientConfig).fetch(
-        groq`*[_type == "order" && orderNumber == $orderNumber][0]{
-            ...,
-            items[] {
-                ...,
-                "productDetails": *[_type == "productInfo" && productKey == ^.productKey][0]{
-                    name,
-                    image,
-                    price,
-                    productKey
-                }
-            }
-        }`,
-        { orderNumber }
-    );
-}
-
-export async function getOrders() {
-    return createClient(clientConfig).fetch(
-        groq`*[_type == "order"] | order(createdAt desc) {
-            orderNumber,
-            companyName,
-            customerName,
-            email,
-            phone,
-            pib,
-            pass,
-            totalPrice,
-            items,
-            createdAt,
-            _id
-        }`
-    );
-}
-
-export async function createStore(store) {
-    return createClient(clientConfig).create({
-        _type: "store",
-        name: store.name,
-        pib: store.pib,
-        address: store.address,
-        phone: store.phone,
-        email: store.email,
-        contactPerson: store.contactPerson,
-        firebaseUid: store.firebaseUid,
-        approvalStatus: store.approvalStatus,
-        registeredAt: store.registeredAt,
-    });
+    if (!response.ok) throw new Error("Katalog nije dostupan.");
+    return (await response.json()).data;
 }
