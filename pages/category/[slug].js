@@ -4,8 +4,7 @@ import styles from "./page.module.css";
 import Content from "@/components/Content/Content";
 import { useCategories, usePages } from "@/hooks/usePages";
 import Layout from "@/components/Layout/Layout";
-import { createClient } from "next-sanity";
-import clientConfig from "../../sanity/config/client-config";
+import { serverSanityClient } from "@/server/sanityClient";
 
 export default function Category({
     initialCategory,
@@ -41,7 +40,7 @@ export async function getServerSideProps({ params }) {
     const slug = params.slug;
     const initialCategory = await getCategories();
     const initialPages = await getPages();
-    const category = await createClient(clientConfig).fetch(
+    const category = await serverSanityClient().fetch(
         `*[_type == "categoryPage" && slug.current == $slug][0]{
             title,
               slug,
