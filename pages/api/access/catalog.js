@@ -1,4 +1,5 @@
-import { serverSanityClient } from "@/server/sanityClient";
+import { createClient } from "next-sanity";
+import clientConfig from "@/sanity/config/client-config";
 import { requireFirebaseUser } from "@/server/requireFirebaseUser";
 import { resolveAccountAccess } from "@/server/accountAccess";
 
@@ -11,7 +12,7 @@ export default async function handler(req, res) {
     if (!user) return;
 
     try {
-        const client = serverSanityClient();
+        const client = createClient({ ...clientConfig, useCdn: false });
         const { status } = await resolveAccountAccess(client, user);
         if (status !== "approved") return res.status(200).json({ status, prices: {} });
 

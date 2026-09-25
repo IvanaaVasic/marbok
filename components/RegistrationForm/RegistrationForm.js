@@ -19,6 +19,7 @@ import styles from "./RegistrationForm.module.css";
 import { FaUser, FaPhoneAlt, FaBuilding, FaIdCard } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
 import { MdEmail, MdPassword } from "react-icons/md";
+import { createStore } from "@/sanity/sanity-utils";
 import emailjs from "@emailjs/browser";
 
 const EMAIL_SERVICE_ID = "service_pn5jvkb";
@@ -87,18 +88,17 @@ export const RegistrationForm = () => {
                 const userDocRef = doc(db, "users", userCredential.user.uid);
                 await setDoc(userDocRef, userData);
 
-                const registrationResponse = await fetch("/api/stores/register", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json", Authorization: `Bearer ${await userCredential.user.getIdToken()}` },
-                    body: JSON.stringify({
+                await createStore({
                     name: values.companyName || values.name || values.email,
                     pib: values.pib,
                     address: values.address,
                     phone: values.phone,
+                    email: values.email,
                     contactPerson: values.name || "",
-                    }),
+                    firebaseUid: userCredential.user.uid,
+                    approvalStatus: "pending",
+                    registeredAt: new Date().toISOString(),
                 });
-                if (!registrationResponse.ok) throw new Error("Registration failed");
 
                 // Registracija ostaje uspešna čak i ako email servis privremeno zakaže;
                 // zahtev je svakako vidljiv vlasniku u listi za odobravanje.

@@ -1,10 +1,9 @@
 import { orderItems, parseOrderPrice, formatOrderPrice } from "@/utils/orderDocument";
-import { useMemo, useEffect, useState } from "react";
-import { auth } from "@/config/firebase";
+import { useMemo } from "react";
+import { getOrder } from "@/sanity/sanity-utils";
 import { urlFromThumbnail } from "@/utils/image";
 import { formatDate } from "@/utils/dateFormat";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import styles from "./Order.module.css";
 import { useGetCurrentUser } from "@/hooks/useGetCurrentUser";
 import { useAuth } from "@/hooks/useAuth";
@@ -24,27 +23,7 @@ function formatPrice(price) {
     }).format(price);
 }
 
-export default function OrderConfirmation() {
-    const router = useRouter();
-    const { orderNumber } = router.query;
-    const [order, setOrder] = useState(null);
-    const [loading, setLoading] = useState(true);
-    useEffect(() => {
-        if (!orderNumber) return;
-        let active = true;
-        (async () => {
-            try {
-                const token = await auth.currentUser?.getIdToken();
-                if (!token) return;
-                const response = await fetch(`/api/orders/by-number?number=${encodeURIComponent(orderNumber)}`, {
-                    headers: { Authorization: `Bearer ${token}` },
-                });
-                const result = await response.json();
-                if (active && response.ok) setOrder(result.order);
-            } finally { if (active) setLoading(false); }
-        })();
-        return () => { active = false; };
-    }, [orderNumber]);
+export default function OrderConfirmation({ order }) {
     const { user } = useAuth();
     const { data: userData } = useGetCurrentUser({ uid: user?.uid ?? null });
     const roles = useMemo(() => userData?.roles || [], [userData]);
@@ -60,7 +39,7 @@ export default function OrderConfirmation() {
         [order?.items]
     );
     const printItems = useMemo(() => orderItems(order), [order]);
-    if (!order) return <div>{loading ? "Učitavanje porudžbine..." : "Porudžbina nije pronađena"}</div>;
+    if (!order) return <div>Porudžbina nije pronađena</div>;
 
     return (
         <div className={styles.container}>
@@ -182,3 +161,12 @@ export default function OrderConfirmation() {
     );
 }
 
+export async function getServerSideProps({ params }) {
+    const order = await getOrder(params.orderNumber);
+
+    return {
+        props: {
+            order,
+        },
+    };
+}

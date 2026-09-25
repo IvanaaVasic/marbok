@@ -4,11 +4,16 @@ import { useForm, FormProvider } from "react-hook-form";
 import Button from "@/components/Button/Button";
 import Input from "@/components/Input/Input";
 import Textarea from "@/components/TextArea/TextArea";
+import emailjs from "@emailjs/browser";
 import { useCart } from "@/hooks/useCart";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
-import { auth } from "@/config/firebase";
+import { createOrder, uploadOrderExcel } from "@/sanity/sanity-utils";
 import { createOrderExcelFile } from "@/utils/orderExcel";
+
+const EMAIL_SERVICE_ID = "service_pn5jvkb";
+const EMAIL_TEMPLATE_ID = "template_ji1obt8";
+const EMAIL_PUBLIC_KEY = "vEKyEbs258TNVtxqI";
 
 function ContactForm({ selectedStore }) {
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -24,15 +29,33 @@ function ContactForm({ selectedStore }) {
     const expression =
         /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-    const triggerEmail = async (orderNumber) => {
+    const triggerEmail = async (data, orderNumber, orderUrl, orderExcelUrl) => {
         try {
             const response = await fetch("/api/orders/send-email", {
                 method: "POST",
-                headers: { "Content-Type": "application/json", Authorization: `Bearer ${await auth.currentUser.getIdToken()}` },
-                body: JSON.stringify({ orderNumber }),
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ orderNumber, orderExcelUrl }),
             });
-            return response.ok;
-        } catch { return false; }
+            if (!response.ok) {
+                const result = await response.json().catch(() => ({}));
+                throw new Error(result.error || "Serversko slanje emaila nije uspelo.");
+            }
+            return true;
+        } catch (serverError) {
+            console.error("Server email delivery failed; trying browser fallback", serverError);
+            try {
+                await emailjs.send(
+                    EMAIL_SERVICE_ID,
+                    EMAIL_TEMPLATE_ID,
+                    data,
+                    EMAIL_PUBLIC_KEY
+                );
+                return true;
+            } catch (browserError) {
+                console.error("Browser email fallback failed", browserError);
+                return false;
+            }
+        }
     };
     const onSubmit = (cart) => async (data) => {
         if (isSubmitting) return;
@@ -61,15 +84,7 @@ function ContactForm({ selectedStore }) {
         };
 
         try {
-            const token = await auth.currentUser?.getIdToken();
-            if (!token) throw new Error("Prijava je istekla.");
-            const createResponse = await fetch("/api/orders/create", {
-                method: "POST",
-                headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-                body: JSON.stringify({ ...orderData, storeId: selectedStore?._id }),
-            });
-            if (!createResponse.ok) throw new Error((await createResponse.json()).error);
-            const { order } = await createResponse.json();
+            const order = await createOrder(orderData);
             const orderUrl = `${window.location.origin}/order/${order.orderNumber}`;
 
             let orderExcelUrl = null;
@@ -78,24 +93,41 @@ function ContactForm({ selectedStore }) {
                     orderNumber: order.orderNumber,
                     customer: { companyName, pib, name: firstName, email, phone },
                     selectedStore,
-                    items: order.items.map((item) => ({
-                        ...item,
-                        image: cart.find((cartItem) => cartItem.productKey === item.productKey)?.image,
-                    })),
+                    items: cart,
                 });
-                const data = btoa(Array.from(new Uint8Array(await orderExcel.arrayBuffer()), byte => String.fromCharCode(byte)).join(""));
-                const uploadResponse = await fetch("/api/orders/upload-excel", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-                    body: JSON.stringify({ orderNumber: order.orderNumber, data }),
-                });
-                if (!uploadResponse.ok) throw new Error("Excel nije sačuvan.");
-                orderExcelUrl = (await uploadResponse.json()).url;
+                orderExcelUrl = await uploadOrderExcel(
+                    orderExcel,
+                    order.orderNumber
+                );
             } catch (excelError) {
                 console.error("Failed to create or upload order Excel", excelError);
             }
 
-            const emailSent = await triggerEmail(order.orderNumber);
+            const excelLine = orderExcelUrl
+                ? `\n\nExcel porudžbina (preuzimanje): ${orderExcelUrl}`
+                : "";
+            const emailData = {
+                companyName,
+                pib,
+                firstName,
+                email,
+                phone,
+                orderNumber: order.orderNumber,
+                orderExcelUrl: orderExcelUrl || "",
+                message: `Firma: ${companyName}\nPIB: ${pib}\nKontakt osoba: ${firstName}\n\n${message || ""}\n\nLink ka potvrdi porudžbine: ${orderUrl}${excelLine}\n\nProizvodi:\n${cart
+                    ?.map(
+                        (item) =>
+                            `proizvod: ${item.name}, kolicina: ${item.quantity}, šifra: ${item.productKey}, cena: ${item.price}`
+                    )
+                    .join("\n")}`,
+            };
+
+            const emailSent = await triggerEmail(
+                emailData,
+                order.orderNumber,
+                orderUrl,
+                orderExcelUrl
+            );
 
             clearCart();
             if (emailSent && orderExcelUrl) {
