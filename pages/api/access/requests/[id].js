@@ -1,4 +1,5 @@
-import { serverSanityClient } from "@/server/sanityClient";
+import { createClient } from "next-sanity";
+import clientConfig from "@/sanity/config/client-config";
 import { requireOwner } from "@/server/requireOwner";
 
 const ALLOWED = new Set(["approved", "rejected"]);
@@ -17,7 +18,7 @@ export default async function handler(req, res) {
     }
 
     try {
-        const client = serverSanityClient();
+        const client = createClient({ ...clientConfig, useCdn: false });
         const request = await client
             .patch(id)
             .set({ approvalStatus: status, reviewedAt: new Date().toISOString() })

@@ -9,12 +9,10 @@ import { useMediaQuery } from "@/hooks/useMediaQuery";
 import StoreSelector from "@/components/StoreSelector/StoreSelector";
 import { useStore } from "@/context/StoreContext";
 import { MdStorefront } from "react-icons/md";
-import { useEffect, useState } from "react";
 
 import { useAuth } from "@/hooks/useAuth";
 import CatalogExportButton from "@/components/CatalogExportButton/CatalogExportButton";
 import { useCatalogAccess } from "@/context/CatalogAccessContext";
-import { auth } from "@/config/firebase";
 
 function normalizeSearchValue(value) {
     return String(value || "")
@@ -35,19 +33,6 @@ function Header({
     const { user } = useAuth();
     const { canSeePrices } = useCatalogAccess();
     const isAdmin = isOwner(user);
-    const [privateStores, setPrivateStores] = useState([]);
-    useEffect(() => {
-        if (!isAdmin) { setPrivateStores([]); return; }
-        let active = true;
-        (async () => {
-            try {
-                const token = await auth.currentUser.getIdToken();
-                const response = await fetch("/api/stores", { headers: { Authorization: `Bearer ${token}` } });
-                if (active && response.ok) setPrivateStores((await response.json()).stores || []);
-            } catch { if (active) setPrivateStores([]); }
-        })();
-        return () => { active = false; };
-    }, [isAdmin]);
     const canExportCatalog = isAdmin;
 
     const router = useRouter();
@@ -143,7 +128,7 @@ function Header({
                     )}
                 </div>
                 {isAdmin && <StoreSelector
-                    stores={privateStores}
+                    stores={stores}
                     selectedStore={selectedStore}
                     onClearSelection={clearStoreSelection}
                     isOpen={isStoreSelectorOpen}

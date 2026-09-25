@@ -1,5 +1,6 @@
 import crypto from "crypto";
-import { serverSanityClient } from "@/server/sanityClient";
+import { createClient } from "next-sanity";
+import clientConfig from "@/sanity/config/client-config";
 import { requireOwner } from "@/server/requireOwner";
 
 export const config = { api: { bodyParser: { sizeLimit: "15mb" } }, maxDuration: 60 };
@@ -48,7 +49,7 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: `Jedna grupa mora imati od 1 do ${MAX_BATCH_SIZE} proizvoda.` });
     }
 
-    const client = serverSanityClient();
+    const client = createClient({ ...clientConfig, useCdn: false });
     try {
         const structures = await client.fetch(`*[_type == "categoryPage"]{_id,title,categoryProducts[]->{_id,title}}`);
         const blocks = new Map();

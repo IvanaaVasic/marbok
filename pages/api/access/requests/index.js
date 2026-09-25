@@ -1,4 +1,5 @@
-import { serverSanityClient } from "@/server/sanityClient";
+import { createClient } from "next-sanity";
+import clientConfig from "@/sanity/config/client-config";
 import { requireOwner } from "@/server/requireOwner";
 
 export default async function handler(req, res) {
@@ -9,7 +10,7 @@ export default async function handler(req, res) {
     if (!(await requireOwner(req, res))) return;
 
     try {
-        const client = serverSanityClient();
+        const client = createClient({ ...clientConfig, useCdn: false });
         const requests = await client.fetch(
             `*[_type == "store" && defined(approvalStatus)] | order(registeredAt desc, _createdAt desc){
                 _id, name, pib, address, phone, email, contactPerson,
