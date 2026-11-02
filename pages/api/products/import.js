@@ -1,3 +1,4 @@
+import { productVariantKey } from "@/utils/productVariant";
 import { importPricing } from "@/utils/importPricing";
 import crypto from "crypto";
 import { createClient } from "next-sanity";
@@ -10,7 +11,7 @@ const MAX_IMAGE_BYTES = 6 * 1024 * 1024;
 
 const text = (value) => String(value ?? "").trim();
 const normalize = (value) => text(value).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase("sr-Latn-RS").replace(/\s+/g, " ");
-const productId = (key) => `productInfo.${crypto.createHash("sha256").update(normalize(key)).digest("hex").slice(0, 32)}`;
+const productId = (product) => `productInfo.variant.${crypto.createHash("sha256").update(productVariantKey(product)).digest("hex").slice(0, 32)}`;
 
 function sanityImageReference(url) {
     if (!url) return null;
@@ -55,9 +56,8 @@ export default async function handler(req, res) {
         const structures = await client.fetch(`*[_type == "categoryPage"]{_id,title,categoryProducts[]->{_id,title}}`);
         const blocks = new Map();
         (structures || []).forEach((category) => (category.categoryProducts || []).forEach((block) => blocks.set(block._id, block)));
-        const keys = products.map((product) => text(product.productKey)).filter(Boolean);
-        const existing = await client.fetch(`*[_type == "productInfo" && productKey in $keys]{productKey}`, { keys });
-        const existingKeys = new Set((existing || []).map((item) => normalize(item.productKey)));
+        const existing = await client.fetch(`*[_type == "productInfo"]{productKey,name}`);
+        const existingKeys = new Set((existing || []).map(productVariantKey));
         const seenKeys = new Set();
         const valid = [];
         const errors = [];
@@ -69,7 +69,7 @@ export default async function handler(req, res) {
             const name = text(product.name);
             const productKey = text(product.productKey);
             const block = blocks.get(text(product.blockId));
-            const key = normalize(productKey);
+            const key = productVariantKey({ productKey, name });
             const pricing = importPricing(product.price, product.markup);
             if (!name || !productKey) errors.push({ row, message: "Nedostaje naziv ili šifra proizvoda." });
             else if (!block) errors.push({ row, message: "Izabrana sekcija nije pronađena." });
@@ -78,8 +78,8 @@ export default async function handler(req, res) {
                 skipped += 1;
                 skippedItems.push({
                     row,
-                    productKey,
-                    message: existingKeys.has(key) ? "Šifra već postoji na sajtu." : "Ista šifra je ponovljena u Excelu.",
+                    productKey, name,
+                    message: existingKeys.has(key) ? "Proizvod sa istom šifrom i nazivom već postoji na sajtu." : "Ista šifra i naziv ponovljeni su u Excelu.",
                 });
             }
             else { seenKeys.add(key); valid.push({ ...product, price: pricing.price, row, name, productKey, block }); }
@@ -96,7 +96,7 @@ export default async function handler(req, res) {
 
         let transaction = client.transaction();
         prepared.forEach((product) => {
-            const id = productId(product.productKey);
+            const id = productId(product);
             const document = {
                 _id: id, _type: "productInfo", name: product.name,
                 productKey: product.productKey,
