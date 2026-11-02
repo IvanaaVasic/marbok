@@ -1,3 +1,4 @@
+import { importPricing } from "@/utils/importPricing";
 import crypto from "crypto";
 import { createClient } from "next-sanity";
 import clientConfig from "@/sanity/config/client-config";
@@ -69,8 +70,10 @@ export default async function handler(req, res) {
             const productKey = text(product.productKey);
             const block = blocks.get(text(product.blockId));
             const key = normalize(productKey);
+            const pricing = importPricing(product.price, product.markup);
             if (!name || !productKey) errors.push({ row, message: "Nedostaje naziv ili šifra proizvoda." });
             else if (!block) errors.push({ row, message: "Izabrana sekcija nije pronađena." });
+            else if (pricing.error) errors.push({ row, message: pricing.error });
             else if (existingKeys.has(key) || seenKeys.has(key)) {
                 skipped += 1;
                 skippedItems.push({
@@ -79,7 +82,7 @@ export default async function handler(req, res) {
                     message: existingKeys.has(key) ? "Šifra već postoji na sajtu." : "Ista šifra je ponovljena u Excelu.",
                 });
             }
-            else { seenKeys.add(key); valid.push({ ...product, row, name, productKey, block }); }
+            else { seenKeys.add(key); valid.push({ ...product, price: pricing.price, row, name, productKey, block }); }
         });
         if (!valid.length) return res.status(200).json({ created: 0, skipped, skippedItems, errors });
 
