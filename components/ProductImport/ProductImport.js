@@ -182,7 +182,7 @@ export default function ProductImport({ categories = [] }) {
         ...row,
         ...resolveTarget(row, categories),
         pricing: importPricing(row.price, row.markup),
-        image: images.get(normalize(row.imageName)) || images.get(normalize(row.productKey)) || null,
+        image: row.imageName ? images.get(normalize(row.imageName)) || null : images.get(normalize(row.productKey)) || null,
     })), [rows, images, categories]);
     const hasSanityImage = (row) => /^https:\/\/cdn\.sanity\.io\//i.test(row.imageName);
     const missingImages = preview.filter((row) => !row.image && !hasSanityImage(row)).length;
@@ -234,7 +234,7 @@ export default function ProductImport({ categories = [] }) {
             if (!created) {
                 setResult(null);
                 setError(skipped
-                    ? `Nijedan proizvod nije dodat. Sve unete šifre već postoje na sajtu: ${skippedItems.map((item) => item.productKey).join(", ")}. Unesi novu, jedinstvenu šifru.`
+                    ? `Nijedan proizvod nije dodat. Proizvodi sa istom šifrom i nazivom već postoje ili su ponovljeni u fajlu: ${skippedItems.map((item) => `${item.productKey} — ${item.name}`).join(", ")}. Za drugi ukus upiši drugačiji naziv.`
                     : "Nijedan proizvod nije dodat. Proveri označene redove i pokušaj ponovo.");
             } else {
                 setResult({ created, skipped, errors: [...errors, ...skippedItems] });
@@ -244,10 +244,10 @@ export default function ProductImport({ categories = [] }) {
 
     return <main className={styles.page}><section className={styles.card}>
         <Link href="/catalog" className={styles.backLink}>← Nazad na katalog</Link>
-        <div className={styles.heading}><div><span className={styles.eyebrow}>Samo za vlasnika</span><h1>Uvoz proizvoda iz Excela</h1><p>U kolonu CENA unesi osnovnu cenu, a u MARŽA (%) izaberi od 5% do 75%. Na primer: 100 + 25% = 125. Prazna marža ostavlja cenu nepromenjenu.</p></div><button type="button" className={styles.templateButton} onClick={() => downloadTemplate(categories)}><FaFileExcel /> Preuzmi novi šablon</button></div>
+        <div className={styles.heading}><div><span className={styles.eyebrow}>Samo za vlasnika</span><h1>Uvoz proizvoda iz Excela</h1><p>U kolonu CENA unesi osnovnu cenu, a u MARŽA (%) izaberi od 5% do 75%. Na primer: 100 + 25% = 125. Prazna marža ostavlja cenu nepromenjenu. Različiti ukusi mogu imati istu šifru: u NAZIV upiši i ukus. Ista šifra i naziv neće biti dodati ponovo.</p></div><button type="button" className={styles.templateButton} onClick={() => downloadTemplate(categories)}><FaFileExcel /> Preuzmi novi šablon</button></div>
         <div className={styles.uploadGrid}>
             <label className={styles.uploadBox}><FaFileExcel /><strong>1. Izaberi popunjen Excel</strong><span>{fileName || "XLSX fajl sa najviše 200 redova"}</span><input type="file" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" onChange={handleExcel} /></label>
-            <label className={styles.uploadBox}><FaImages /><strong>2. Izaberi sve slike</strong><span>{images.size ? "Slike su učitane" : "Naziv slike neka bude šifra, npr. 8057.jpg"}</span><input type="file" accept="image/jpeg,image/png,image/webp" multiple onChange={(event) => { setImages(buildImageMap(event.target.files)); setResult(null); }} /></label>
+            <label className={styles.uploadBox}><FaImages /><strong>2. Izaberi sve slike</strong><span>{images.size ? "Slike su učitane" : "Za različite ukuse upiši tačan naziv slike u SLIKA, npr. 8057-jagoda.jpg"}</span><input type="file" accept="image/jpeg,image/png,image/webp" multiple onChange={(event) => { setImages(buildImageMap(event.target.files)); setResult(null); }} /></label>
         </div>
         {error && <div className={styles.error}>{error}</div>}
         {!!preview.length && <div className={styles.summary}><strong>Pronađeno: {preview.length} proizvoda</strong><span>{invalidRows.length ? `Ispravi redove: ${invalidRows.length}` : missingImages ? `Bez pronađene slike: ${missingImages}` : "Sve je spremno za uvoz"}</span></div>}

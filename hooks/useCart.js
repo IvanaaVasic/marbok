@@ -1,3 +1,4 @@
+import { sameCartProduct } from "@/utils/productVariant";
 import { useQueryClient, useMutation, useQuery } from "react-query";
 
 export function useCart() {
@@ -13,9 +14,7 @@ export function useCart() {
         ? JSON.parse(localStorage.getItem("cart")) || []
         : [];
       const existingProductIndex = currentCartItems.findIndex(
-        (item) =>
-          (product.productId && item.productId === product.productId) ||
-          (product.productKey && item.productKey === product.productKey)
+        (item) => sameCartProduct(item, product)
       );
       const newCartItems = [...currentCartItems];
 
